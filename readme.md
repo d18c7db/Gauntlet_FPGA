@@ -1,7 +1,4 @@
-<center>
 # *WIP* - Work In Progress - *WIP*
-</center>
-
 
 # Atari Gauntlet FPGA Arcade
 

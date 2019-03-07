@@ -292,10 +292,12 @@ Since MPX output of MO Horizontal Line Buffer is not as expected, problem may be
 Simplistic way of how MOHLB works:  
 There are two 512B RAMs that alternately buffer a single video line of sprites. Focusing on just one of those buffers, if two sprites overlap, the sprite data is written to the buffer starting with the lower sprite, then the next sprite that should cover the lower sprite, etc. If the current value of the sprite is visible (not FF) then it overwrites the memory location (covers the pixel of the sprite below) but if the current value of the sprite is transparent (FF), then it is not written to RAM so the pixel of the sprite below remains and shows through.
 
+<pre>
 Higher Sprite Data (new data to RAM)    : D7 D9 FF DE DE DE DE FF FF FF DE DE DE DE DE FF D7 DA DE DE DE FF FF FF FF  
 Lower Sprite Data (existing data in RAM): FF FF FF FF D7 D9 FF DE DE DE DE FF FF FF DE DE DE DE DE FF D7 DA DE DE DE  
 Expected RAM Data                       : D7 D9 FF DE DE DE DE DE DE DE DE DE DE DE DE DE D7 DA DE DE DE DA DE DE DE  
 Observed RAM Data                       : D7 D9 FF DE D7 D9 DE DE DE DE DE DE DE DE DE DE D7 DA DE DE DE DA DE DE DE  
+</pre>
 
 It seems the `MOHLB` woks as expected, but the data presented to it is causing it to incorrectly overwrite earlier buffered data when it shouldn't. This may be a side effect of forcing sprites to appear on screen by loading sprite offset 0 with sprite data. Possibly a side effect of the issue below.  
 

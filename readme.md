@@ -378,7 +378,7 @@ Below is the initial screen at game startup from simulation. The reason the play
 Same screen from MAME for reference.  
 [![Reference screen 1](doc/images/MAME02.png)](doc/images/MAME02.png)  
 
-Another simulation of a later game screen with lots of sprites visible.  
+Another simulation of a later game screen with lots of sprites visible. Again the playfield horizontal scroll register in the simulation has a slightly different value from MAME so the screen is shifted right by some number of pixels.
 [![Simulation screen 2](doc/images/SIM22.png)](doc/images/SIM22.png)  
 
 Compared to the same MAME screen for reference.  

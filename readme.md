@@ -144,7 +144,7 @@ From simulation, this memory range is scanned during each horizontal line, data 
 ## It's Alive!!!
 After the initial translation of the schematic to RTL, the simulation produces the frame of video on the left but it's not the expected output as can be seen on the right from MAME:  
 [![Frame from Simulation](doc/images/SIM00.png)](doc/images/SIM00.png) 
-[![Frame from MAME](doc/images/MAME04.png)](doc/images/MAME04.ref)
+[![Frame from MAME](doc/images/MAME02.png)](doc/images/MAME02.png)
 
 ### Debugging the alphanumerics:
 The top right corner under the Gauntlet logo, where the first text line should read "LEVEL   1", the L begins to be drawn but instead of drawing an L shape the display shows the 2 pixels of the top of the L replicated for all 8 lines after. All text characters exhibit this same behaviour.

@@ -5,15 +5,14 @@
 ## About
 These are the early stages of an attempt at an FPGA implementation of Atari's arcade game "Gauntlet" from 1985, based on the SP-284 schematic circuit diagram.
 
-[![Gauntlet Tile](doc/images/Gauntlet0.gif)](doc/images/Gauntlet0.gif)
-[![Gauntlet Play](doc/images/Gauntlet1.gif)](doc/images/Gauntlet1.gif)
+[![Gauntlet Tile](doc/images/MAME00.png)](doc/images/MAME00.png)
+[![Gauntlet Play](doc/images/MAME03.png)](doc/images/MAME03.png)
 
 There is no code published yet as this is in a non functional "work in progress" state at this time.
 
 ## Hardware
-None yet, this is purely at the simulation stage using Xilinx ISIM. All screen shots are generated from test bench output of what the video signal would look like if it was displayed on a monitor. The testbench dumps the output video values for each frame in a .ppm (portable pixmap) text file which can then be directly viewed by a suitable viewer (eg FastStone Image Viewer).  
+None yet, this is purely at the simulation stage using Xilinx ISIM. All screen shots are generated from test bench output of what the video signal would look like if it was displayed on a monitor. The testbench dumps the output video values for each frame in a .ppm (portable pixmap) text file which can then be directly viewed by a suitable viewer (eg FastStone Image Viewer). The .ppm file format consists of one line with the pixmap magic value P3, next line is the X and Y resolution and max number of colors, followed by hopefully at least X*Y lines of RGB color triplets like so:  
 
-The .ppm file format is very simple and unique since it's a text file yet can be viewed with an image viewer. It consists of one line with the pixmap magic value P3, next line is the X and Y resolution and max number of colors, followed by hopefully at least X*Y lines of RGB color triplets like so:
 <pre>
 P3
 336 240 15
@@ -72,10 +71,10 @@ AL  905000-905ED3   R/W   xxxxxxxx xxxxxxxx   Alphanumerics RAM (64x32 tiles)
     905F6E          R/W   xxxxxxxx x-----xx   Playfield Y scroll/tile bank select
                     R/W   xxxxxxxx x-------      (Playfield Y scroll)
                     R/W   -------- ------xx      (Playfield tile bank select)
-AL  905F80-905FBF   R/W   xxxxxxxx xxxxxxxx  
+AL  905F80-905FBF   R/W   xxxxxxxx xxxxxxxx   
 AL  905FC0-905FFF   R/W   xxxxxxxx xxxxxxxx   
 </pre>
-Additionally 2KB RAM are used for the CRAM (color palettes):
+Additionally 2KB RAM are used for the CRAM (color palette RAM):
 <pre>
 AL  910000-9101FF   R/W   xxxxxxxx xxxxxxxx   Alphanumerics palette RAM (256 entries)
 MO  910200-9103FF   R/W   xxxxxxxx xxxxxxxx   Motion object palette RAM (256 entries)
@@ -97,7 +96,7 @@ Bottom line starts at 905E80 - 905ED3, remaining 22 words not visible on screen
 
 There are two special memory locations at 930000 and 905F6E that control overall MO and PF horizontal and vertical offset (scroll)
 
-- 930000 = PF and MO horizontal scroll. Increasing values scrolls the playfield left. Any write to memory range 930XXX will work. The bottom 9 bits of the `WORD` written to 930000 will be latched by signal `/HSCRLD` into a 9 bit register formed by chips `9S` `6M` `7M` as well as latched into the internal register of custom chip `12K`, the `PFHS` (play field horizontal scroller). At game startup this is initialized to 0005.
+- 930000 = PF and MO horizontal scroll. Increasing values scrolls the playfield left. Any write to memory range 930XXX will work. The bottom 9 bits of the `WORD` written to 930000 will be latched by signal `/HSCRLD` into a 9 bit register formed by chips `9S` `6M` `7M` as well as latched into the internal register of custom chip `12K`, the `PFHS` (Play Field Horizontal Scroller). At game startup this is initialized to 0005.
 
 - 905F6E = PF and MO vertical scroll. Increasing values scroll playfield up. This memory location is scanned each video frame and the top 9 bits are loaded into presettable counters `5J`,`5F`,`4F` when both `/VSYNC` and `/PFHST` are active (start of each video frame). The counters counts up from that value for each horizontal line. This effectively pushes an offset into VPOS via the adders `5D`, `5E`. Lowest 2 bits are also loaded into a counter at each start of frame and count up modulo 4 into a 2:4 decoder which selects graphic ROM chip selects `GCS0`..`GCS3`  
 
@@ -125,18 +124,16 @@ Sprite   0800   0800   0800   0800   0800   0800   0800   0800   0800   0800   0
 The sprite link list does not appear to be circular, so the LINK register must be somehow initialized with the offset of the first sprite in the link list at the start of each horizontal scanline. It appears that the first memory location (index=0) does not contain a LINK to a valid sprite during gameplay so once that memory location is reached, the LINK register remains zeroed until it is loaded again with a valid index.
 
 Memory region 905F80-905FFF seems to control sprite visibility as follows  
-905F80 enables sprites on   top  8 lines of screen 328..335  
-905F82 enables sprites on  next  8 lines of screen 320..327  
+905F80 enables sprites on first 8 lines of screen 1..8  
+905F82 enables sprites on  next 8 lines of screen 9..16  
 ...  
-905FB8 enables sprites on  next  8 lines of screen 8..15  
-905FBA enables sprites on bottom 8 lines of screen 0..7  
+905FB8 enables sprites on  next 8 lines of screen 321..328  
+905FBA enables sprites on  last 8 lines of screen 329..336  
 
 To be determined  
 905FC0  
 ..  
 905FFE  
-
-The region is scanned once at the start of each frame during the first 8 scan lines.
 
 At each location, the word's top 6 bits seem to be unused and the word's bottom 10 bits (when doubled) is a pointer to a sprite offset (typically the first sprite in a linked list).
 
@@ -145,9 +142,9 @@ So for every word in the memory range 905F80-905FBA, if the word's bottom 10 bit
 From simulation, this memory range is scanned during each horizontal line, data from MO VRAM ends up on VRD then loaded on LINK register latch `8F`, `8J` on rising `RCLK` when `/LINK` signal is low.
 
 ## It's Alive!!!
-After the initial translation of the schematic to RTL, the simulation produces the frame of video on the left but it's not the expected output as we can see on the right from MAME:  
-[![Frame from Simulation](doc/images/00.png)](doc/images/00.png) 
-[![Frame from MAME](doc/images/ref.png)](doc/images/00.ref)
+After the initial translation of the schematic to RTL, the simulation produces the frame of video on the left but it's not the expected output as can be seen on the right from MAME:  
+[![Frame from Simulation](doc/images/SIM00.png)](doc/images/SIM00.png) 
+[![Frame from MAME](doc/images/MAME04.png)](doc/images/MAME04.ref)
 
 ### Debugging the alphanumerics:
 The top right corner under the Gauntlet logo, where the first text line should read "LEVEL   1", the L begins to be drawn but instead of drawing an L shape the display shows the 2 pixels of the top of the L replicated for all 8 lines after. All text characters exhibit this same behaviour.
@@ -166,34 +163,40 @@ start of line 48 at 3570us
 258x54 at 3995.975 addr  
 258x50 at 4059.815 addr  
 </pre>
-Turns out `4V`, `2V`, `1V` were not being driven so `ROM 6P` was not being addressed properly and was not outputting enough data to form proper characters. Connecting the additional signal properly produces a much more recognizable picture:  
-[![Alphanumerics fixed](doc/images/03.png)](doc/images/03.png)
+Turns out `4V`, `2V`, `1V` were not being driven so `ROM 6P` was not being addressed properly and was not outputting enough new data to form proper characters. Connecting the additional signal properly produces a much more recognizable picture:  
+[![Alphanumerics fixed](doc/images/SIM03.png)](doc/images/SIM03.png)
 
 Additionally GPC `I_D` bus connect order was wrong, so the colors were also reversed. Fixing that shows colors in the correct order:  
-[![Alphanumeric colors fixed](doc/images/04.png)](doc/images/04.png)
+[![Alphanumeric colors fixed](doc/images/SIM04.png)](doc/images/SIM04.png)
 
 ### Playfield debugging
-The playfield shows pink stripes instead of the expected maze. Forcing the AL ROMs to return zero, makes the text on the right of the screen disappear. This reveals additional playfield that would normally be hidden by the text. Since AL was fixed earlier, it will be left disabled while troubleshooting the PF issue.
+The playfield shows pink stripes instead of the expected maze. Forcing the AL ROMs to return zero, makes the text on the right of the screen disappear. This reveals additional playfield that would normally be hidden by the text. Since AL was fixed earlier, the AL ROMs will be left disabled while troubleshooting the PF issue.
 
 Adding debug code to the simulator to dump selected busses to a log file and debugging the GP bus address (ROM addresses), data out of ROMs and into SLAGS, reveals several mistakes such as unconnected signals, SLAGS selectors S0 S1 to the shifters were reversed, etc, so progressively the playfield becomes more and more visible.  
-[![Pink Stripes](doc/images/10.png)](doc/images/10.png)  
-[![More Stripes](doc/images/11.png)](doc/images/11.png)  
-[![Flipped blocks](doc/images/12.png)](doc/images/12.png)  
-[![Finally a maze](doc/images/13.png)](doc/images/13.png)  
+[![Pink Stripes](doc/images/SIM10.png)](doc/images/SIM10.png)  
+[![More Stripes](doc/images/SIM11.png)](doc/images/SIM11.png)  
+[![Flipped blocks](doc/images/SIM12.png)](doc/images/SIM12.png)  
+
+The raw data from the correctly functioning SLAGS can be seen below. This is and example of what the `SLAGS` `MO` shifter output dumped into a .ppm file looks like before it is turned into an index into the color palette.
+[![SLAGS MO output](doc/images/SLAGS_MO.png)](doc/images/SLAGS_MO.png)  
+
+And this is the corresponding `PF` shifters output. Since these values are intercepted straight from the SLAGS outputs before they hit the color palette, each value is written into the .ppm file three times (R=G=B) so as to form a grayscale image.
+[![SLAGS PF output](doc/images/SLAGS_PF.png)](doc/images/SLAGS_PF.png)  
 
 ### CRAM Debugging
-PF is now looking much better but the colors are wrong. Suspecting CRAM, palette indexing.
+PF is now looking much better but the colors are wrong. Suspecting CRAM, palette indexing.  
+[![Finally a maze](doc/images/SIM13.png)](doc/images/SIM13.png)  
 
-CRAM is addressed by the 10 bit bus CRA from GPC. The top two bits of address selects CPAL as follows:
+CRAM is addressed by the 10 bit bus CRA from GPC. The top two bits of address selects CPAL as follows:  
 
-- 0 = AL
-- 1 = MO
-- 2 = PF
-- 3 = Extra
+- 0 = AL  
+- 1 = MO  
+- 2 = PF  
+- 3 = Extra  
 
-Top two bits have value of 2 so they correctly access PF CPAL, lower byte is an index into the PF CPAL.
+Top two bits have value of 2 so they correctly access PF CPAL, lower byte is an index into the PF CPAL.  
 
-From MAME it is apparent that for the initial screen, the game only uses CPAL indexes 280-29F for PF as below. This CPAL section shows what each index value is used for, X is don't care/unused, F is floor tile, the rest are different types of wall pieces.
+From MAME it is apparent that for the initial screen, the game only uses CPAL indexes 280-29F for PF as below. This CPAL section shows what each index value is used for, X is don't care/unused, F is floor tile, the rest are different types of wall pieces.  
 <pre>
 280: 0000 6631 9631 C631 F631 F643 F654 F876 -- X X X X X X F X
 288: 8333 7223 A324 F334 C334 C445 E445 F445 -- wallshade F F F F F F F
@@ -201,7 +204,7 @@ From MAME it is apparent that for the initial screen, the game only uses CPAL in
 298: FC63 F840 FD84 F335 F246 F158 F26A F37B -- walltop X X X X X X X
 </pre>
 
-Examination in the simulator shows the following discrepancies:
+Examination in the simulator shows the following discrepancies:  
 
 - wallshade color index expected 288 observed 257  
 - wallright color index expected 293 observed 24C  
@@ -209,24 +212,27 @@ Examination in the simulator shows the following discrepancies:
 - wallleft  color index expected 297 observed 248  
 - walltop   color index expected 298 observed 247  
 
-It appears that the pattern is the original value lower byte + x20 xor 0xff. This incorrect data comes from the GPC (Graphic Priority Control) chip `12M` which in turn receives it from PFHS (Play Field Horizontal Scroll) chip `12K`. Since many of the custom chips in this schematic are based on earlier Atari arcade versions implemented with discrete components, checking schematic SP-277 for the Atari System 1 where this PFHS implementation is based on, shows there is a small 64 bit 74F189 RAM chip inside the PFHS. The mistake made was to assume that the data that goes into the RAM chip comes out exactly the same, but upon reading the RAM datasheet it turns out the data coming out of RAM is the **complement** of the data going in! After inverting the outputs from the PFHS RAM chip the PF now shows correct colors:  
-[![Correct Playfield](doc/images/14.png)](doc/images/14.png)
+It appears that the pattern is the original value lower byte + x20 xor 0xff. This incorrect data comes from the GPC (Graphic Priority Control) chip `12M` which in turn receives it from PFHS (Play Field Horizontal Scroll) chip `12K`. Since many of the custom chips in this schematic are based on earlier Atari arcade versions implemented with discrete components, checking schematic `SP-277` for the Atari System 1 where this `PFHS` implementation is based on, shows there is a small 64 bit `74F189` RAM chip inside the `PFHS`. A mistake made was in assuming that the data that goes into the RAM chip comes out exactly the same, but upon reading the RAM datasheet it turns out the data coming out of RAM is the **complement** of the data going in! After inverting the outputs from the `PFHS` RAM chip the PF now shows correct colors:  
+[![Correct Playfield](doc/images/SIM14.png)](doc/images/SIM14.png)
 
 ### Debugging Motion Objects
-Sprites do not show on screen at all. When sprites exist on the screen, it seems `/VMATCH` asserts during sprite presence but, horizontal match doesn't so the `MATCH` signal is never asserted. It seems the `6S` F/F VHDL implementation is wrong, something with having both set and presets, output `6S9` is never preset by `/VERTDL`, also `6S6` output is **inverted**, not just straight through. After inverting output `6S6` and fixed async preset of F/F `6S` sprites now show (corrupted) on top of screen and they seem to repeat instead of just showing once. Further research shows that `MOHLB` (Motion Object Horizontal Line Buffer) had miscellaneous logic issues that needed correcting.
+Sprites do not show on screen at all. When there are sprites on the screen, it seems `/VMATCH` asserts during sprite presence but, horizontal match doesn't so the `MATCH` signal is never asserted. It seems the VHDL implementation of `6S` F/F with both set and preset was incorrect, output `6S9` is never preset by `/VERTDL`, also `6S6` output is **inverted**, not just straight through. After inverting output `6S6` and fixing the async preset of F/F `6S` sprites now show (corrupted) on the top part of screen and they seem to repeat instead of just showing once. Further research shows that `MOHLB` (Motion Object Horizontal Line Buffer) had miscellaneous logic issues that needed correcting.
 
 ### More CRAM debugging
-Just when the colors appeared to be OK, it became apparent that sprites like 0863 (ghost) show up with wrong colors. Investigating why an incorrect color palette is selected leads to discovering that CRA5, CRA7 outputs from 8U page 15 are stuck low because they were not driven (were left unconnected). After connecting them to the appropriate drivers the colors are now much better. Below left is what it looked like before, right is what it looks like after the fix.  
-[![Color Trouble](doc/images/16.png)](doc/images/16.png)
-
-## Outstanding Bugs
-These bugs may be "outstanding" but they don't deserve a standing ovation or a parade. They need to be unceremoniously squashed.
+Just when the colors appeared to be OK, it became apparent that sprites like 0863 (ghost) show up with wrong colors. Investigating why an incorrect color palette is selected leads to discovering that CRA5, CRA7 outputs from 8U page 15 are stuck low because they were left unconnected and were not baing driven. After connecting them to the appropriate drivers the colors now look correct. Below left is what it looked like before, right is what it looks like after the fix.  
+[![Color Trouble](doc/images/SIM16.png)](doc/images/SIM16.png)  
 
 ### Debugging Motion Objects Overlap
-Problem with sprite overlay, when sprites (like the ghosts) are overlapping, some minor corruption is visible, for example the shadow of the top ghost's arm is not obscuring the ghost underneath. Suspecting GPC (Graphic Priority Control) problem.
+Problem with sprite overlap, when sprites (like the ghosts) are overlapping, some minor corruption is visible, for example the shadow of the top ghost's arm is not obscuring the ghost underneath. Suspecting GPC (Graphic Priority Control) problem.  
 
 Left: how it looks, Right: how it should look.  
-[![Sprite Overlap](doc/images/17.png)](doc/images/17.png)
+[![Sprite Overlap](doc/images/SIM17.png)](doc/images/SIM17.png)
+
+In other places there is visible corruption where extra pixels appear.  
+[![Sprite Corrupt](doc/images/SIM20.png)](doc/images/SIM20.png)  
+
+As opposed to how it look sin MAME  
+[![Sprite Correct](doc/images/MAME01.png)](doc/images/MAME01.png)  
 
 Sprite tuples for two ghosts to replicate issue  
 GH1  GH2  
@@ -234,8 +240,6 @@ GH1  GH2
 0202 0002  
 F392 F392  
 0001 0000  
-
-In ISIM place value on bus\_vbd, pulse i\_hs, see debug commands below.
 
 At time offset 1918235ns line 7 of ghost sprite  
 <pre>
@@ -251,6 +255,7 @@ CRAM address comes from 12M GPC Graphic Priority Control output. This is not a `
 Exclude PF without recompiling simulation with following command:  
 isim force add {/tb\_fpga\_gauntlet/uut/gauntlet\_inst/video\_inst/p\_12M/i\_p} 80 -radix hex  
 
+<pre>
 MPX to IRGB Sprite value mapping  
  D7 -> 8FFF Ghost arm light gray  
  D8 -> 6FFF Ghost arm medium gray  
@@ -258,8 +263,9 @@ MPX to IRGB Sprite value mapping
  DA -> 5EEF Ghost arm darker gray  
  DE -> 8C63 Ghost shadow brown  
  FF ->      Seethrough  
+</pre>
 
-MOSR bus input to MOHLB for ghost sprite, top 4 bits are D (1101) and select the palette, bottom 4 bits select the sprite color within the selected palette. If you squint you can almost see the ghost pattern in the data below  
+MOSR bus input to MOHLB for ghost sprite, FF means transparent otherwise top 4 bits are D (1101) and select the palette, bottom 4 bits select the sprite color within the selected palette. Squinting, you can almost see the ghost pattern in the data below  
 <pre>
 FF FF FF FF DE FF FF FF FF FF FF FF FF FF FF FF FF FF FF DE FF FF FF FF  
 FF FF FF DE DE FF FF FF FF FF FF FF FF FF FF FF FF FF FF DE DE FF FF FF  
@@ -290,7 +296,7 @@ FF FF FF FF FF FF FF FF D8 D9 FF FF FF FF FF FF FF FF FF FF FF FF FF FF
 Since MPX output of MO Horizontal Line Buffer is not as expected, problem may be with MOHLB.  
 
 Simplistic way of how MOHLB works:  
-There are two 512B RAMs that alternately buffer a single video line of sprites. Focusing on just one of those buffers, if two sprites overlap, the sprite data is written to the buffer starting with the lower sprite, then the next sprite that should cover the lower sprite, etc. If the current value of the sprite is visible (not FF) then it overwrites the memory location (covers the pixel of the sprite below) but if the current value of the sprite is transparent (FF), then it is not written to RAM so the pixel of the sprite below remains and shows through.
+There are two 512B RAMs that alternately buffer a **single video line** of sprites. Focusing on just one of those buffers, if two sprites overlap, the first sprite in the linked list is written to the buffer, then the next sprite in the linked list is written to the buffer, etc. If the sprites overlap and the current value of the sprite is visible (not FF) then it overwrites the memory location (covers the pixel of the sprite below) but if the current value of the sprite is transparent (FF), then it is not written to RAM so the pixel of the sprite below remains unchanged and shows through.
 
 <pre>
 Higher Sprite Data (new data to RAM)    : D7 D9 FF DE DE DE DE FF FF FF DE DE DE DE DE FF D7 DA DE DE DE FF FF FF FF  
@@ -299,10 +305,10 @@ Expected RAM Data                       : D7 D9 FF DE DE DE DE DE DE DE DE DE DE
 Observed RAM Data                       : D7 D9 FF DE D7 D9 DE DE DE DE DE DE DE DE DE DE D7 DA DE DE DE DA DE DE DE  
 </pre>
 
-It seems the `MOHLB` woks as expected, but the data presented to it is causing it to incorrectly overwrite earlier buffered data when it shouldn't. This may be a side effect of forcing sprites to appear on screen by loading sprite offset 0 with sprite data. Possibly a side effect of the issue below.  
+It seems the `MOHLB` woks as designed, but the data presented to it is causing it to incorrectly overwrite earlier buffered data when it shouldn't. This feels like it's a side effect of forcing sprites to appear on screen by loading sprite offset 0 with sprite data. Possibly a side effect of the issue below so putting this on ice for now until problem below is resolved.  
 
 ### Debugging Motion Objects LINK register
-Sprites only show when sprite LINK value at offset 0 (memory 903800) points to a valid sprite, otherwise no sprites show at all.
+Sprites only show when sprite LINK value at offset 0 (memory 903800) points to a valid sprite, otherwise no sprites show at all.  
 
 Visible sprites at game start:  
 <pre>
@@ -317,28 +323,67 @@ Sprite bits 14..0     Palette 3..0     YTiles 2..0      Link 9..0 (offset x2 + 9
 Must latch in         Must latch in    Must latch in    Must latch in
 3C3K on rising        4N 3N on rising  5C 5K on rising  8F 8J on rising
 PICTDL                HORZDL           VERTDL           /LINK  
-The latch signals come from MC1, MC0 decoded by 1:4 active low selector 8T
+
+The latch signals come from MC1, MC0 decoded by 1:4 active low selector 8T. MC1, MC0 are generated by 1H, 2H, 4H, MATCH  
 3 /LINK
 2 VERTDL
 1 HORZDL
-0 PICTDL  
-MC1, MC0 are generated by 1H, 2H, 4H, MATCH  
-VAS_star
-3 CPU
-2 AL
-1 MO
-0 PF
+0 PICTDL
 </pre>
 
+The problem as observed from simulation is this:  
+If the word at 903800 contains 0400 (as per MAME simulation of game), the LINK register is loaded with the bottom 10 bits (all zero) from that memory location and therefore when it is used as a pointer into the MO VRAM, it points to offset 0 (memory 903800) so it is loaded again with zero and so on, so the LINK register is always zeroed and never finds any sprites to display.
 
-The problem as observed from simulation is this:
-If the word at 903800 contains 0400 (as per MAME simulation of game), the LINK register is loaded with the bottom 10 bits (all zero) and therefore when it is used as a pointer into the MO VRAM, it points to offset 0 (memory 903800) so it is loaded again with zero and so on. So the LINK register is always zeroed and never finds any sprites.
+If however as a test, the word at memory location 903800 is initialized with a value that points to an actual sprite's offset, then that value is loaded into the LINK register and the LINK register is used as an index into the MO VRAM LINK area to retrieve the next word which is used as an index to the next sprite and so on. ISE simulator confirms this, by loading the VRAM with an exact dump of the memory from MAME, then changing location 903800 from 0400 to 0046 (so it points to the first sprite offset) then the simulation indeed proceeds to display all sprites on the screen as expected. Note that this is a hack to force the display of sprites and not normal game behaviour.
 
-If however we initialize word at 903800 with a value that points to an actual sprite's offset, then that value is loaded into the LINK register, then the LINK register is used as an index into the MO VRAM LINK area to retrieve the next word which is used as an index and so on.
+To further examine the VRAM addressing, a dump of the VRD bus is sent to a log file together with the address accessed. Analysis of the log shows that at video frame 1, line 1 time offset 574515ns the screen vertical offset appears on the bus (905F6E=0080) and in the simulator it is verified that it is indeed loaded into counters `5J`, `5F`, `4F` as expected.  
 
-As a test, in ISE simulator, we load VRAM with an exact dump of the memory from MAME, then we change location 903800 from 0400 to 0046 (so it points to the first sprite offset) then the simulation indeed proceeds to display all sprites on the screen as expected.
+A little later at 576755ns memory location 905F80 is accessed. From experiments with MAME it is apparent that during game play the memory region 905F80 onwards stores sprite index values for sprites that should appear on the screen and this is where the LINK register should be loaded from initially. Further in the log, address 905F80 appears on the `VRD bus ànd has value 0046 which is the value of the index to the first valid sprite but instead of being loaded into the `LINK` register `8F`, `8J` on the rising edge of the master clock when `/LINK` is low, the simulator shows that the enable signal `/LINK` goes low just as the master clock rises, and therefore misses loading the value on the VRD bus into the LINK register. By the time the master clock rises again, the `VRD` bus has changed value. There are two possibilities, either the VRD bus is early and should be delayed or the `/LINK` signal is late and should arrive about a half a master clock earlier.  
 
-**Find out how LINK register is supposed to work.**
+The `/LINK` signal is generated by chip `8T` when both `MC1` `MC0` are high and gate signal is low. All those signals come from register `6U` which registers them on the rising master clock. Before reaching `6U` the signals come from the outputs of GAL `7U` which is not clocked.  
+
+Further experiments in ISIM indicate that forcibly initializing the `LINK` register to 046 at the start of each horizontal line, makes the sprites appear as expected. The LINK register must be initialized not earlier than H counter = 004 and possibly as late as H counter = 1A0. Initializing LINK earlier than 004 does not display all sprites (skips the first sprite in linked list) and initializing `LINK` as late as 1A0 makes the leftmost sprites on screen appear but leaves no time for the rightmost sprites to be displayed. Once `LINK` is initialized with 046 it follows through the sprite link list from index to index until it reaches index 0 and remains there (since the game does not place sprites at index 0 and its link index points to back to itself = 0 ).  
+
+During the game's initial startup screen, sprites should be visible during lines 42-62 (3187125 ns), 103-126 (7081365 ns) and 138-157 (9315765 ns)  
+
+Gut feel at this stage is that everything works as designed and the fault may be due to `SYNGEN`. The Sync Generator custom chip is based on the discrete chip implementation from schematic SP-277 for Atari System I. The GAL chips `136032.102.e5` and `136032.103.f7` may contain equations that while suitable for System I, may have been changed or tweaked in the `SYNGEN` for Gauntlet.
+
+Further analysing the schametic and trying to understand how sprites function, of particular note is signal `/NXL` generated by `SYNGEN`. This signal comes from GAL `136032.103.f7` which monitors the H horizontal counters and resets them when a particular count is reached, therefore when `/NXL` pulses low, it resets the H counters to zero (start of new horizontal video line). It is not totally clear how the signals `/NXL` and `/NXL*` from schematic `SP-277` correspond with Gauntlet schema `SP-284` in regards to how many master clock cycles one is delayed with respect to the other.  
+
+Furthermore on sheet 9 of Gauntlet schema, the address selector chip `7S` has a direct override controlled by `/NXL` which causes the `VAS1` line to go low when `/NXL` is pulsed low once at the start of each horizontal line.  
+
+<pre>
+VRAM addressing
+
+VAS1* VAS0* VRAM_ADDR
+ 0     0    PF 900000-901FFF
+ 0     1    MO 902000-903FFF
+ 1     0    AL 904000-905FFF
+ 1     1    - No VRAM selected
+
+VAS1 VAS0 VRAM_ADDR_BUS
+ 0    0   from PF V and H counters
+ 0    1   from MC1/MC0 and LINK register 
+ 1    0   from V and H counters
+ 1    1   from CPU address bus
+</pre>
+
+Since `VAS1` and `VAS0` directly control which one of four buses is selected to make up the video RAM address lines, this seems like a very good candidate to force a particular address on the `VRAM` bus to cause `LINK` register initialization. Of note is that a delayed and inverted version of `/NXL` disables the address selector that controls the top 6 bits of of the `VRAM` address allowing the pullups to pull high forcing a particular range of addresses for one master clock cycle.  
+
+So when `/NXL` is low it forces `VAS1` to be low, limiting the `VRAM` address selection to only two out of the four available busses. `VAS0` is then used to select one of those two buses. `VAS0` comes directly from `VAS0*` delayed one master clock and `VAS0*` is created from `1H`, `2H`, `4H` and `/NXL` by GAL `7U`, but we see from the equations of `7U` GAL that one of the terms is "`/NXL` and `1H`", but because `/NXL` is always low when `1H` is low (they are in sync) then `/NXL` has no chance of affecting `1H`. This doesn't seem correct and in fact point to the root cause of this entire sprite problem. The `/NXL` signal is delayed one master clock cycle inside `SYNGEN` before it comes out, then delayed again by the `5T` register. This turns out is one delay too many and by eliminating the delay inside `SYNGEN` the portion of the `/NXL` low signal lines up with the part where `1H` is high, so essentially `/NXL` can now cause `1H` to skip a pulse and influence the output `VAS0*` which direclty affects the VRAM address selection.
+
+ISIM testing now shows that removing the `/NXL` delay inside `SYNGEN` makes the sprites appear without having to force `LINK` register loading!!! So as suspected timing of the `/NXL` signal was at the root of the problem.
+
+Below is the initial screen at game startup from simulation. The reason the playfield on the left hand side looks a little different from MAME is because I forgot to initialize the playfield horizontal scroll register to 005 as MAME does, the the playfield is scrolled right 5 pixels compared to the MAME reference picture.
+[![Simulation screen 1](doc/images/SIM21.png)](doc/images/SIM21.png)  
+Same screen from MAME for reference.  
+[![Reference screen 1](doc/images/MAME21.png)](doc/images/MAME21.png)  
+
+Another simulation of a later game screen with lots of sprites visible.  
+[![Simulation screen 2](doc/images/SIM22.png)](doc/images/SIM22.png)  
+
+Compared to the same MAME screen for reference.  
+[![Reference screen 2](doc/images/MAME21.png)](doc/images/MAME21.png)  
 
 ## Debugging Commands
 
@@ -375,38 +420,4 @@ Flow of data with no CPU active should be
               +---[VS1* VS0* selectors from 7U PROM]
 </pre>
 
-There are four cycles counted by `VS1*`, `VS0*` which select RAMs  
-
-- 0 = PF
-- 1 = MO
-- 2 = AL
-- 3 = CPU  
-
 When no RAMs are selected the bus `VRD` floats  
-
-Bus `VRD` can be driven by:  
-		CPU via `9E`-`10E` into `VBD` when `BW//R` is 1 and `VBUS` is 0 then `VBUS` into `VRD` via `10F`, `9F` when `/VRAMWE` is 0  
-		RAMs when any of them is selected via a `/MOHI` `/MOLO` `/ALHI` `/ALLO` `/PFHI` `/PFLO` low signal and `/VRAMWE` is 1  
-
-`VRD` drives  
-		`VBD` via `10J` `9J` when `/VRAM` is 0 and `BW//R` is 0  
-		RAMs when any of them is selected via a `/MOHI` `/MOLO` `/ALHI` `/ALLO` `/PFHI` `/PFLO` low signal and `/VRAMWE` is 0  
-
-`/VBUS` active enables one of `/VRAM` `/CRAM` `/HSCRLD` based on `A17` `A16`
-
-
-Minimum VRAM contents to display one sprite  
-900000-905FFF zeroed out then  
-w@90208C=097E  
-w@90288C=2E01  
-w@90308C=E812  
-w@90388C=AC00  
-
-w@905F8A=0046  
-w@905F88=0046  
-w@905F86=0046  
-
-910000-9107FF zeroed out then:  
-Color palette loaded at 910220-91023F  
-
-To Be Continued

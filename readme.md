@@ -6,7 +6,7 @@
 These are the early stages of an attempt at an FPGA implementation of Atari's arcade game "Gauntlet" from 1985, based on the SP-284 schematic circuit diagram.
 
 [![Gauntlet Tile](doc/images/MAME00.png)](doc/images/MAME00.png)
-[![Gauntlet Play](doc/images/MAME03.png)](doc/images/MAME03.png)
+[![Gauntlet Play](doc/images/MAME01.png)](doc/images/MAME01.png)
 
 There is no code published yet as this is in a non functional "work in progress" state at this time.
 
@@ -231,7 +231,7 @@ Left: how it looks, Right: how it should look.
 In other places there is visible corruption where extra pixels appear.  
 [![Sprite Corrupt](doc/images/SIM20.png)](doc/images/SIM20.png)  
 
-As opposed to how it look sin MAME  
+As opposed to how it looks in MAME  
 [![Sprite Correct](doc/images/MAME01.png)](doc/images/MAME01.png)  
 
 Sprite tuples for two ghosts to replicate issue  

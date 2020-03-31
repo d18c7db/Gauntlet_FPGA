@@ -11,7 +11,7 @@ These are the early stages of an attempt at an FPGA implementation of Atari's ar
 There is no code published yet as this is in a non functional "work in progress" state at this time.
 
 ## Hardware
-None yet, this is purely at the simulation stage using Xilinx ISIM. All screen shots are generated from test bench output of what the video signal would look like if it was displayed on a monitor. The testbench dumps the output video values for each frame in a .ppm (portable pixmap) text file which can then be directly viewed by a suitable viewer (eg FastStone Image Viewer). The .ppm file format consists of one line with the pixmap magic value P3, next line is the X and Y resolution and max number of colors, followed by hopefully at least X*Y lines of RGB color triplets like so:  
+Initially all screen shots here were generated from test bench output of what the video signal would look like if it was displayed on a monitor. The testbench dumps the output video values for each frame in a .ppm (portable pixmap) text file which can then be directly viewed by a suitable viewer (eg FastStone Image Viewer). The .ppm file format consists of one line with the pixmap magic value P3, next line is the X and Y resolution and max number of colors, followed by hopefully at least X*Y lines of RGB color triplets like so:  
 
 <pre>
 P3
@@ -23,7 +23,9 @@ P3
 10  9 15
 ...  
 </pre>
-Currently only the Video section of the arcade game is being implemented and debugged (sheets 8 though 16 in the schematic). Because there is no CPU to run the game, for simulation purposes the video RAMs are initialized with data dumped from MAME so as to produce the relevant game screens.
+To start with, the Video section of the arcade game was implemented and debugged (sheets 8 though 16 in the schematic). Because there was no CPU to run the game, for simulation purposes the video RAMs are initialized with data dumped from MAME so as to produce the relevant game screens.
+
+Progress has been made and the game has been successfully run on a Pipistrello FPGA board with a custom add-on board which has a 2Mx16 SRAM chip rated at 10ns access time. This is needed because there is no space inside the FPGA to store all the game ROMs.
 
 ## Platform Information
 
@@ -151,17 +153,6 @@ The top right corner under the Gauntlet logo, where the first text line should r
 
 Pixel data goes to GPC `APIX1`, `APIX0` from shifters `7P`, `7N` fed by `ROM 6P` driven by `VRD` bus through latches `4P`, `7R` on `4H` rising clock. `ROM 6P` address is `VRD9..0` registered, plus unregistered signals `4V`, `2V`, `1V`, `/4H`, address changes every 4 cycles.
 
-<pre>
-start of line 48 at 3570us  
-258x48 at 3612.935 addr is L=[04C0, 04C1], E=[450, 451], V=[560, 561], E=[0450, 0451], L=[04C0, 04C1]...  
-258x49 at 3676.775 addr  
-258x50 at 3740.615 addr  
-258x51 at 3804.455 addr  
-258x52 at 3868.295 addr  
-258x53 at 3932.135 addr  
-258x54 at 3995.975 addr  
-258x50 at 4059.815 addr  
-</pre>
 Turns out `4V`, `2V`, `1V` were not being driven so `ROM 6P` was not being addressed properly and was not outputting enough new data to form proper characters. Connecting the additional signals properly produces a much more recognizable picture:  
 [![Alphanumerics fixed](doc/images/SIM03.png)](doc/images/SIM03.png)
 
@@ -240,16 +231,6 @@ GH1  GH2
 F392 F392  
 0001 0000  
 
-At time offset 1918235ns line 7 of ghost sprite  
-<pre>
-Observed  
-CRAM ADDR   0298 0298 0298 0298 0128 0126 0298 0218 0128 0126 0218 0218 0218 0218 0218 0218 0218 0218 0218 0218 0128 0125 0218 0218 0218 0125 0218 0218 0218 0298...  
-CRAM DATA   FC63 FC63 FC63 FC63 8FFF 6FFF FC63 8C63 8FFF 6FFF 8C63 8C63 8C63 8C63 8C63 8C63 8C63 8C63 8C63 8C63 8FFF 5EEF 8C63 8C63 8C63 5EEF 8C63 8C63 8C63 FC63...  
-MOHLB MPX     FF   FF   FF   FF   D7   D9   FF   DE   D7   D9   DE   DE   DE   DE   DE   DE   DE   DE   DE   DE   D7   DA   DE   DE   DE   DA   DE   DE   DE   FF  
-            ------01-----> <---------------------------05----------------------------> <-------------------------------------01------------------------------------  
-Expected  
-MOHLB MPX     FF   FF   FF   FF   D7   D9   FF   DE   DE   DE   DE   DE   DE   DE   DE   DE   DE   DE   DE   DE   D7   DA   DE   DE   DE   DA   DE   DE   DE   FF  
-</pre>
 CRAM address comes from 12M GPC Graphic Priority Control output. This is not a `GPC` problem, need to check `MOHLB`  
 Exclude PF without recompiling simulation with following command:  
 isim force add {/tb\_fpga\_gauntlet/uut/gauntlet\_inst/video\_inst/p\_12M/i\_p} 80 -radix hex  
@@ -304,7 +285,7 @@ Expected RAM Data                       : D7 D9 FF DE DE DE DE DE DE DE DE DE DE
 Observed RAM Data                       : D7 D9 FF DE D7 D9 DE DE DE DE DE DE DE DE DE DE D7 DA DE DE DE DA DE DE DE  
 </pre>
 
-It seems the `MOHLB` woks as designed, but the data presented to it is causing it to incorrectly overwrite earlier buffered data when it shouldn't. This feels like it's a side effect of forcing sprites to appear on screen by loading sprite offset 0 with sprite data. Possibly a side effect of the issue below so putting this on ice for now until problem below is resolved.  
+It seems the `MOHLB` works as designed, but the data presented to it is causing it to incorrectly overwrite earlier buffered data when it shouldn't. This feels like it's a side effect of forcing sprites to appear on screen by loading sprite offset 0 with sprite data. Possibly a side effect of the issue below so putting this on ice for now until problem below is resolved.  
 
 ### Debugging Motion Objects LINK register
 Sprites only show when sprite LINK value at offset 0 (memory 903800) points to a valid sprite, otherwise no sprites show at all.  
@@ -347,7 +328,7 @@ During the game's initial startup screen, sprites should be visible during lines
 
 Gut feel at this stage is that everything works as designed and the fault may be due to `SYNGEN`. The Sync Generator custom chip is based on the discrete chip implementation from schematic SP-277 for Atari System I. The GAL chips `136032.102.e5` and `136032.103.f7` may contain equations that while suitable for System I, may have been changed or tweaked in the `SYNGEN` for Gauntlet.
 
-Further analysing the schametic and trying to understand how sprites function, of particular note is signal `/NXL` generated by `SYNGEN`. This signal comes from GAL `136032.103.f7` which monitors the H horizontal counters and resets them when a particular count is reached, therefore when `/NXL` pulses low, it resets the H counters to zero (start of new horizontal video line). It is not totally clear how the signals `/NXL` and `/NXL*` from schematic `SP-277` correspond with Gauntlet schema `SP-284` in regards to how many master clock cycles one is delayed with respect to the other.  
+Further analysing the schematic and trying to understand how sprites function, of particular note is signal `/NXL` generated by `SYNGEN`. This signal comes from GAL `136032.103.f7` which monitors the H horizontal counters and resets them when a particular count is reached, therefore when `/NXL` pulses low, it resets the H counters to zero (start of new horizontal video line). It is not totally clear how the signals `/NXL` and `/NXL*` from schematic `SP-277` correspond with Gauntlet schema `SP-284` in regards to how many master clock cycles one is delayed with respect to the other.  
 
 Furthermore on sheet 9 of Gauntlet schema, the address selector chip `7S` has a direct override controlled by `/NXL` which causes the `VAS1` line to go low when `/NXL` is pulsed low once at the start of each horizontal line.  
 
@@ -386,12 +367,12 @@ Compared to the same MAME screen for reference.
 
 ## Debugging Commands
 
-In MAME debug mode use ***w@930000=0005*** to write new horizontal scroll offsets, or ***w@930000=00BC*** for vertical scroll offsets
+In MAME debug mode use ***w@930000=0005*** to write new horizontal scroll offsets, or ***w@905F6E=00CB*** for vertical scroll offsets
 
-In ISIM to write to 930000 we can place a value on `VBD` then pulse `/HSCRLD` with the following commands. This could also be done in a testbench but then we have to relaunch (recompile) the simulation every time we try a new value.
+In ISIM to write to 930000 without recompiling simulation we can place a value on `VBD` then pulse `/HSCRLD` with the following commands. .
 
 **restart;  
-isim force add {/tb\_fpga\_gauntlet/uut/gauntlet\_inst/video\_inst/bus\_VBD} BC -radix hex -time 3 us -cancel 5 us;  
+isim force add {/tb\_fpga\_gauntlet/uut/gauntlet\_inst/video\_inst/bus\_VBD} CB -radix hex -time 3 us -cancel 5 us;  
 isim force add {/tb\_fpga\_gauntlet/uut/gauntlet\_inst/video\_inst/s\_HSCRLDn} 0 -radix bin -time 3 us -cancel 4 us;  
 run 18ms;**  
 
@@ -420,3 +401,147 @@ Flow of data with no CPU active should be
 </pre>
 
 When no RAMs are selected the bus `VRD` floats  
+
+## Sound Section
+    ========================================================================
+    SOUND CPU
+    ========================================================================
+    0000-0FFF   R/W   xxxxxxxx   Program RAM
+    4000-FFFF   R     xxxxxxxx   Program ROM
+
+    1000          W   xxxxxxxx   Sound response write
+    1010        R     xxxxxxxx   Sound command read
+    1020        R     ----xxxx   Coin inputs
+                R     ----x---      (Coin 1)
+                R     -----x--      (Coin 2)
+                R     ------x-      (Coin 3)
+                R     -------x      (Coin 4)
+    1020          W   xxxxxxxx   Mixer control
+                  W   xxx-----      (TMS5220 volume)
+                  W   ---xx---      (POKEY volume)
+                  W   -----xxx      (YM2151 volume)
+    1030        R     xxxx----   Sound status read
+                R     x-------      (Sound command buffer full)
+                R     -x------      (Sound response buffer full)
+                R     --x-----      (TMS5220 ready)
+                R     ---x----      (Self test)
+
+    1030          W   x-------   YM2151 reset
+    1031          W   x-------   TMS5220 data strobe
+    1032          W   x-------   TMS5220 reset
+    1033          W   x-------   TMS5220 frequency
+    1800-180F   R/W   xxxxxxxx   POKEY communications
+    1810-1811   R/W   xxxxxxxx   YM2151 communications
+    1820          W   xxxxxxxx   TMS5220 data latch
+    1830        R/W   --------   IRQ acknowledge
+    ========================================================================
+    Interrupts:
+        IRQ = timed interrupt
+        NMI = latch on sound command
+    ========================================================================
+
+List of sounds:
+0 Reset all sounds
+1 Silent (Volume off)
+2 Noisy (Volume on)
+3 Silences sounds
+4 Music Chip Test (YM)
+5 Effects Chip Test (Pokey)
+6 Silences sounds
+7 Silences sounds
+8 Speech Chip Test (TMS)
+
+YM sounds
+	09-65 Misc Effects
+	47/48 start/stop alarm sound
+	49/50 start/stop alarm sound
+	51/52 start/stop alarm sound
+	53/54 start/stop alarm sound
+	66/67 start/stop long music
+	68-71 long music different tempos
+	72 fade out music 68-71
+	73 melody
+Pokey sounds
+	74-80 effects
+TMS sounds
+	81-220 Speech Sounds
+
+221 pokey vol off
+222 pokey vol low
+223 pokey vol med
+224 pokey vol high
+225
+
+Set DIP switch to service mode and advance to sound test, then from MAINCPU, write sound command as
+w@803170=51
+
+From MAINCPU, sound CPU reset should be
+w@80312E=1
+w@80312E=0
+
+breakpoint 5787 reads 1010, x contains the sound to play
+
+
+When AUDIOCPU is unused and it is reset then 1030=00 so from reset address 599e the condition doesn't match and CPU is stuck in infinite loop at 59A5
+When AUDIOCPU is used it is reset then 1030=80 so from reset address 599e the condition matches and it jumps to 4002, where it initializes stack and continues running
+
+IRQ FFFE 4187
+RST FFFC 599E
+NMI FFFA 5729
+
+bp 4187,1,{printf "IRQ"; g}
+bp 599E,1,{printf "RST"; g}
+bp 5729,1,{printf "NMI"; g}
+bp 578a,1,{printf "X=%x",X; g}
+
+Skip RAM and ROM checks, jmp 40a3
+audiocpu.md@402c=ea40a34c
+
+breakpoint after NMI on read of snd command
+bp 578a
+watchpoint on YM access
+wps 1810,2,rw,1,{printf "%X %X",wpaddr,wpdata; g}
+
+NMI disable
+audiocpu.mb@fffa=9c
+
+SYNGEN 7M16 in , H1 = 3M58 H2=1M78
+IRQ 17.15ms
+
+## Main CPU Section
+After an 8 month break from this project, spring, summer and autumn has come and gone, it is now cold and dark, time to get some work done :) Used the TG68K softcore from MiSTer as the base for the main CPU core. Initial problem was that the softcore doesn't match the pins of the real 68K CPU, for example `/AS` is completely missing and also the timing of the `R/W` and `/UDS`, `/LDS` signals coming out of the softcore is very wide so the whole timing doesn't match a real 68K bus access. After some research, the way others deal with that is to implement a wrapper around the softcore with a state machine to create or activate the signals in such a way that it more closely resembles a 68K in timing.
+
+With a first draft wrapper, initial success was observed in simulation as the CPU comes out of reset, fetches `SP` from address 000000 and `PC` from address 000004 then continues execution. Additinally success is observed jumping into and returning from subroutines, meaning the correct data is pushed into and popped off the stack (RAM). Also interrupts work as expected which should not be surprising since the stack is functional.
+
+### Memory.. unused
+An interesting observation, even though the schematic sheet 3 shows RAMs attached to the CPU at address 800000, they do not appear to be used. Instead the stack is initialized with 904F00 which falls in the `SPARE` video memory area which seems to be used as the CPU RAM. Tracking down a picture of a Gauntlet board, it shows places 11A, 11B, 12A, 12B fitted with empty sockets.
+
+### CPU simulation
+Observations from MAME indicate that on game powerup it is not until frame 77 that a picture starts to appear. This is far too long to simulate as it takes about 90 seconds per frame to simulate. Poking around MAME debugger it seems a good starting point is address 040000, which produces a stable game with first video picture appearing at frame 35, a saving of 42 frames (1 hour of simulation).
+
+This is an animation of the first 2 seconds (120 frames) produced by running the simulation in ISIM for about 3 hours.
+[![Game startup simulation](doc/images/gauntlet_anim1.gif)](doc/images/gauntlet_anim1.gif) 
+
+### What memory test?
+Poking around in the debugger I discovered a bug in the original game ROMs. At game power on, as well as performing ROM checksums to ensure that the ROMs are valid, the game also performs a RAM "test", or at least it tries to.
+
+At address 0636 is the start of a number of calls to subroutine 0A2C which is called with registers A1 and A2 initialized to the following memory ranges: 
+<pre>
+904000-904FFE Spare video RAM
+910000-9107FE Palette RAM
+900000-901FFE Playfield RAM
+905000-905FFE Alphanumerics RAM
+902000-903FFE Motion object RAM
+</pre>
+
+The idea is that the subroutine at 0A2C will go through every memory word in the range and fill the word first with 1's (8000, C000, E000, ..., FFFC, FFFE, FFFF) then with 0's (FFFF, 7FFF, 3FFF, ..., 0003, 0001, 0000) comparing that the data read from RAM is as expected.
+
+The problem is that in the loop that compares the current address in A1 with the end address in A2, someone inserted a write to address 803100 (watchdog reset), so this messes up the carry flag and the branch back to 0B04 is never taken.
+
+<pre>
+000B1C: B1CA           cmpa.l  A2, A0
+000B1E: 33C0 0080 3100 move.w  D0, $803100.l
+000B24: 65DE           bcs     $b04
+</pre>
+
+This means that only the first word in each memory region is tested before the loop falls through. If you were to swap around the instructions at 0B1C and 0B1E the bug would be fixed and the entire RAM range would be tested.

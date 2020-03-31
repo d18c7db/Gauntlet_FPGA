@@ -3,12 +3,13 @@
 # Atari Gauntlet FPGA Arcade
 
 ## About
-These are the early stages of an attempt at an FPGA implementation of Atari's arcade game "Gauntlet" from 1985, based on the SP-284 schematic circuit diagram.
+This is an attempt at an FPGA implementation of Atari's arcade game "Gauntlet" from 1985, based on the SP-284 schematic circuit diagram.
 
 [![Gauntlet Tile](doc/images/MAME00.png)](doc/images/MAME00.png)
 [![Gauntlet Play](doc/images/MAME01.png)](doc/images/MAME01.png)
 
-There is no code published yet as this is in a non functional "work in progress" state at this time.
+Code will be published soon when the last few bugs have been sorted out. For now here is a video of the current progress:..
+[![Gauntlet running on FPGA](https://img.youtube.com/vi/7A2k7wLUSUU/0.jpg)](https://www.youtube.com/watch?v=7A2k7wLUSUU)
 
 ## Hardware
 Initially all screen shots here were generated from test bench output of what the video signal would look like if it was displayed on a monitor. The testbench dumps the output video values for each frame in a .ppm (portable pixmap) text file which can then be directly viewed by a suitable viewer (eg FastStone Image Viewer). The .ppm file format consists of one line with the pixmap magic value P3, next line is the X and Y resolution and max number of colors, followed by hopefully at least X*Y lines of RGB color triplets like so:  

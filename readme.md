@@ -8,7 +8,7 @@ This is an attempt at an FPGA implementation of Atari's arcade game "Gauntlet" f
 [![Gauntlet Tile](doc/images/MAME00.png)](doc/images/MAME00.png)
 [![Gauntlet Play](doc/images/MAME01.png)](doc/images/MAME01.png)
 
-Code will be published soon when the last few bugs have been sorted out. For now here is a video of the current progress:..
+Code will be published soon when the last few bugs have been sorted out. For now here is a video of the current progress:  
 [![Gauntlet running on FPGA](https://img.youtube.com/vi/7A2k7wLUSUU/0.jpg)](https://www.youtube.com/watch?v=7A2k7wLUSUU)
 
 ## Hardware
@@ -404,6 +404,7 @@ Flow of data with no CPU active should be
 When no RAMs are selected the bus `VRD` floats  
 
 ## Sound Section
+<pre>
     ========================================================================
     SOUND CPU
     ========================================================================
@@ -440,7 +441,9 @@ When no RAMs are selected the bus `VRD` floats
         IRQ = timed interrupt
         NMI = latch on sound command
     ========================================================================
+</pre>
 
+<pre>
 List of sounds:
 0 Reset all sounds
 1 Silent (Volume off)
@@ -472,6 +475,7 @@ TMS sounds
 223 pokey vol med
 224 pokey vol high
 225
+</pre>
 
 Set DIP switch to service mode and advance to sound test, then from MAINCPU, write sound command as
 w@803170=51

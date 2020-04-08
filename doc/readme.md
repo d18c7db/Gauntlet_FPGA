@@ -135,8 +135,8 @@ From simulation, this memory range is scanned during each horizontal line, data 
 
 ## It's Alive!!!
 After the initial translation of the schematic to RTL, the simulation produces the frame of video on the left but it's not the expected output as can be seen on the right from MAME:  
-[![Frame from Simulation](doc/images/SIM00.png)](doc/images/SIM00.png) 
-[![Frame from MAME](doc/images/MAME02.png)](doc/images/MAME02.png)
+[![Frame from Simulation](images/SIM00.png)](images/SIM00.png) 
+[![Frame from MAME](images/MAME02.png)](images/MAME02.png)
 
 ### Debugging the alphanumerics:
 The top right corner under the Gauntlet logo, where the first text line should read "LEVEL   1", the L begins to be drawn but instead of drawing an L shape the display shows the 2 pixels of the top of the L replicated for all 8 lines after. All text characters exhibit this same behaviour.
@@ -144,28 +144,28 @@ The top right corner under the Gauntlet logo, where the first text line should r
 Pixel data goes to GPC `APIX1`, `APIX0` from shifters `7P`, `7N` fed by `ROM 6P` driven by `VRD` bus through latches `4P`, `7R` on `4H` rising clock. `ROM 6P` address is `VRD9..0` registered, plus unregistered signals `4V`, `2V`, `1V`, `/4H`, address changes every 4 cycles.
 
 Turns out `4V`, `2V`, `1V` were not being driven so `ROM 6P` was not being addressed properly and was not outputting enough new data to form proper characters. Connecting the additional signals properly produces a much more recognizable picture:  
-[![Alphanumerics fixed](doc/images/SIM03.png)](doc/images/SIM03.png)
+[![Alphanumerics fixed](images/SIM03.png)](images/SIM03.png)
 
 Additionally GPC `I_D` bus connect order was wrong, so the colors were also reversed. Fixing that shows colors in the correct order:  
-[![Alphanumeric colors fixed](doc/images/SIM04.png)](doc/images/SIM04.png)
+[![Alphanumeric colors fixed](images/SIM04.png)](images/SIM04.png)
 
 ### Playfield debugging
 The playfield shows pink stripes instead of the expected maze. Forcing the AL ROMs to return zero, makes the text on the right of the screen disappear. This reveals additional playfield that would normally be hidden under the text. Since AL was fixed earlier, the AL ROMs will be left disabled while troubleshooting the PF issue.
 
 Adding debug code to the simulator to dump selected busses to a log file and debugging the GP bus address (ROM addresses), data out of ROMs and into SLAGS, reveals several mistakes such as unconnected signals, SLAGS selectors S0 S1 to the shifters were reversed, etc, so progressively the playfield becomes more and more visible.  
-[![Pink Stripes](doc/images/SIM10.png)](doc/images/SIM10.png)  
-[![More Stripes](doc/images/SIM11.png)](doc/images/SIM11.png)  
-[![Flipped blocks](doc/images/SIM12.png)](doc/images/SIM12.png)  
+[![Pink Stripes](images/SIM10.png)](images/SIM10.png)  
+[![More Stripes](images/SIM11.png)](images/SIM11.png)  
+[![Flipped blocks](images/SIM12.png)](images/SIM12.png)  
 
 The raw data from the correctly functioning SLAGS can be seen below. This is an example of what the `SLAGS` `MO` shifter output dumped into a .ppm file looks like before it is turned into an index into the color palette.
-[![SLAGS MO output](doc/images/SLAGS_MO.png)](doc/images/SLAGS_MO.png)  
+[![SLAGS MO output](images/SLAGS_MO.png)](images/SLAGS_MO.png)  
 
 And this is the corresponding `PF` shifters output. Since these values are intercepted straight from the SLAGS outputs before they hit the color palette, each value is written into the .ppm file three times (R=G=B) so as to form a grayscale image.
-[![SLAGS PF output](doc/images/SLAGS_PF.png)](doc/images/SLAGS_PF.png)  
+[![SLAGS PF output](images/SLAGS_PF.png)](images/SLAGS_PF.png)  
 
 ### CRAM Debugging
 PF is now looking much better but the colors are wrong. Suspecting CRAM, palette indexing.  
-[![Finally a maze](doc/images/SIM13.png)](doc/images/SIM13.png)  
+[![Finally a maze](images/SIM13.png)](images/SIM13.png)  
 
 CRAM is addressed by the 10 bit bus CRA from GPC. The top two bits of address selects CPAL as follows:  
 
@@ -193,26 +193,26 @@ Examination in the simulator shows the following discrepancies:
 - walltop   color index expected 298 observed 247  
 
 It appears that the pattern is the original value lower byte + x20 xor 0xff. This incorrect data comes from the GPC (Graphic Priority Control) chip `12M` which in turn receives it from PFHS (Play Field Horizontal Scroll) chip `12K`. Since many of the custom chips in this schematic are based on earlier Atari arcade versions implemented with discrete components, checking schematic `SP-277` for the Atari System 1 where this `PFHS` implementation is based on, shows there is a small 64 bit `74F189` RAM chip inside the `PFHS`. A mistake made was in assuming that the data that goes into the RAM chip comes out exactly the same, but upon reading the RAM datasheet it turns out the data coming out of RAM is the **complement** of the data going in! After inverting the outputs from the `PFHS` RAM chip the PF now shows correct colors:  
-[![Correct Playfield](doc/images/SIM14.png)](doc/images/SIM14.png)
+[![Correct Playfield](images/SIM14.png)](images/SIM14.png)
 
 ### Debugging Motion Objects
 Sprites do not show on screen at all. When there are sprites on the screen, it seems `/VMATCH` asserts during sprite presence but, horizontal match doesn't so the `MATCH` signal is never asserted. It seems the VHDL implementation of `6S` F/F with both set and preset was incorrect, output `6S9` is never preset by `/VERTDL`, also `6S6` output is **inverted**, not just straight through. After inverting output `6S6` and fixing the async preset of F/F `6S` sprites now show (corrupted) on the top part of screen and they seem to repeat instead of just showing once. Further research shows that `MOHLB` (Motion Object Horizontal Line Buffer) had miscellaneous logic issues that needed correcting.
 
 ### More CRAM debugging
 Just when the colors appeared to be OK, it became apparent that sprites like 0863 (ghost) show up with wrong colors. Investigating why an incorrect color palette is selected leads to discovering that CRA5, CRA7 outputs from 8U page 15 are stuck low because they were left unconnected and were not being driven. After connecting them to the appropriate drivers the colors now look correct. Below left is what it looked like before, right is what it looks like after the fix.  
-[![Color Trouble](doc/images/SIM16.png)](doc/images/SIM16.png)  
+[![Color Trouble](images/SIM16.png)](images/SIM16.png)  
 
 ### Debugging Motion Objects Overlap
 Problem with sprite overlap, when sprites (like the ghosts) are overlapping, some minor corruption is visible, for example the shadow of the top ghost's arm is not obscuring the ghost underneath. Suspecting GPC (Graphic Priority Control) problem.  
 
 Left: how it looks, Right: how it should look.  
-[![Sprite Overlap](doc/images/SIM17.png)](doc/images/SIM17.png)
+[![Sprite Overlap](images/SIM17.png)](images/SIM17.png)
 
 In other places there is visible corruption where extra pixels appear.  
-[![Sprite Corrupt](doc/images/SIM20.png)](doc/images/SIM20.png)  
+[![Sprite Corrupt](images/SIM20.png)](images/SIM20.png)  
 
 As opposed to how it looks in MAME  
-[![Sprite Correct](doc/images/MAME01.png)](doc/images/MAME01.png)  
+[![Sprite Correct](images/MAME01.png)](images/MAME01.png)  
 
 Sprite tuples for two ghosts to replicate issue  
 GH1  GH2  
@@ -345,15 +345,15 @@ So when `/NXL` is low it forces `VAS1` to be low, limiting the `VRAM` address se
 ISIM testing now shows that removing the `/NXL` delay inside `SYNGEN` makes the sprites appear without having to force `LINK` register loading!!! So as suspected timing of the `/NXL` signal was at the root of the problem.
 
 Below is the initial screen at game startup from simulation. The reason the playfield on the left hand side looks a little different from MAME is because I forgot to initialize the playfield horizontal scroll register to 005 as MAME does, the the playfield is scrolled right 5 pixels compared to the MAME reference picture.  
-[![Simulation screen 1](doc/images/SIM21.png)](doc/images/SIM21.png)  
+[![Simulation screen 1](images/SIM21.png)](images/SIM21.png)  
 Same screen from MAME for reference.  
-[![Reference screen 1](doc/images/MAME02.png)](doc/images/MAME02.png)  
+[![Reference screen 1](images/MAME02.png)](images/MAME02.png)  
 
 Another simulation of a later game screen with lots of sprites visible. Again the playfield horizontal scroll register in the simulation has a slightly different value from MAME so the screen is shifted right by some number of pixels.
-[![Simulation screen 2](doc/images/SIM22.png)](doc/images/SIM22.png)  
+[![Simulation screen 2](images/SIM22.png)](images/SIM22.png)  
 
 Compared to the same MAME screen for reference.  
-[![Reference screen 2](doc/images/MAME01.png)](doc/images/MAME01.png)  
+[![Reference screen 2](images/MAME01.png)](images/MAME01.png)  
 
 ## Debugging Commands
 
@@ -514,7 +514,7 @@ An interesting observation, even though the schematic sheet 3 shows RAMs attache
 Observations from MAME indicate that on game powerup it is not until frame 77 that a picture starts to appear. This is far too long to simulate as it takes about 90 seconds per frame to simulate. Poking around MAME debugger it seems a good starting point is address 040000, which produces a stable game with first video picture appearing at frame 35, a saving of 42 frames (1 hour of simulation).
 
 This is an animation of the first 2 seconds (120 frames) produced by running the simulation in ISIM for about 3 hours.
-[![Game startup simulation](doc/images/gauntlet_anim1.gif)](doc/images/gauntlet_anim1.gif) 
+[![Game startup simulation](images/gauntlet_anim1.gif)](images/gauntlet_anim1.gif) 
 
 ### What memory test?
 Poking around in the debugger I discovered a bug in the original game ROMs. At game power on, as well as performing ROM checksums to ensure that the ROMs are valid, the game also performs a RAM "test", or at least it tries to.

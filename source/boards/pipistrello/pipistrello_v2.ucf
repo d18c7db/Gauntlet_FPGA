@@ -1,0 +1,281 @@
+# Pipistrello (LX45) User Constraints File
+
+# Main board wing pin [] to FPGA pin map
+# ---------WING C--------    ---------WING B--------  --------WING A---------
+# [GND] [C00] F17 IO_L35P    [GND] [B00] C18 IO_L29N  IO_L31N D18 [A15]
+# [2V5] [C01] F16 IO_L1N     [2V5] [B01] E18 IO_L33N  IO_L35N F18 [A14]
+# [3V3] [C02] E16 IO_L33P    [3V3] [B02] G18 IO_L38N  IO_L43N H18 [A13]
+# [5V0] [C03] G16 IO_L38P    [5V0] [B03] H16 IO_L37N  IO_L37P H15 [A12]
+#       [C04] F15 IO_L1P           [B04] J18 IO_L44N  IO_L44P J16 [A11] [5V0]
+#       [C05] G14 IO_L30N          [B05] K18 IO_L45N  IO_L45P K17 [A10] [3V3]
+#       [C06] F14 IO_L30P          [B06] K16 IO_L41N  IO_L41P K15 [A09] [2V5]
+#       [C07] H14 IO_L36N          [B07] L18 IO_L46N  IO_L46P L17 [A08] [GND]
+# [GND] [C08] H13 IO_L36P    [GND] [B08] L16 IO_L42N  IO_L42P L15 [A07]
+# [2V5] [C09] J13 IO_L39P    [2V5] [B09] M18 IO_L47N  IO_L47P M16 [A06]
+# [3V3] [C10] G13 IO_L32N    [3V3] [B10] N18 IO_L48N  IO_L48P N17 [A05]
+# [5V0] [C11] H12 IO_L32P    [5V0] [B11] N15 IO_L50P  IO_L50N N16 [A04]
+#       [C12] K14 IO_L39N          [B12] P15 IO_L74P  IO_L74N P16 [A03] [5V0]
+#       [C13] K13 IO_L34N          [B13] P18 IO_L49N  IO_L49P P17 [A02] [3V3]
+#       [C14] K12 IO_L34P          [B14] T18 IO_L51N  IO_L51P T17 [A01] [2V5]
+#       [C15] L12 IO_L40P          [B15] U17 IO_L52P  IO_L52N U18 [A00] [GND]
+
+CONFIG PART = xc6slx45-csg324-3 ;
+CONFIG VCCAUX = "3.3" ;
+
+## Prohibit the automatic placement of pins that are connected to VCC or GND for configuration.
+CONFIG PROHIBIT="D4" ; # HSWAPEN high = disables I/O pullups before and during configuration
+CONFIG PROHIBIT="T15"; # M0 high for serial configuration
+CONFIG PROHIBIT="N12"; # M1 low for master
+CONFIG PROHIBIT="U3" ; # INIT_B high via pullup
+
+NET "CLK_IN"          LOC = "H17"  | IOSTANDARD = LVCMOS33;
+NET "CLK_IN" TNM_NET = "CLK_IN" ;
+#NET "CLKIN2"         LOC = "V10"  | IOSTANDARD = LVCMOS33; # auxiliary clock input (N/C)
+
+############################################################################
+## Clock constraints                                                        
+############################################################################
+#NET "lpddr_inst/memc3_infrastructure_inst/sys_clk_ibufg" TNM_NET = "CLK_IN";
+TIMESPEC "TS_CLK_IN" = PERIOD "CLK_IN" 20 ns HIGH 50%;
+############################################################################
+
+# JTAG
+#NET "JTAG_TMS"       LOC = "B18"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ;
+#NET "JTAG_TCK"       LOC = "A17"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ;
+#NET "JTAG_TDI"       LOC = "D15"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ;
+#NET "JTAG_TDO"       LOC = "D16"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ;
+
+# SPI Flash N25Q128A13ESE40G
+NET "FLASH_SCK"      LOC = "R15"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ;
+NET "FLASH_CSn"      LOC = "V3"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ;
+NET "FLASH_MOSI"     LOC = "T13"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ;
+NET "FLASH_MISO"     LOC = "R13"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ;
+NET "FLASH_WPn"      LOC = "T14"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ;
+NET "FLASH_HOLDn"    LOC = "V14"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ;
+
+# SPI Flash N25Q128A13ESE40G quad IO mode
+#NET "FLASH_SCK"      LOC = "R15"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ;
+#NET "FLASH_CSn"      LOC = "V3"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ;
+#NET "FLASH_DQ<0>"    LOC = "T13"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ;
+#NET "FLASH_DQ<1>"    LOC = "R13"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ;
+#NET "FLASH_DQ<2>"    LOC = "T14"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ;
+#NET "FLASH_DQ<3>"    LOC = "V14"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ;
+
+# FTDI FT2232-chB used as USB UART
+#NET "O_USB_TXD"      LOC = "A10"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ;  # FPGA to UART
+#NET "I_USB_RXD"      LOC = "A11"  | IOSTANDARD = LVCMOS33 | PULLUP;                    # UART to FPGA
+#NET "USB_RTS"        LOC = "C10"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ;
+#NET "USB_CTS"        LOC = "A9"   | IOSTANDARD = LVCMOS33 | PULLUP;
+
+# FTDI FT2232-chB used as USB Asynchronnous FIFO
+#NET "USB_DATA<0>"    LOC = "A11"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; # BDBUS0
+#NET "USB_DATA<1>"    LOC = "A10"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; # BDBUS1
+#NET "USB_DATA<2>"    LOC = "C10"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; # BDBUS2
+#NET "USB_DATA<3>"    LOC = "A9"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; # BDBUS3
+#NET "USB_DATA<4>"    LOC = "B9"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; # BDBUS4
+#NET "USB_DATA<5>"    LOC = "A8"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; # BDBUS5
+#NET "USB_DATA<6>"    LOC = "B8"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; # BDBUS6
+#NET "USB_DATA<7>"    LOC = "A7"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; # BDBUS7
+#
+#NET "USB_RXF"        LOC = "C7"   | IOSTANDARD = LVCMOS33;                            # BCBUS0
+#NET "USB_TXE"        LOC = "A6"   | IOSTANDARD = LVCMOS33;                            # BCBUS1
+#NET "USB_RD"         LOC = "B6"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; # BCBUS2
+#NET "USB_WR"         LOC = "A5"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; # BCBUS3
+#NET "USB_SIWUA"      LOC = "C5"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; # BCBUS4
+
+# TMDS signals
+NET "TMDS_P<0>"      LOC = "T6"   | IOSTANDARD = TMDS_33 ; # Blue
+NET "TMDS_N<0>"      LOC = "V6"   | IOSTANDARD = TMDS_33 ;
+NET "TMDS_P<1>"      LOC = "U7"   | IOSTANDARD = TMDS_33 ; # Red
+NET "TMDS_N<1>"      LOC = "V7"   | IOSTANDARD = TMDS_33 ;
+NET "TMDS_P<2>"      LOC = "U8"   | IOSTANDARD = TMDS_33 ; # Green
+NET "TMDS_N<2>"      LOC = "V8"   | IOSTANDARD = TMDS_33 ;
+NET "TMDS_P<3>"      LOC = "U5"   | IOSTANDARD = TMDS_33 ; # Clock
+NET "TMDS_N<3>"      LOC = "V5"   | IOSTANDARD = TMDS_33 ;
+
+# EDID
+#NET "EDID_SDA"       LOC = "T9"   | IOSTANDARD = I2C ;
+#NET "EDID_SCL"       LOC = "V9"   | IOSTANDARD = I2C ;
+
+#NET "HDMI_DET"       LOC = "R8"   | IOSTANDARD = LVCMOS33 ; # active low
+
+# Audio
+NET "O_AUDIO_L"      LOC = "R7"   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8 ;
+NET "O_AUDIO_R"      LOC = "T7"   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8 ;
+
+# SD-card SDIO interface
+#NET "SD_DAT<0>"      LOC = "B4"   | IOSTANDARD = SDIO | SLEW = FAST | DRIVE = 8 | PULLUP ;
+#NET "SD_DAT<1>"      LOC = "A4"   | IOSTANDARD = SDIO | SLEW = FAST | DRIVE = 8 | PULLUP ;
+#NET "SD_DAT<2>"      LOC = "B2"   | IOSTANDARD = SDIO | SLEW = FAST | DRIVE = 8 | PULLUP ;
+#NET "SD_DAT<3>"      LOC = "A2"   | IOSTANDARD = SDIO | SLEW = FAST | DRIVE = 8 | PULLUP ;
+#NET "SD_CMD"         LOC = "B3"   | IOSTANDARD = SDIO | SLEW = FAST | DRIVE = 8 | PULLUP ;
+#NET "SD_CLK"         LOC = "A3"   | IOSTANDARD = SDIO | SLEW = FAST | DRIVE = 8 ;
+
+# SD-card SPI interface
+#NET "SD_MISO"        LOC = "B4"   | IOSTANDARD = SDIO | SLEW = FAST | DRIVE = 8 | PULLUP ;
+#NET "SD_CS"          LOC = "A2"   | IOSTANDARD = SDIO | SLEW = FAST | DRIVE = 8 | PULLUP ;
+#NET "SD_MOSI"        LOC = "B3"   | IOSTANDARD = SDIO | SLEW = FAST | DRIVE = 8 | PULLUP ;
+#NET "SD_SCK"         LOC = "A3"   | IOSTANDARD = SDIO | SLEW = FAST | DRIVE = 8 ;
+
+# Leds
+NET "LEDS<1>"         LOC = "V16"  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8 ; # active high green
+NET "LEDS<2>"         LOC = "U16"  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8 ; # active high red
+NET "LEDS<3>"         LOC = "A16"  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8 ; # active high green
+NET "LEDS<4>"         LOC = "A15"  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8 ; # active high red
+#NET "LEDS<5>"         LOC = "A12"  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8 ; # active high red
+
+# Switch
+NET "I_RESET"        LOC = "N14"  | IOSTANDARD = LVCMOS33 | PULLDOWN ; # active high
+
+# PMOD top row pin 5 GND, pin 6 3V3
+NET "PMOD1_IO<1>"    LOC = "D9"   | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD1-IO1 pin 1
+NET "PMOD1_IO<2>"    LOC = "C8"   | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD1-IO2 pin 2
+NET "PMOD1_IO<3>"    LOC = "D6"   | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD1-IO3 pin 3
+NET "PMOD1_IO<4>"    LOC = "C4"   | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD1-IO4 pin 4
+
+# PMOD bottom row pin 11 GND, pin 12 3V3
+NET "PMOD2_IO<1>"    LOC = "B11"  | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD2-IO1 pin 7
+NET "PMOD2_IO<2>"    LOC = "C9"   | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD2-IO2 pin 8
+NET "PMOD2_IO<3>"    LOC = "D8"   | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD2-IO3 pin 9
+NET "PMOD2_IO<4>"    LOC = "C6"   | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD2-IO4 pin 10
+
+############################################################################
+# DDR2 requires the MCB to operate in Extended performance mode with higher Vccint
+# specification to achieve maximum frequency. Therefore, the following CONFIG constraint
+# follows the corresponding GUI option setting. However, DDR3 can operate at higher 
+# frequencies with any Vcciint value by operating MCB in extended mode. Please do not
+# remove/edit the below constraint to avoid false errors.
+############################################################################
+#CONFIG MCB_PERFORMANCE= STANDARD;
+
+##################################################################################
+# Timing Ignore constraints for paths crossing the clock domain 
+##################################################################################
+#NET "lpddr_inst/memc?_wrapper_inst/memc?_mcb_raw_wrapper_inst/selfrefresh_mcb_mode" TIG;
+
+#NET "lpddr_inst/c?_pll_lock" TIG;
+#INST "lpddr_inst/memc?_wrapper_inst/memc?_mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/DONE_SOFTANDHARD_CAL*" TIG;
+
+#Please uncomment the below TIG if used in a design which enables self-refresh mode
+#NET "lpddr_inst/memc?_wrapper_inst/memc?_mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/SELFREFRESH_MCB_REQ" TIG;
+
+############################################################################
+## Memory Controller 3                               
+## Memory Device: LPDDR->MT46H32M16XXXX-5 
+## Frequency: 200 MHz
+## Time Period: 5000 ps
+## Supported Part Numbers: MT46H32M16LFBF-5
+############################################################################
+
+############################################################################
+# All the IO resources in an IO tile which contains DQSP/UDQSP are used
+# irrespective of a single-ended or differential DQS design. Any signal that
+# is connected to the free pin of the same IO tile in a single-ended design
+# will be unrouted. Hence, the IOB cannot used as general pupose IO.
+############################################################################
+CONFIG PROHIBIT = P1,L3;
+
+############################################################################
+# SDRAM 
+############################################################################
+#NET "DDR_D<0>"       LOC = "L2"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_D<1>"       LOC = "L1"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_D<2>"       LOC = "K2"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_D<3>"       LOC = "K1"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_D<4>"       LOC = "H2"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_D<5>"       LOC = "H1"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_D<6>"       LOC = "J3"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_D<7>"       LOC = "J1"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_D<8>"       LOC = "M3"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_D<9>"       LOC = "M1"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_D<10>"      LOC = "N2"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_D<11>"      LOC = "N1"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_D<12>"      LOC = "T2"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_D<13>"      LOC = "T1"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_D<14>"      LOC = "U2"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_D<15>"      LOC = "U1"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+
+#NET "DDR_A<0>"       LOC = "J7"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_A<1>"       LOC = "J6"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_A<2>"       LOC = "H5"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_A<3>"       LOC = "L7"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_A<4>"       LOC = "F3"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_A<5>"       LOC = "H4"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_A<6>"       LOC = "H3"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_A<7>"       LOC = "H6"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_A<8>"       LOC = "D2"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_A<9>"       LOC = "D1"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_A<10>"      LOC = "F4"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_A<11>"      LOC = "D3"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_A<12>"      LOC = "G6"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_A<13>"      LOC = "F6"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; # not routed on PCB
+#NET "DDR_A<14>"      LOC = "F5"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; # not routed on PCB
+
+#NET "DDR_UDQS"       LOC = "P2"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_LDQS"       LOC = "L4"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_UDM"        LOC = "K4"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_LDM"        LOC = "K3"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_RASn"       LOC = "L5"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_CASn"       LOC = "K5"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_WEn"        LOC = "E3"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_CKE"        LOC = "H7"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_CK_P"       LOC = "G3"  | IOSTANDARD = DIFF_MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_CK_N"       LOC = "G1"  | IOSTANDARD = DIFF_MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_BA<0>"      LOC = "F2"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_BA<1>"      LOC = "F1"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; #
+#NET "DDR_BA<2>"      LOC = "E1"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; # not routed on PCB
+#NET "DDR_RZQ"        LOC = "N4"  | IOSTANDARD = MOBILE_DDR | SLEW = FAST | DRIVE = 8 ; # not routed on PCB
+
+# External SRAM/FLASH board
+NET "MEM_D<15>"      LOC = "D18"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ; # IO_L31N  WING_A15
+NET "MEM_D<14>"      LOC = "F18"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ; # IO_L35N  WING_A14
+NET "MEM_D<13>"      LOC = "H18"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ; # IO_L43N  WING_A13
+NET "MEM_D<12>"      LOC = "H15"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ; # IO_L37P  WING_A12
+NET "MEM_D<11>"      LOC = "J16"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ; # IO_L44P  WING_A11
+NET "MEM_D<10>"      LOC = "K17"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ; # IO_L45P  WING_A10
+NET "MEM_D<9>"       LOC = "K15"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ; # IO_L41P  WING_A9
+NET "MEM_D<8>"       LOC = "L17"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ; # IO_L46P  WING_A8
+NET "MEM_nBLE"       LOC = "L15"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L42P  WING_A7
+NET "MEM_nBHE"       LOC = "M16"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L47P  WING_A6
+NET "MEM_A<20>"      LOC = "N17"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L48P  WING_A5
+#NET "WING_A4"        LOC = "N16"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L50N  WING_A4
+#NET "WING_A3"        LOC = "P16"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L74N  WING_A3
+#NET "WING_A2"        LOC = "P17"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L49P  WING_A2
+#NET "WING_A1"        LOC = "T17"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L51P  WING_A1
+#NET "WING_A0"        LOC = "U18"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L52N  WING_A0
+
+NET "MEM_A<1>"       LOC = "U17"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L52P  WING_B15
+NET "MEM_A<2>"       LOC = "T18"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L51N  WING_B14
+NET "SRAM_nCS"       LOC = "P18"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L49N  WING_B13
+NET "MEM_A<0>"       LOC = "P15"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L74P  WING_B12
+NET "MEM_A<19>"      LOC = "N15"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L50P  WING_B11
+NET "MEM_nOE"        LOC = "N18"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L48N  WING_B10
+NET "FLASH_nCE"      LOC = "M18"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L47N  WING_B9
+NET "MEM_D<0>"       LOC = "L16"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ; # IO_L42N  WING_B8
+NET "MEM_D<1>"       LOC = "L18"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ; # IO_L46N  WING_B7
+NET "MEM_D<2>"       LOC = "K16"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ; # IO_L41N  WING_B6
+NET "MEM_D<3>"       LOC = "K18"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ; # IO_L45N  WING_B5
+NET "MEM_D<4>"       LOC = "J18"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ; # IO_L44N  WING_B4
+NET "MEM_D<5>"       LOC = "H16"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ; # IO_L37N  WING_B3
+NET "MEM_D<6>"       LOC = "G18"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ; # IO_L38N  WING_B2
+NET "MEM_D<7>"       LOC = "E18"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 | PULLUP ; # IO_L33N  WING_B1
+NET "MEM_A<16>"      LOC = "C18"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L29N  WING_B0
+                                                                       
+NET "MEM_A<3>"       LOC = "L12"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L40P  WING_C15
+NET "MEM_A<4>"       LOC = "K12"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L34P  WING_C14
+NET "MEM_A<5>"       LOC = "K13"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L34N  WING_C13
+NET "MEM_A<6>"       LOC = "K14"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L39N  WING_C12
+NET "MEM_A<7>"       LOC = "H12"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L32P  WING_C11
+NET "MEM_A<17>"      LOC = "G13"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L32N  WING_C10
+NET "MEM_A<18>"      LOC = "J13"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L39P  WING_C9
+NET "MEM_nWE"        LOC = "H13"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L36P  WING_C8
+NET "MEM_A<8>"       LOC = "H14"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L36N  WING_C7
+NET "MEM_A<9>"       LOC = "F14"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L30P  WING_C6
+NET "MEM_A<10>"      LOC = "G14"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L30N  WING_C5
+NET "MEM_A<11>"      LOC = "F15"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L1P   WING_C4
+NET "MEM_A<12>"      LOC = "G16"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L38P  WING_C3
+NET "MEM_A<13>"      LOC = "E16"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L33P  WING_C2
+NET "MEM_A<14>"      LOC = "F16"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L1N   WING_C1
+NET "MEM_A<15>"      LOC = "F17"  | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8          ; # IO_L35P  WI NG_C0
+
+# End of UCF

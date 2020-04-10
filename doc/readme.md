@@ -235,7 +235,7 @@ MPX to IRGB Sprite value mapping
  FF ->      Seethrough  
 </pre>
 
-MOSR bus input to MOHLB for ghost sprite, FF means transparent otherwise top 4 bits are D (1101) and select the palette, bottom 4 bits select the sprite color within the selected palette. Squinting, you can almost see the ghost pattern in the data below  
+`MOSR` bus input to `MOHLB` for ghost sprite, FF means transparent otherwise top 4 bits are D (1101) and select the palette, bottom 4 bits select the sprite color within the selected palette. Squinting, you can almost see the ghost pattern in the data below  
 <pre>
 FF FF FF FF DE FF FF FF FF FF FF FF FF FF FF FF FF FF FF DE FF FF FF FF  
 FF FF FF DE DE FF FF FF FF FF FF FF FF FF FF FF FF FF FF DE DE FF FF FF  
@@ -263,9 +263,9 @@ FF FF FF FF FF FF FF FF D7 D9 FF FF FF FF FF FF FF FF FF FF FF FF FF FF
 FF FF FF FF FF FF FF FF D8 D9 FF FF FF FF FF FF FF FF FF FF FF FF FF FF  
 </pre>
 
-Since MPX output of MO Horizontal Line Buffer is not as expected, problem may be with MOHLB.  
+Since `MPX` output of MO Horizontal Line Buffer is not as expected, problem may be with `MOHLB`.  
 
-Simplistic way of how MOHLB works:  
+Simplistic way of how `MOHLB` works:  
 There are two 512B RAMs that alternately buffer a **single video line** of sprites. Focusing on just one of those buffers, if two sprites overlap, the first sprite in the linked list is written to the buffer, then the next sprite in the linked list is written to the buffer, etc. If the sprites overlap and the current value of the sprite is visible (not FF) then it overwrites the memory location (covers the pixel of the sprite below) but if the current value of the sprite is transparent (FF), then it is not written to RAM so the pixel of the sprite below remains unchanged and shows through.
 
 <pre>
@@ -344,7 +344,7 @@ So when `/NXL` is low it forces `VAS1` to be low, limiting the `VRAM` address se
 
 ISIM testing now shows that removing the `/NXL` delay inside `SYNGEN` makes the sprites appear without having to force `LINK` register loading!!! So as suspected timing of the `/NXL` signal was at the root of the problem.
 
-Below is the initial screen at game startup from simulation. The reason the playfield on the left hand side looks a little different from MAME is because I forgot to initialize the playfield horizontal scroll register to 005 as MAME does, the the playfield is scrolled right 5 pixels compared to the MAME reference picture.  
+Below is the initial screen at game startup from simulation. The reason the playfield on the left hand side looks a little different from MAME is because I forgot to initialize the playfield horizontal scroll register to 005 as MAME does, so the playfield is scrolled right 5 pixels compared to the MAME reference picture.  
 [![Simulation screen 1](images/SIM21.png)](images/SIM21.png)  
 Same screen from MAME for reference.  
 [![Reference screen 1](images/MAME02.png)](images/MAME02.png)  
@@ -475,32 +475,31 @@ w@80312E=0
 
 breakpoint 5787 reads 1010, x contains the sound to play
 
+When AUDIOCPU is unused and it is reset then 1030=00 so from reset address 599e the condition doesn't match and CPU is stuck in infinite loop at 59A5  
+When AUDIOCPU is used it is reset then 1030=80 so from reset address 599e the condition matches and it jumps to 4002, where it initializes stack and continues running  
 
-When AUDIOCPU is unused and it is reset then 1030=00 so from reset address 599e the condition doesn't match and CPU is stuck in infinite loop at 59A5
-When AUDIOCPU is used it is reset then 1030=80 so from reset address 599e the condition matches and it jumps to 4002, where it initializes stack and continues running
+IRQ FFFE 4187  
+RST FFFC 599E  
+NMI FFFA 5729  
 
-IRQ FFFE 4187
-RST FFFC 599E
-NMI FFFA 5729
+bp 4187,1,{printf "IRQ"; g}  
+bp 599E,1,{printf "RST"; g}  
+bp 5729,1,{printf "NMI"; g}  
+bp 578a,1,{printf "X=%x",X; g}  
 
-bp 4187,1,{printf "IRQ"; g}
-bp 599E,1,{printf "RST"; g}
-bp 5729,1,{printf "NMI"; g}
-bp 578a,1,{printf "X=%x",X; g}
+Skip RAM and ROM checks, jmp 40a3  
+audiocpu.md@402c=ea40a34c  
 
-Skip RAM and ROM checks, jmp 40a3
-audiocpu.md@402c=ea40a34c
+breakpoint after NMI on read of snd command  
+bp 578a  
+watchpoint on YM access  
+wps 1810,2,rw,1,{printf "%X %X",wpaddr,wpdata; g}  
 
-breakpoint after NMI on read of snd command
-bp 578a
-watchpoint on YM access
-wps 1810,2,rw,1,{printf "%X %X",wpaddr,wpdata; g}
+NMI disable  
+audiocpu.mb@fffa=9c  
 
-NMI disable
-audiocpu.mb@fffa=9c
-
-SYNGEN 7M16 in , H1 = 3M58 H2=1M78
-IRQ 17.15ms
+SYNGEN 7M16 in , H1 = 3M58 H2=1M78  
+IRQ 17.15ms  
 
 ## Main CPU Section
 After an 8 month break from this project, spring, summer and autumn has come and gone, it is now cold and dark, time to get some work done :) Used the TG68K softcore from MiSTer as the base for the main CPU core. Initial problem was that the softcore doesn't match the pins of the real 68K CPU, for example `/AS` is completely missing and also the timing of the `R/W` and `/UDS`, `/LDS` signals coming out of the softcore is very wide so the whole timing doesn't match a real 68K bus access. After some research, the way others deal with that is to implement a wrapper around the softcore with a state machine to create or activate the signals in such a way that it more closely resembles a 68K in timing.
@@ -569,22 +568,22 @@ Armed with this ROM patch the investigation began and sure enough the simulator 
 
 [![Sprites 2](images/sprites2.png)](images/sprites2.png)  
 
-Then it was a matter of following the signals backwards starting from the video output. After identifying the video line signal where the part of the sprites was missing, that data comes out of the color palette RAMs, which are driven by the Graphics Priority Chip `GPC` which apparently also outputs incomplete data. So the `GPC` is not at fault, tracing backwards, the `GPC` is driven by the two line buffers inside the Motion Object Horizonal Line Buffer chip `MOHLB`. Because the line buffers, buffer the video signal and output it one video line later, this introduces a delay, so in the simulation traces one must look to the time period of the previous video line to find the relevant data stored in the line buffers. Turns out this data is also incomplete, to the "fault" lies before the `MOHLB` which is driven by the outputs of the video ROMs.
+Then it was a matter of following the signals backwards starting from the video output. After identifying the video line signal where the part of the sprites was missing, that data comes out of the color palette RAMs, which are driven by the Graphics Priority Chip `GPC` which apparently also outputs incomplete data. So the `GPC` is not at fault, tracing backwards, the `GPC` is driven by the two line buffers inside the Motion Object Horizonal Line Buffer chip `MOHLB`. Because the line buffers, buffer the video signal and output it one video line later, this introduces a delay, so in the simulation traces one must look to the time period of the previous video line to find the relevant data stored in the line buffers. Turns out this data is also incomplete, so the "fault" lies before the `MOHLB` which is driven by the outputs of the video ROMs.  
 
-So the next step is to check what is driving the address bus of the video ROMs. This is where things become complicated, see sheet 10 of the schematic. There is a fairly complex piece of circuitry that involves horizontal and vertical sprite address coordinate latches that also add offsets to those coordinates via adders and generate "match" signals when a sprite position matches the current H and V position of the video counters rendering the picture. Additionally the is also circuitry on page 14 which is also related in terms of timing and control signals. Long story short, after many hours in the simulator trying to understand how sprites are rendered to the video screen, it became apparent that the "problem" was in fact on page 14.
+So the next step is to check what is driving the address bus of the video ROMs. This is where things become complicated, see sheet 10 of the schematic. There is a fairly complex piece of circuitry that involves horizontal and vertical sprite address coordinate latches that also add offsets to those coordinates via adders and generate "match" signals when a sprite position matches the current H and V position of the video counters rendering the picture. Additionally there is also circuitry on page 14 which is also related in terms of timing and control signals. Long story short, after many hours in the simulator trying to understand how sprites are rendered to the video screen, it became apparent that the "problem" was in fact on page 14.  
 
-There is a PROM chip 4R and  a countdown counter 5R. The PROM chip address is driven with bits 8 though 4 of the sprite horizontal position, as well as three bits representing one of the 8 possible sprite sizes. Based on the sprite horizontal position and size, the output of the PROM loads countdown counter 5R with a certain value when signal `/NEWMO` is aserted (New Motion Object aka sprite). The counter then counts down and generates signal `/END` which terminates the display of the sprite on screen.
+There is a PROM chip 4R and  a countdown counter 5R. The PROM chip address is driven with bits 8 though 4 of the sprite horizontal position, as well as three bits representing one of the 8 possible sprite sizes. Based on the sprite horizontal position and size, the output of the PROM loads countdown counter 5R with a certain value when signal `/NEWMO` is aserted (New Motion Object aka sprite). The counter then counts down and generates signal `/END` which terminates the display of the sprite on screen.  
 
-It was now clear in the simulation that while the first few sprites on the screen were being drawn correctly, the last two sprites (large squares) were being terminated prematurely by the `/END` signal. Inspecting the contents of the 4R PROM, it has a repeating pattern of 1,3,5,7,9,B,D,F for most of its first half and zeroes for most of the last half. Each of those values represent one of the eight possible sprite sizes, except for the least significant bit, which when set indicates that a sprite is present and must be displayed. The other top three bits are loaded into the 5R countdown counter. Each set of 8 bytes in the PROM represent a 16 pixel horizontal line offset (because only bits 8 though 4 of sprites H position drive the PROM address, so bits 3 to 0 = 16 values are not evaluated). This means that as we move from address 0 in the PROM towards higher values, this represents lower H sprite coordinates (left of the screen) moving towards higher H coordinates (right of screen).
+It was now clear in the simulation that while the first few sprites on the screen were being drawn correctly, the last two sprites (large squares) were being terminated prematurely by the `/END` signal. Inspecting the contents of the 4R PROM, it has a repeating pattern of 1,3,5,7,9,B,D,F for most of its first half and zeroes for most of the last half. Each of those values represent one of the eight possible sprite sizes, except for the least significant bit, which when set indicates that a sprite is present and must be displayed. The other top three bits are loaded into the 5R countdown counter. Each set of 8 bytes in the PROM represent a 16 pixel horizontal line offset (because only bits 8 though 4 of sprites H position drive the PROM address, so bits 3 to 0 = 16 values are not evaluated). This means that as we move from address 0 in the PROM towards higher values, this represents lower H sprite coordinates (left of the screen) moving towards higher H coordinates (right of screen).  
 
-As we arrive to the middle of the PROM (almost all the way right of the screen), the repeating pattern of of 1,3,5,7,9,B,D,F, changes to to 1,3,5,7,7,7,7,7 and then 1,3,3,3,3,3,3,3 meaning that the counter value for larger sprites is artificially reduced causing them to be cut off before being fully displayed because the 5R countdown counter is loaded with a smaller value and asserts /END earlier. Then most of the last half of the PROM has zeroes meaning that no sprites will ever be displayed after a certain H coordinate (too far right / off screen).
+As we arrive to the middle of the PROM (almost all the way right of the screen), the repeating pattern of of 1,3,5,7,9,B,D,F, changes to to 1,3,5,7,7,7,7,7 and then 1,3,3,3,3,3,3,3 meaning that the counter value for larger sprites is artificially reduced causing them to be cut off before being fully displayed because the 5R countdown counter is loaded with a smaller value and asserts /END earlier. Then most of the last half of the PROM has zeroes meaning that no sprites will ever be displayed after a certain H coordinate (too far right / off screen).  
 
 So after wasting many hours analyzing this, it turns out there is nothing wrong, the FPGA implementation functions correctly and it is in fact MAME that is wrong, even though it seems to display "more correct" video output. As a test I filled the PROM entirely with the 1,3,5,7,9,B,D,F pattern and run a simulation since I knew now that would cause all sprites to be fully displayed regardless of H screen coordinate value. The simulation proved it:
 
 [![Sprites 3](images/sprites3.png)](images/sprites3.png)  
 
-Finally thanks to Colin Davies, who was kind enough to hook up his real Gauntlet arcade PCB and run a test for me, the following picture shows that the real arcade game also displays cut off sprites on the right hand side, so yeah... MAME is wrong.
+Finally thanks to Colin Davies, who was kind enough to hook up his real Gauntlet arcade PCB and run a test for me, the following picture shows that the real arcade game also displays cut off sprites on the right hand side, so yeah... MAME is wrong.  
 
 [![Sprites 4](images/sprites4.png)](images/sprites4.png)  
 
-Just for completeness though, it's worth pointing out that during gameplay, the rightmost 1/4 of the screen is always taken up by text display with player stats, so no sprites will even be visible in that region of the screen, therefore this will never be a problem.
+Just for completeness though, it's worth pointing out that during gameplay, the rightmost 1/4 of the screen is always taken up by text display with player stats, so no sprites will even be visible in that region of the screen, therefore this will never be a problem.  

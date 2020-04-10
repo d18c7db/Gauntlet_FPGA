@@ -530,7 +530,7 @@ At address 0636 is the start of a number of calls to subroutine 0A2C which is ca
 
 The idea is that the subroutine at 0A2C will go through every memory word in the range and fill the word first with 1's (8000, C000, E000, ..., FFFC, FFFE, FFFF) then with 0's (FFFF, 7FFF, 3FFF, ..., 0003, 0001, 0000) comparing that the data read from RAM is as expected.
 
-The problem is that in the loop that compares the current address in A1 with the end address in A2, someone inserted a write to address 803100 (watchdog reset), so this messes up the carry flag and the branch back to 0B04 is never taken.
+The problem is that in the loop that compares the current address in A0 with the end address in A2, someone inserted a write to address 803100 (watchdog reset), so this messes up the carry flag and the branch back to 0B04 is never taken.
 
 <pre>
 000B1C: B1CA           cmpa.l  A2, A0
@@ -539,3 +539,52 @@ The problem is that in the loop that compares the current address in A1 with the
 </pre>
 
 This means that only the first word in each memory region is tested before the loop falls through. If you were to swap around the instructions at 0B1C and 0B1E the bug would be fixed and the entire RAM range would be tested.
+
+### Oh MAME, how could you...
+
+I don't have access to a real Gauntlet arcade board, so I used MAME as my reference. Imagine my surprise after I got the game going and it appeared to function fine, when I went into the game "service mode" and I see this. Some of the sprite squares on the right hand side are cut off, while in MAME they appear whole.
+
+[![Sprites 1](images/sprites1.png)](images/sprites1.png)  
+
+Immediate assumption was "MAME is correct" so there's a bug in my implementation whereupon I proceed to embarc on a very lengthy debug session in ISIM. The problem with simulations is that they're very very slow, so anything one can do to skip unnecessary game run time in simulation can shave literally hours of simulation time. Normally the game takes 12 seconds from bootup to come up and advance 9 test screens to get to the relevant sprite test screen. It takes 2-3 hours to simulate 2 seconds of game run time. Slight problem...  
+
+The most efficient way to deal with this is spend 10-20 minutes in MAME debug mode and find a suitable patch to the ROMs that causes the game to boot up and just jump to the relevant code that displays the sprites. Then the simulation time is cut to 5 minutes as it only needs to render the first 2 or 3 frames of video. This is exactly the process here, the game ROM was patched with the following code that executes straight from reset.  
+
+<pre>
+0005E2: move    #$2700, SR ; disable interrupts
+0005E6: movea.w #$5A36, a3 ; set parameter
+0005EA: movea.w #$5A32, a4 ; set parameter
+0005EE: jmp     $1BD6.w    ; jump to relevant sprite code
+</pre>
+
+The real game ROMs are not in fact touched, instead a small script is run every time MAME debug mode is entered that apply this patch over the ROM memory.  
+
+<pre>
+maincpu.md@5E6=367C5A36
+maincpu.md@5EA=387C5A32
+maincpu.md@5EE=4EF81BD6
+</pre>
+
+Armed with this ROM patch the investigation began and sure enough the simulator produced the relevant video frame in only a few minutes.  
+
+[![Sprites 2](images/sprites2.png)](images/sprites2.png)  
+
+Then it was a matter of following the signals backwards starting from the video output. After identifying the video line signal where the part of the sprites was missing, that data comes out of the color palette RAMs, which are driven by the Graphics Priority Chip ´GPC´ which apparently also outputs incomplete data. So the ´GPC´ is not at fault, tracing backwards, the ´GPC´ is driven by the two line buffers inside the Motion Object Horizonal Line Buffer chip ´MOHLB´. Because the line buffers, buffer the video signal and output it one video line later, this introduces a delay, so in the simulation traces one must look to the time period of the previous video line to find the relevant data stored in the line buffers. Turns out this data is also incomplete, to the "fault" lies before the ´MOHLB´ which is driven by the outputs of the video ROMs.
+
+So the next step is to check what is driving the address bus of the video ROMs. This is where things become complicated, see sheet 10 of the schematic. There is a fairly complex piece of circuitry that involves horizontal and vertical sprite address coordinate latches that also add offsets to those coordinates via adders and generate "match" signals when a sprite position matches the current H and V position of the video counters rendering the picture. Additionally the is also circuitry on page 14 which is also related in terms of timing and control signals. Long story short, after many hours in the simulator trying to understand how sprites are rendered to the video screen, it became apparent that the "problem" was in fact on page 14.
+
+There is a PROM chip 4R and  a countdown counter 5R. The PROM chip address is driven with bits 8 though 4 of the sprite horizontal position, as well as three bits representing one of the 8 possible sprite sizes. Based on the sprite horizontal position and size, the output of the PROM loads countdown counter 5R with a certain value when signal ´/NEWMO´ is aserted (New Motion Object aka sprite). The counter then counts down and generates signal ´/END´ which terminates the display of the sprite on screen.
+
+It was now clear in the simulation that while the first few sprites on the screen were being drawn correctly, the last two sprites (large squares) were being terminated prematurely by the ´/END´ signal. Inspecting the contents of the 4R PROM, it has a repeating pattern of 1,3,5,7,9,B,D,F for most of its first half and zeroes for most of the last half. Each of those values represent one of the eight possible sprite sizes, except for the least significant bit, which when set indicates that a sprite is present and must be displayed. The other top three bits are loaded into the 5R countdown counter. Each set of 8 bytes in the PROM represent a 16 pixel horizontal line offset (because only bits 8 though 4 of sprites H position drive the PROM address, so bits 3 to 0 = 16 values are not evaluated). This means that as we move from address 0 in the PROM towards higher values, this represents lower H sprite coordinates (left of the screen) moving towards higher H coordinates (right of screen).
+
+As we arrive to the middle of the PROM (almost all the way right of the screen), the repeating pattern of of 1,3,5,7,9,B,D,F, changes to to 1,3,5,7,7,7,7,7 and then 1,3,3,3,3,3,3,3 meaning that the counter value for larger sprites is artificially reduced causing them to be cut off before being fully displayed because the 5R countdown counter is loaded with a smaller value and asserts /END earlier. Then most of the last half of the PROM has zeroes meaning that no sprites will ever be displayed after a certain H coordinate (too far right / off screen).
+
+So after wasting many hours analyzing this, it turns out there is nothing wrong, the FPGA implementation functions correctly and it is in fact MAME that is wrong, even though it seems to display "more correct" video output. As a test I filled the PROM entirely with the 1,3,5,7,9,B,D,F pattern and run a simulation since I knew now that would cause all sprites to be fully displayed regardless of H screen coordinate value. The simulation proved it:
+
+[![Sprites 3](images/sprites3.png)](images/sprites3.png)  
+
+Finally thanks to Colin Davies, who was kind enough to hook up his real Gauntlet arcade PCB and run a test for me, the following picture shows that the real arcade game also displays cut off sprites on the right hand side, so yeah... MAME is wrong.
+
+[![Sprites 4](images/sprites4.png)](images/sprites4.png)  
+
+Just for completeness though, it's worth pointing out that during gameplay, the rightmost 1/4 of the screen is always taken up by text display with player stats, so no sprites will even be visible in that region of the screen, therefore this will never be a problem.

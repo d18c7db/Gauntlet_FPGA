@@ -9,6 +9,9 @@ This is an FPGA implementation of Atari's arcade game "Gauntlet" from 1985, base
 Here is a youtube video of the current status, click on picture below:  
 [![Gauntlet running on FPGA](https://img.youtube.com/vi/7A2k7wLUSUU/0.jpg)](https://www.youtube.com/watch?v=7A2k7wLUSUU)
 
+Additional video of FPGA running Gauntlet II ROMs
+[![Gauntlet II running on FPGA](https://img.youtube.com/vi/HNHAjOb2i3s/0.jpg)](https://www.youtube.com/watch?v=HNHAjOb2i3s)
+
 The game is mostly functional right now, can coin up and start game, known problems are as follows:
 
 * The TMS5220 speech synth is not implemented

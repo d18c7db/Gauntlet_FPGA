@@ -67,7 +67,7 @@ architecture RTL of bootstrap is
 
 	signal bs_BHLEn			: std_logic_vector( 1 downto 0) := (others => '1');
 	-- bootstrap control of SRAM, these signals connect to SRAM when boostrap_busy = '1'
-	signal bs_A					: std_logic_vector(18 downto 0) := (others => '0');
+	signal bs_A					: std_logic_vector(20 downto 0) := (others => '0');
 
 	-- for bootstrap state machine
 	type	BS_STATE_TYPE is (
@@ -78,7 +78,7 @@ architecture RTL of bootstrap is
 	signal bs_state : BS_STATE_TYPE;
 
 begin
-	O_A		<= "00" & bs_A(18 downto 0);
+	O_A		<= bs_A;
 	O_BHEn	<= bs_BHLEn(1);
 	O_BLEn	<= bs_BHLEn(0);
 

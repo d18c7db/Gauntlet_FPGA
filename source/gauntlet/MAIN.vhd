@@ -17,6 +17,9 @@ library ieee;
 	use ieee.std_logic_unsigned.all;
 
 entity MAIN is
+	generic (
+		slap_type			: integer range 100 to 118 := 104
+	);
 	port(
 		I_MCKR				: in	std_logic;	-- 7MHz
 		I_XCKR				: in	std_logic;
@@ -91,11 +94,11 @@ architecture RTL of MAIN is
 --		sl_14D_Y5,
 --		sl_14D_Y6,
 		sl_14D_Y7,
-		sl_10D_Y0,
+--		sl_10D_Y0,
 --		sl_10D_Y1,
 --		sl_10D_Y2,
 		sl_10D_Y3,
-		sl_10D_Y4,
+--		sl_10D_Y4,
 --		sl_10D_Y5,
 --		sl_10D_Y6,
 --		sl_10D_Y7,
@@ -172,7 +175,7 @@ architecture RTL of MAIN is
 								: std_logic_vector( 1 downto 0) := (others=>'1');
 	signal
 		slv_FC,
-		slv_ROMEN,
+--		slv_ROMEN,
 		slv_IPL
 								: std_logic_vector( 2 downto 0) := (others=>'1');
 	signal
@@ -369,18 +372,18 @@ begin
 --	sl_10D_Y7	<= slv_cpu_ad(23) or slv_cpu_ad(22) or ( not slv_cpu_ad(18) ) or ( not slv_cpu_ad(17) ) or ( not slv_cpu_ad(16) );
 --	sl_10D_Y6	<= slv_cpu_ad(23) or slv_cpu_ad(22) or ( not slv_cpu_ad(18) ) or ( not slv_cpu_ad(17) ) or (     slv_cpu_ad(16) );
 --	sl_10D_Y5	<= slv_cpu_ad(23) or slv_cpu_ad(22) or ( not slv_cpu_ad(18) ) or (     slv_cpu_ad(17) ) or ( not slv_cpu_ad(16) );	-- unused
-	sl_10D_Y4	<= slv_cpu_ad(23) or slv_cpu_ad(22) or ( not slv_cpu_ad(18) ) or (     slv_cpu_ad(17) ) or (     slv_cpu_ad(16) );
+--	sl_10D_Y4	<= slv_cpu_ad(23) or slv_cpu_ad(22) or ( not slv_cpu_ad(18) ) or (     slv_cpu_ad(17) ) or (     slv_cpu_ad(16) );
 	sl_10D_Y3	<= slv_cpu_ad(23) or slv_cpu_ad(22) or (     slv_cpu_ad(18) ) or ( not slv_cpu_ad(17) ) or ( not slv_cpu_ad(16) );
 --	sl_10D_Y2	<= slv_cpu_ad(23) or slv_cpu_ad(22) or (     slv_cpu_ad(18) ) or ( not slv_cpu_ad(17) ) or (     slv_cpu_ad(16) );	-- unused
 --	sl_10D_Y1	<= slv_cpu_ad(23) or slv_cpu_ad(22) or (     slv_cpu_ad(18) ) or (     slv_cpu_ad(17) ) or ( not slv_cpu_ad(16) );	-- unused
-	sl_10D_Y0	<= slv_cpu_ad(23) or slv_cpu_ad(22) or (     slv_cpu_ad(18) ) or (     slv_cpu_ad(17) ) or (     slv_cpu_ad(16) );
+--	sl_10D_Y0	<= slv_cpu_ad(23) or slv_cpu_ad(22) or (     slv_cpu_ad(18) ) or (     slv_cpu_ad(17) ) or (     slv_cpu_ad(16) );
 
 --	slv_ROMEN(4)<= sl_10D_Y7;
 --	slv_ROMEN(3)<= sl_10D_Y6;
 --	slv_ROMEN(2)<= sl_10D_Y5;
-	slv_ROMEN(1)<= sl_10D_Y4;
+--	slv_ROMEN(1)<= sl_10D_Y4;
 	sl_SLAPSTK	<= sl_10D_Y3;
-	slv_ROMEN(0)<= sl_10D_Y0;
+--	slv_ROMEN(0)<= sl_10D_Y0;
 
 	-- Wrapper around 68010 soft core
 	u_12E : entity work.TG68K
@@ -627,6 +630,7 @@ begin
 	----------------------------
 
 	p_10C		: entity work.SLAPSTIC
+	generic map (chip_type=>slap_type)
 	port map (
 		I_CK	=> I_MCKR,
 		I_ASn => sl_ASn,
@@ -646,15 +650,12 @@ begin
 		DO  => slv_EEP_14A
 	);
 
-	-- address bus and enable for externally located program ROMs 7A, 7B, 9A, 9B, 10A, 10B
-	-- top 4 address bits map each ROM into external memory space
+	-- address bus and enable for externally located program ROMs, special case for slapstic
 	O_MP_EN <=
 		not (sl_ASn or sl_ROM);
 	O_MP_ADDR <=
-		x"4" & sl_ROM_H_Ln & slv_cpu_ad(14 downto 1)               when sl_ROM='0' and slv_ROMEN(1)='0' else	-- /ROM1 7A/B
-		x"5" & sl_ROM_H_Ln & slv_cpu_ad(14 downto 1)               when sl_ROM='0' and slv_ROMEN(0)='0' else	-- /ROM0 9A/B
-		x"6" & '0' & slv_BS( 1 downto 0) & slv_cpu_ad(12 downto 1) when sl_ROM='0' and sl_SLAPSTK  ='0' else	-- SLAP 10A/B
-		(others=>'0');
+		slv_cpu_ad(19 downto 16) & '0' & slv_BS & slv_cpu_ad(12 downto 1) when sl_SLAPSTK='0' else
+		slv_cpu_ad(19 downto 16) & sl_ROM_H_Ln  & slv_cpu_ad(14 downto 1);
 
 	----------------------------
 	-- sheet 7

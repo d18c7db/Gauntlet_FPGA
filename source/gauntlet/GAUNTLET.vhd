@@ -33,6 +33,9 @@ library ieee;
 --pragma translate_on
 
 entity FPGA_GAUNTLET is
+	generic (
+		slap_type			: integer range 100 to 118 := 104
+	);
 	port(
 		-- System Clock
 		I_CLK_14M			: in	std_logic;
@@ -67,7 +70,7 @@ entity FPGA_GAUNTLET is
 
 		-- GFX ROMs
 		O_GP_EN				: out	std_logic := '0';
-		O_GP_ADDR			: out	std_logic_vector(15 downto 0) := (others=>'0');
+		O_GP_ADDR			: out	std_logic_vector(17 downto 0) := (others=>'0');
 		I_GP_DATA			: in 	std_logic_vector(31 downto 0) := (others=>'0');
 		-- Main Program ROMs
 		O_MP_EN				: out	std_logic := '0';
@@ -117,6 +120,7 @@ architecture RTL of FPGA_GAUNTLET is
 								: std_logic_vector(15 downto 0) := (others=>'0');
 begin
 	u_main : entity work.MAIN
+	generic map (slap_type=>slap_type)
 	port map (
 		I_MCKR				=> I_CLK_7M,
 		I_XCKR				=> I_CLK_14M,

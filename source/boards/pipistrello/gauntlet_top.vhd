@@ -78,6 +78,22 @@ entity GAUNTLET_TOP is
 end GAUNTLET_TOP;
 
 architecture RTL of GAUNTLET_TOP is
+	constant clk_type			: string :="PLL"; -- "CTR", "SIM", "DCM", "PLL"
+--	constant flash_length	: std_logic_vector(23 downto 0) := x"000004"; -- for faster simulation
+
+	-- Define Gauntlet params
+	constant slap_type		: integer := 104;
+	constant flash_address	: std_logic_vector(23 downto 0) := x"200000"; -- byte offset in flash
+	constant flash_length	: std_logic_vector(23 downto 0) := x"0C8000"; -- length in words
+	-- Define Gauntlet II params
+--	constant slap_type		: integer := 106;
+--	constant flash_address	: std_logic_vector(23 downto 0) := x"390000"; -- byte offset in flash
+--	constant flash_length	: std_logic_vector(23 downto 0) := x"0C8000"; -- length in words
+	-- Define Vindicators II params
+--	constant slap_type		: integer := 118;
+--	constant flash_address	: std_logic_vector(23 downto 0) := x"520000"; -- byte offset in flash
+--	constant flash_length	: std_logic_vector(23 downto 0) := x"0C8000"; -- length in words
+
 	-- bootstrap control of SRAM, these signals connect to SRAM when bs_done = '0'
 	signal bs_AD			: std_logic_vector(20 downto 0) := (others => '0');
 	signal bs_DO			: std_logic_vector(15 downto 0) := (others => '0');
@@ -141,12 +157,18 @@ architecture RTL of GAUNTLET_TOP is
 	signal
 		slv_ROM_16R,
 		slv_ROM_16S,
-		slv_ROM_10A,
-		slv_ROM_10B,
-		slv_ROM_9A,
-		slv_ROM_9B,
-		slv_ROM_7A,
-		slv_ROM_7B,
+--		slv_ROM_10A,
+--		slv_ROM_10B,
+--		slv_ROM_9A,
+--		slv_ROM_9B,
+--		slv_ROM_7A,
+--		slv_ROM_7B,
+--		slv_ROM_6A,
+--		slv_ROM_6B,
+--		slv_ROM_5A,
+--		slv_ROM_5B,
+--		slv_ROM_3A,
+--		slv_ROM_3B,
 		s_audio_l,
 		s_audio_r
 								: std_logic_vector( 7 downto 0) := (others => '0');
@@ -155,15 +177,11 @@ architecture RTL of GAUNTLET_TOP is
 	signal s_MP_DATA			: std_logic_vector(15 downto 0) := (others => '0');
 	signal s_AP_DATA			: std_logic_vector( 7 downto 0) := (others => '0');
 
-	signal s_GP_ADDR			: std_logic_vector(15 downto 0) := (others => '0');
+	signal s_GP_ADDR			: std_logic_vector(17 downto 0) := (others => '0');
 	signal s_MP_ADDR			: std_logic_vector(18 downto 0) := (others => '0');
 	signal s_AP_ADDR			: std_logic_vector(15 downto 0) := (others => '0');
 
-	signal s_GP_ADDR_last	: std_logic_vector(15 downto 0) := (others => '0');
-	signal s_MP_ADDR_last	: std_logic_vector(18 downto 0) := (others => '0');
-	signal s_AP_ADDR_last	: std_logic_vector(15 downto 0) := (others => '0');
-
-	signal user_AD				: std_logic_vector(18 downto 0) := (others => '0');
+	signal user_AD				: std_logic_vector(20 downto 0) := (others => '0');
 	signal user_DI				: std_logic_vector(15 downto 0) := (others => '0');
 
 begin
@@ -175,7 +193,7 @@ begin
 
 	-- SRAM muxer, allows access to physical SRAM by either bootstrap or user
 	MEM_D		<= bs_DO		when bs_done = '0' and bs_nWE = '0' else (others => 'Z');	-- no need for user write
-	MEM_A		<= bs_AD		when bs_done = '0' else "00" & user_AD;
+	MEM_A		<= bs_AD		when bs_done = '0' else user_AD;
 	SRAM_nCS	<= bs_nCS	when bs_done = '0' else user_nCS;
 	MEM_nWE	<= bs_nWE	when bs_done = '0' else user_nWE;
 	MEM_nOE	<= bs_nOE	when bs_done = '0' else user_nOE;
@@ -192,9 +210,8 @@ begin
 	u_bs : entity work.bootstrap
 	generic map (
 		-- Keep the first 2MB of flash available for FPGA bitstream so place game ROM data starting at flash offset 0x200000
-		user_address	=> x"200000",
-		user_length		=> x"03C000" -- for synthesis
---		user_length		=> x"000004" -- for faster simulation
+		user_address	=> flash_address,
+		user_length		=> flash_length
 	)
 	port map (
 		I_CLK				=> gclk_28M,
@@ -245,8 +262,7 @@ begin
 	-- Clock
 	u_clks : entity work.TIMING
 	generic map (
-		clk_type => "PLL"	-- for synthesis
---		clk_type => "SIM"	-- for faster simulation
+		clk_type => clk_type
 	)
 	port map(
 		I_CLK => CLK_IN,		-- 50MHz clock
@@ -268,6 +284,7 @@ begin
 	clk4_bufg : BUFG port map (O => gclk_dvi_n, I => clk_dvi_n);
 
 	u_gauntlet : entity work.FPGA_GAUNTLET
+	generic map (slap_type=>slap_type)
 	port map(
 		-- System Clock
 		I_CLK_14M	=> gclk_14M,
@@ -423,6 +440,61 @@ begin
 		dac_o	=> s_dac_out_r
 	);
 
+--	#################################################
+-- ## Internal ROM addresses to external SRAM mapper
+
+--	s_GP_ADDR(17 downto 0) s_GP_DATA(31 downto 0)
+--			GP17..15	P-0 P-1 P-2 P-3
+--	GCS0	0 0 0		1A  1L  2A  2L
+--	GCS1	0 0 1		1B  1MN 2B  2MN
+--	GCS2	0 1 0		1C  1P  2C  2P
+--	GCS3	0 1 1		1D  1R  2D  2R
+--	GCS4	1 0 0		1EF 1ST 2EF 2ST
+--	GCS5	1 0 1		1J  1U  2J  2U
+
+--	s_MP_ADDR(18 downto 0) s_MP_DATA(15 downto 0)
+--			A17..15
+--	ROM0	0 0 0		9A  9B
+--	SLAP	0 1 1		10A 10B
+--	ROM1	1 0 0		7A  7B
+--	ROM2	1 0 1		6A  6B
+--	ROM3	1 1 0		5A  5B
+--	ROM4	1 1 1		3A  3B
+
+--	Mapping of 16K Selectors in SRAM to ROMs
+-- SRAM			ROMS
+--	A20..15		A14..0
+
+--	000000	-	1L  1A
+--	000001	-	1MN 1B
+--	000010	-	1P  1C
+--	000011	-	1R  1D
+--	000100	-	1ST 1EF
+--	000101	-	1U  1J
+--	000110	-
+--	000111	-
+--	001000	-	2L  2A
+--	001001	-	2MN 2B
+--	001010	-	2P  2C
+--	001011	-	2R  2D
+--	001100	-	2ST 2EF
+--	001101	-	2U  2J
+--	001110	-
+--	001111	-
+--	010000	-	9A  9B
+--	010001	-
+--	010010	-
+--	010011	-	10A 10B
+--	010100	-	7A  7B
+--	010101	-	6A  6B
+--	010110	-	5A  5B
+--	010111	-	3A  3B
+--	011000	-
+--	011001	-
+--	011010	-
+--	011011	-
+--	011100	-
+
 	-- multiplex internal ROMs to external SRAM
 	p_ram_mux : process
 	begin
@@ -435,12 +507,12 @@ begin
 
 		case ram_state_ctr is
 			when 3 =>
-				user_AD <= s_MP_ADDR;					-- set 68K program ROM address
+				user_AD <= "01" & s_MP_ADDR;			-- set 68K program ROM address
 			when 0 =>
-				user_AD <= "000"  & s_GP_ADDR;		-- set graphics ROM address for lower data word (GCS0)
+				user_AD <= "000" & s_GP_ADDR;			-- set graphics ROM address for lower data word
 				s_MP_DATA <= MEM_D; 						-- get 68K program data word
 			when 1 =>
-				user_AD <= "001"  & s_GP_ADDR;		-- set graphics ROM address for upper data word (GCS1)
+				user_AD <= "001" & s_GP_ADDR;			-- set graphics ROM address for upper data word
 				s_GP_DATA(15 downto  0) <= MEM_D;	-- get graphics ROM lower data word
 			when 2 =>
 				s_GP_DATA(31 downto 16) <= MEM_D;	-- get graphics ROM upper data word
@@ -454,15 +526,24 @@ begin
 	s_AP_DATA <= slv_ROM_16S when s_AP_ADDR(15)='1' else slv_ROM_16R;
 
 	-- 68K directly connected ROMS
---	ROM_7A  : entity work.ROM_7A  port map ( CLK=>gclk_28M, DATA=>slv_ROM_7A,  ADDR=>s_MP_ADDR(14 downto 0) );
---	ROM_7B  : entity work.ROM_7B  port map ( CLK=>gclk_28M, DATA=>slv_ROM_7B,  ADDR=>s_MP_ADDR(14 downto 0) );
 --	ROM_9A  : entity work.ROM_9A  port map ( CLK=>gclk_28M, DATA=>slv_ROM_9A,  ADDR=>s_MP_ADDR(14 downto 0) );
 --	ROM_9B  : entity work.ROM_9B  port map ( CLK=>gclk_28M, DATA=>slv_ROM_9B,  ADDR=>s_MP_ADDR(14 downto 0) );
 --	ROM_10A : entity work.ROM_10A port map ( CLK=>gclk_28M, DATA=>slv_ROM_10A, ADDR=>s_MP_ADDR(13 downto 0) );
 --	ROM_10B : entity work.ROM_10B port map ( CLK=>gclk_28M, DATA=>slv_ROM_10B, ADDR=>s_MP_ADDR(13 downto 0) );
+--	ROM_7A  : entity work.ROM_7A  port map ( CLK=>gclk_28M, DATA=>slv_ROM_7A,  ADDR=>s_MP_ADDR(14 downto 0) );
+--	ROM_7B  : entity work.ROM_7B  port map ( CLK=>gclk_28M, DATA=>slv_ROM_7B,  ADDR=>s_MP_ADDR(14 downto 0) );
+--	ROM_6A  : entity work.ROM_6A  port map ( CLK=>gclk_28M, DATA=>slv_ROM_6A,  ADDR=>s_MP_ADDR(14 downto 0) );
+--	ROM_6B  : entity work.ROM_6B  port map ( CLK=>gclk_28M, DATA=>slv_ROM_6B,  ADDR=>s_MP_ADDR(14 downto 0) );
+--	ROM_5A  : entity work.ROM_5A  port map ( CLK=>gclk_28M, DATA=>slv_ROM_5A,  ADDR=>s_MP_ADDR(14 downto 0) );
+--	ROM_5B  : entity work.ROM_5B  port map ( CLK=>gclk_28M, DATA=>slv_ROM_5B,  ADDR=>s_MP_ADDR(14 downto 0) );
+--	ROM_3A  : entity work.ROM_3A  port map ( CLK=>gclk_28M, DATA=>slv_ROM_3A,  ADDR=>s_MP_ADDR(14 downto 0) );
+--	ROM_3B  : entity work.ROM_3B  port map ( CLK=>gclk_28M, DATA=>slv_ROM_3B,  ADDR=>s_MP_ADDR(14 downto 0) );
 --	s_MP_DATA <=
---		slv_ROM_7A  & slv_ROM_7B  when s_MP_ADDR(18 downto 15)=x"4" else -- /ROM1 40000
---		slv_ROM_9A  & slv_ROM_9B  when s_MP_ADDR(18 downto 15)=x"5" else -- /ROM0 00000
---		slv_ROM_10A & slv_ROM_10B when s_MP_ADDR(18 downto 15)=x"6" else -- /SLAP 38000
+--		slv_ROM_9A  & slv_ROM_9B  when s_MP_ADDR(17 downto 15)="000" else -- /ROM0 00000
+--		slv_ROM_10A & slv_ROM_10B when s_MP_ADDR(17 downto 15)="011" else -- /SLAP 38000
+--		slv_ROM_7A  & slv_ROM_7B  when s_MP_ADDR(17 downto 15)="100" else -- /ROM1 40000
+--		slv_ROM_6A  & slv_ROM_6B  when s_MP_ADDR(17 downto 15)="101" else -- /ROM2 50000
+--		slv_ROM_5A  & slv_ROM_5B  when s_MP_ADDR(17 downto 15)="110" else -- /ROM3 60000
+--		slv_ROM_3A  & slv_ROM_3B  when s_MP_ADDR(17 downto 15)="111" else -- /ROM4 70000
 --		(others=>'1');
 end RTL;

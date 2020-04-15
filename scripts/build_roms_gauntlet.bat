@@ -9,7 +9,7 @@ REM "136032.101.e3"         256               SHA1(84d422b53547271e3a07342704a05
 REM "136032.102.e5"         256               SHA1(2d327e78832edd67ca3909c25b8c8c839637a1ed)
 REM "136032.103.f7.bin",    235               SHA1(0a42a4816c89447b16e1f3245409591efea98a4a)
 
-REM "maincpu" /* 68000 code */
+REM "maincpu" /* 68010 code */
 REM "136037-1409.7a",     32768 CRC(6fb8419c) SHA1(299fee0368f6027bacbb57fb469e817e64e0e41d)
 REM "136037-1410.7b",     32768 CRC(931bd2a0) SHA1(d69b45758d1c252a93dbc2263efa9de1f972f62e)
 REM "136037-1307.9a",     32768 CRC(46fe8743) SHA1(d5fa19e028a2f43658330c67c10e0c811d332780)
@@ -35,7 +35,7 @@ REM "136037-117.2l",      32768 CRC(29a5db41) SHA1(94f4f5dd39e724570a0f54af176ad
 REM "136037-118.2mn",     32768 CRC(8bf3b263) SHA1(683d900ab7591ee661218be2406fb375a12e435c)
 
 set rom_path_src=..\roms\gauntlet
-set rom_path=..\source\gauntlet\ROMS
+set rom_path=..\source\gauntlet\ROMS.G1
 
 mkdir %rom_path%
 
@@ -77,7 +77,7 @@ echo #   3E - only 32 bytes long
 echo #   4R - only 4 bit data width
 echo #   5E - only 4 bit data width
 echo #   5L - only 128 bytes long
-echo #   6P - only 16KB long
+echo #   6P - only 8KB long, second 8K filled with 00
 echo ##################################################
 
 pause

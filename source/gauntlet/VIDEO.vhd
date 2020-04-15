@@ -46,7 +46,7 @@ entity VIDEO is
 		O_CSYNC				: out	std_logic;
 		-- external GFX ROMs
 		O_GP_EN				: out	std_logic;
-		O_GP_ADDR			: out	std_logic_vector(15 downto 0);
+		O_GP_ADDR			: out	std_logic_vector(17 downto 0);
 		I_GP_DATA			: in 	std_logic_vector(31 downto  0)
 	);
 end VIDEO;
@@ -229,7 +229,8 @@ begin
 	O_VSYNC   <= sl_VSYNCn;
 	O_CSYNC   <= sl_HSYNCn and sl_VSYNCn;
 
-	O_GP_ADDR <= slv_GP_ADDR(15) & sl_GP_ADDR14 & slv_GP_ADDR(13 downto 0);
+	-- Vindicators II uses ROM 2J which is the only ROM with a scrambled address -- FIXME
+	O_GP_ADDR <= slv_GP_ADDR(17 downto 15) & sl_GP_ADDR14 & slv_GP_ADDR(13 downto 0);
 	O_GP_EN   <= sl_GP_EN;
 
 	sl_MCKF   <= not I_MCKR;
@@ -377,7 +378,7 @@ begin
 	-- when /4HDL is active selects 3C, 3J outputs
 	sl_HFLP <= slv_TILE(15) when sl_4HDLn = '0' else slv_4C_4K(15);
 
-	-- 3F selector is external because all ROMs are also external, address bits 17:15 below would decode to GCS0..5
+	-- 3F decoder is external because all ROMs are also external, address bits 17:15 below would decode to GCS0..5
 	slv_GP_ADDR(17 downto 3) <= slv_TILE(14 downto 8) & slv_MPIC when sl_4HDLn = '0' else '0' & slv_PFV(11 downto 10) & slv_4C_4K(11 downto 0);
 
 	-- 3E mux, SEL 0=A, 1=B

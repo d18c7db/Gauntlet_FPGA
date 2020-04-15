@@ -54,14 +54,6 @@ use ieee.std_logic_1164.ALL;
 use ieee.std_logic_unsigned.ALL;
 use work.TG68K_Pack.ALL;
 
---pragma translate_off
-library ieee;
-	use ieee.std_logic_arith.all;
-	use ieee.numeric_std.all;
-	use ieee.std_logic_textio.all;
-	use std.textio.all;
---pragma translate_on
-
 entity TG68KdotC_Kernel is
   generic (
 	SR_Read        : integer := 2; --0=>user,  1=>privileged,   2=>switchable with CPU(0)
@@ -301,21 +293,6 @@ architecture logic of TG68KdotC_Kernel is
   signal regin                  : std_logic_vector(31 downto 0):=(others=>'0');
 
 begin
---pragma translate_off
-	p_debug_writemem : process
-		file		file_xx		: TEXT open WRITE_MODE is "..\..\SIM\T68K.log";
-		variable	s				: line;
-	begin
-		wait until falling_edge(clk);
-		if setopcode = '1' and clkena_lw = '1' then
-			if state="00" then
-				hwrite(s,        addr(23 downto 0)); write(s, " -- "); hwrite(s,       data_in); write(s, " - "); write(s, time'image(now), right, 18); writeline(file_xx,s);
-			else
-				hwrite(s, last_opc_pc(23 downto 0)); write(s, " -- "); hwrite(s, last_opc_read); write(s, " - "); write(s, time'image(now), right, 18); writeline(file_xx,s);
-			end if;
-		end if;
-	end process;
---pragma translate_on
 
   ALU : TG68K_ALU
   generic map(

@@ -40,27 +40,15 @@ end TIMING;
 
 architecture RTL of TIMING is
 	signal	clkfb, pll_locked, clk0, clk1, clk2, clk3, clk4, clk5 : std_logic := '0';
-	signal	delay : std_logic_vector(9 downto 0) := (others => '0');
-	signal	ctr1  : std_logic_vector(2 downto 0) := (others => '0');
-	signal	ctr2  : std_logic_vector(2 downto 0) := "011";
+	signal	ctr1 : std_logic_vector(2 downto 0) := (others => '0');
+	signal	ctr2 : std_logic_vector(2 downto 0) := "011";
 begin
 -- Simulation times vastly different
 -- with 28M counter 5ms takes  9 sec
 --	with DCM_SP      5ms takes 16 sec
 --	with PLL_BASE    5ms takes 50 sec
 
-	O_RST <= I_RST or (not pll_locked);-- or (not delay(9));
---	p_delay : process
---	begin
---		wait until rising_edge(I_CLK);
---		if (I_RST='1') or (pll_locked='0') then
---			delay <= (others => '0');
---		else
---			if delay(9) = '0' then
---				delay <= delay + 1;
---			end if;
---		end if;
---	end process;
+	O_RST <= I_RST or (not pll_locked);
 
 	-- simulates the timing of the PLL for faster simulation
 	gen_sim : if  clk_type = "SIM" generate

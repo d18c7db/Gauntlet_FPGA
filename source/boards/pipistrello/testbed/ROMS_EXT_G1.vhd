@@ -55,11 +55,11 @@ begin
 		slv_ROM_2L  & slv_ROM_2A  when ADDR(20 downto 15)="001000"  and ENA = '1' else -- 40000-47FFF 32K-32K GS0 plane 3, 2
 		slv_ROM_2MN & slv_ROM_2B  when ADDR(20 downto 15)="001001"  and ENA = '1' else -- 48000-4FFFF 32K-32K GS1 plane 3, 2
 
-		slv_ROM_9A  & slv_ROM_9B  when ADDR(20 downto 15)="100000"  and ENA = '1' else -- 80000-87FFF 32K-32K ROM0
-		slv_ROM_10A & slv_ROM_10B when ADDR(20 downto 15)="100011"  and ENA = '1' else -- 88000-8FFFF 16K-16K SLAP
-		slv_ROM_7A  & slv_ROM_7B  when ADDR(20 downto 15)="100100"  and ENA = '1' else -- 90000-97FFF 32K-32K ROM1
+		slv_ROM_9A  & slv_ROM_9B  when ADDR(20 downto 15)="010000"  and ENA = '1' else -- 80000-87FFF 32K-32K ROM0
+		slv_ROM_10A & slv_ROM_10B when ADDR(20 downto 15)="010011"  and ENA = '1' else -- 88000-8FFFF 16K-16K SLAP
+		slv_ROM_7A  & slv_ROM_7B  when ADDR(20 downto 15)="010100"  and ENA = '1' else -- 90000-97FFF 32K-32K ROM1
 
-		slv_ROM_16R & slv_ROM_16S when ADDR(20 downto 15)="101000"  and ENA = '1' else -- B0000-B7FFF 16K-32K Audio
+		slv_ROM_16R & slv_ROM_16S when ADDR(20 downto 15)="011000"  and ENA = '1' else -- B0000-B7FFF 16K-32K Audio
 		(others=>'1');
 
 	-- Gauntlet ROMs

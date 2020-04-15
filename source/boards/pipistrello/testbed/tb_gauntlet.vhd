@@ -49,11 +49,7 @@ architecture RTL of tb_gauntlet is
 	constant CLK_period  : TIME := 1000 ns / 50;		-- 50MHz external clock
 
 begin
-	-- Choose correct ROM set for simulation
 	u_ROMS_EXT : entity work.ROMS_EXT
-	generic map (chip_type=>104) -- Gauntlet
---	generic map (chip_type=>106) -- Gauntlet II
---	generic map (chip_type=>118) -- Vindicators II
 	port map (
 		CLK			=>	CLKS,
 		ENA			=>	'1',

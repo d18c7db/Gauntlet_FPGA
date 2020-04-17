@@ -512,7 +512,7 @@ begin
 		-- sign extend to 14 bits and add all outputs together as signed integers
 		s_chan_l <=  signed(s_audio_YML(11) & s_audio_YML(11) & s_audio_YML)
 					+ ( signed(s_audio_POK(11) & s_audio_POK(11) & s_audio_POK)
-					+	 signed(s_audio_TMS(11) & s_audio_TMS(11) & s_audio_TMS) );
+					+   signed(s_audio_TMS(11) & s_audio_TMS(11) & s_audio_TMS) );
 		s_chan_r <=  signed(s_audio_YMR(11) & s_audio_YMR(11) & s_audio_YMR)
 					+ ( signed(s_audio_POK(11) & s_audio_POK(11) & s_audio_POK)
 					+   signed(s_audio_TMS(11) & s_audio_TMS(11) & s_audio_TMS) );

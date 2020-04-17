@@ -21,8 +21,8 @@ REM  68000 6FFFF  2U     2J   32K-32K padding
 REM  70000 77FFF              32K-32K padding
 REM  78000-7FFFF              32K-32K padding
 REM  80000-87FFF  9A     9B   32K-32K ROM0
-REM  88000-8FFFF  PAD    PAD  32K 32K padding
-REM  90000-97FFF  PAD    PAD  32K 32K padding
+REM  88000-8FFFF              32K 32K padding
+REM  90000-97FFF              32K 32K padding
 REM  98000-9FFFF  10A    10B  16K-16K SLAP plus 16K padding
 REM  A0000-A7FFF  7A     7B   32K-32K ROM1
 REM  A8000-AFFFF  6A     6B   32K-32K ROM2
@@ -91,6 +91,6 @@ SET SOURCES=%SOURCES% + %ROMS%\136043-1120.16R+16K-FF.BIN
 COPY/B %SOURCES% ROMS.BIN >NUL
 
 REM Write bitstream and ROMS to flash
-..\..\papilio-prog.exe -b ..\..\pipistrello_bscan_spi_6slx45csg324.bit -f ..\iseconfig\build\gauntlet_top.bit -a 2A8000:ROMS.BIN -v
+..\..\papilio-prog.exe -b ..\..\pipistrello_bscan_spi_6slx45csg324.bit -f ..\iseconfig\build\gauntlet_top.bit -a 390000:ROMS.BIN -v
 REM DEL ROMS.BIN
 PAUSE

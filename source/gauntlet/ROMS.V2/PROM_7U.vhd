@@ -48,7 +48,7 @@ architecture RTL of PROM_7U is
 	);
 
 	attribute ram_style : string;
-	attribute ram_style of ROM : signal is "auto";
+	attribute ram_style of ROM : signal is "block";
 begin
 	mem_proc : process
 	begin

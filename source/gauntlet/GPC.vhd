@@ -93,7 +93,7 @@ begin
 				when "01" => slv_9D <= '0' & not I_M(6 downto 0);
 				when "10" => slv_9D <= I_P;
 				when "11" => slv_9D <= I_P(3 downto 0) & not I_M(3 downto 0);
-				when others => slv_9D <= "11111111";
+				when others => slv_9D <= (others=>'1');
 			end case;
 		end if;
 	end process;

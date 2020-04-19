@@ -89,6 +89,8 @@ genrom.py %rom_path_src%\136059-1160.16s      ROM_16R %rom_path%\ROM_16R.vhd
 REM "gfx1"
 genrom.py %rom_path_src%\136059-1198.6p       ROM_6P  %rom_path%\ROM_6P.vhd
 
+descramble_2J.py %rom_path_src%\136059-1184.2j 136059-1184.2j
+
 REM "gfx2"
 genrom.py %rom_path_src%\136059-1162.1a       ROM_1A  %rom_path%\ROM_1A.vhd
 genrom.py %rom_path_src%\136059-1166.1b       ROM_1B  %rom_path%\ROM_1B.vhd
@@ -107,13 +109,14 @@ genrom.py %rom_path_src%\136059-1168.2b       ROM_2B  %rom_path%\ROM_2B.vhd
 genrom.py %rom_path_src%\136059-1172.2c       ROM_2C  %rom_path%\ROM_2C.vhd
 genrom.py %rom_path_src%\136059-1176.2d       ROM_2D  %rom_path%\ROM_2D.vhd
 genrom.py %rom_path_src%\136059-1180.2ef      ROM_2EF %rom_path%\ROM_2EF.vhd
-genrom.py %rom_path_src%\136059-1184.2j       ROM_2J  %rom_path%\ROM_2J.vhd
+genrom.py                136059-1184.2j       ROM_2J  %rom_path%\ROM_2J.vhd
 genrom.py %rom_path_src%\136059-1165.2l       ROM_2L  %rom_path%\ROM_2L.vhd
 genrom.py %rom_path_src%\136059-1169.2mn      ROM_2MN %rom_path%\ROM_2MN.vhd
 genrom.py %rom_path_src%\136059-1173.2p       ROM_2P  %rom_path%\ROM_2P.vhd
 genrom.py %rom_path_src%\136059-1177.2r       ROM_2R  %rom_path%\ROM_2R.vhd
 genrom.py %rom_path_src%\136059-1181.2st      ROM_2ST %rom_path%\ROM_2ST.vhd
 genrom.py %rom_path_src%\136059-1185.2u       ROM_2U  %rom_path%\ROM_2U.vhd
+del 136059-1184.2j
 
 echo ##################################################
 echo # Remember these ROMs need to be manually adjusted

@@ -16,9 +16,6 @@ library ieee;
 
 -- ROMs organized as 512K x 16
 entity ROMS_EXT is
-	generic (
-		chip_type			: integer range 100 to 118 := 104
-	);
 	port(
 		CLK		: in	std_logic;
 		ENA		: in	std_logic;

@@ -233,7 +233,7 @@ begin
 	p_11R : process(I_RESET, I_MCKR)
 	begin
 		if I_RESET = '1' then
-			ctr_11R <= "0000";
+			ctr_11R <= (others=>'0');
 		elsif rising_edge(I_MCKR) then
 			sl_VBLANKn_last<=I_VBLANKn;
 			if sl_WDOGn = '0' then

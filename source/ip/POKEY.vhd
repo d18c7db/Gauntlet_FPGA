@@ -321,7 +321,7 @@ begin
 
 	-- dump transistors
 	--PIN <= x"00" when (pot_fin = '1') else (others => 'Z');
-	p_in_gate : process(pin_reg, reset) -- dump transistor fakeup
+	p_in_gate : process(pin_reg, reset, pot_fin) -- dump transistor fakeup
 	begin
 		pin_reg_gated <= pin_reg;
 		-- I think the datasheet lies about dump transistors being disabled

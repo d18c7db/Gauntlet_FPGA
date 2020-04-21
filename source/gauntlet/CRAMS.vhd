@@ -13,7 +13,7 @@
 
 library ieee;
 	use ieee.std_logic_1164.all;
-	use ieee.std_logic_unsigned.all;
+	use ieee.numeric_std.all;
 
 library unimacro;
 	use unimacro.vcomponents.all;
@@ -33,69 +33,53 @@ end CRAMS;
 
 architecture RTL of CRAMS is
 	signal
-		sl_CRAM_CS,
+		sl_CRAM_CS_U,
+		sl_CRAM_CS_L,
 		sl_CRAMWRn
 								: std_logic := '1';
-	signal
-		slv_CRAM_WE
-								: std_logic_vector(1 downto 0) := (others=>'0');
+
+	type RAM_ARRAY_1Kx8 is array (0 to 1023) of std_logic_vector(7 downto 0);
+	signal CRAM_U : RAM_ARRAY_1Kx8:=(others=>(others=>'0'));
+	signal CRAM_L : RAM_ARRAY_1Kx8:=(others=>(others=>'0'));
+	-- Tell synthesis to use block RAMs if possible
+	attribute ram_style : string;
+	attribute ram_style of CRAM_U : signal is "block";
+	attribute ram_style of CRAM_L : signal is "block";
 begin
 	------------------------
 	-- sheet 15 Color RAM --
 	------------------------
 
-	-- BRAM_SINGLE_MACRO: Single Port RAM Spartan-6
-	-- Xilinx HDL Language Template, version 14.7
-	-- Note - This Unimacro model assumes the port directions to be "downto".
-	-----------------------------------------------------------------------
-	--  BRAM_SIZE | RW DATA WIDTH | RW Depth | RW ADDR Width | WE Width
-	-- ===========|===============|==========|===============|=========
-	--   "18Kb"   |     19-36     |    512   |      9-bit    |   4-bit
-	--   "18Kb"   |     10-18     |   1024   |     10-bit    |   2-bit
-	--    "9Kb"   |     10-18     |    512   |      9-bit    |   2-bit
-	--   "18Kb"   |      5-9      |   2048   |     11-bit    |   1-bit
-	--    "9Kb"   |      5-9      |   1024   |     10-bit    |   1-bit
-	--   "18Kb"   |      3-4      |   4096   |     12-bit    |   1-bit
-	--    "9Kb"   |      3-4      |   2048   |     11-bit    |   1-bit
-	--   "18Kb"   |        2      |   8192   |     13-bit    |   1-bit
-	--   " 9Kb"   |        2      |   4096   |     12-bit    |   1-bit
-	--   "18Kb"   |        1      |  16384   |     14-bit    |   1-bit
-	--    "9Kb"   |        1      |   8192   |     13-bit    |   1-bit
-	-------------------------------------------------------------------
-
-	-- 9L, 9M, 10L, 10M RAM
-	p_9L_9M_10L_10M  : BRAM_SINGLE_MACRO
-	generic map (
-		BRAM_SIZE	=> "18Kb",				-- Target BRAM, "9Kb" or "18Kb"
-		DEVICE		=> "SPARTAN6",			-- Target Device: "VIRTEX5", "VIRTEX6", "SPARTAN6"
-		READ_WIDTH	=> 16,					-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		WRITE_WIDTH => 16,					-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		DO_REG		=> 0,						-- Optional output register (0 or 1)
-		SRVAL			=> x"000000000",		-- Set/Reset value for port output
-		INIT			=> x"000000000",		-- Initial values on output port
-		INIT_FILE	=> "NONE",
-		WRITE_MODE	=> "WRITE_FIRST"		-- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
-	)
-
-	port map (
-		DO				=> O_DB,						-- Output data, width defined by READ_WIDTH parameter
-		ADDR			=> I_CRA(9 downto 0),		-- Input address, width defined by read/write port depth
-		CLK			=> I_MCKR,						-- 1-bit input clock
-		DI				=> I_DB,							-- Input data port, width defined by WRITE_WIDTH parameter
-		EN				=> sl_CRAM_CS,					-- 1-bit input RAM enable
-		REGCE			=> '0',							-- 1-bit input output register enable
-		RST			=> '0',							-- 1-bit input reset
-		WE				=> slv_CRAM_WE					-- Input write enable, width defined by write port depth
-	);
-
-	slv_CRAM_WE <= not (
-		(((not I_CRAMn) and I_UDSn) or sl_CRAMWRn) &
-		(((not I_CRAMn) and I_LDSn) or sl_CRAMWRn)
-	);
-
 	-- gates 7W, 11P
-	sl_CRAM_CS	<= not (I_UDSn and I_LDSn and (not I_CRAMn));
+	sl_CRAM_CS_U	<= I_UDSn and (not I_CRAMn);
+	sl_CRAM_CS_L	<= I_LDSn and (not I_CRAMn);
 
 	-- gate 7X
 	sl_CRAMWRn	<= I_CRAMn or I_BR_Wn;
+
+	-- 10L, 10M RAM
+	p_CRAM_U : process
+	begin
+		wait until rising_edge(I_MCKR);
+		if sl_CRAM_CS_U = '0' then
+			if sl_CRAMWRn = '0' then
+				CRAM_U(to_integer(unsigned(I_CRA))) <= I_DB(15 downto 8);
+			else
+				O_DB(15 downto 8) <= CRAM_U(to_integer(unsigned(I_CRA)));
+			end if;
+		end if;
+	end process;
+
+	-- 9L, 9M
+	p_CRAM_L : process
+	begin
+		wait until rising_edge(I_MCKR);
+		if sl_CRAM_CS_L = '0' then
+			if sl_CRAMWRn = '0' then
+				CRAM_L(to_integer(unsigned(I_CRA))) <= I_DB( 7 downto 0);
+			else
+				O_DB( 7 downto 0) <= CRAM_L(to_integer(unsigned(I_CRA)));
+			end if;
+		end if;
+	end process;
 end RTL;

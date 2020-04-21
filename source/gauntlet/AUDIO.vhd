@@ -15,9 +15,6 @@ library ieee;
 	use ieee.std_logic_unsigned.all;
 	use ieee.numeric_std.all;
 
-library unimacro;
-	use unimacro.vcomponents.all;
-
 entity AUDIO is
 	port(
 		I_MCKR				: in	std_logic;	-- 7.14MHz
@@ -79,6 +76,7 @@ architecture RTL of AUDIO is
 		sl_POKEY_cs
 								: std_logic := '0';
 	signal
+		sl_SWR,
 		sl_SYNC,
 		sl_MCKF,
 		sl_PHI2,
@@ -101,9 +99,6 @@ architecture RTL of AUDIO is
 		sl_ROM_16S_cs
 								: std_logic := '1';
 	signal
-		sl_SWR
-								: std_logic_vector( 0 downto 0) := (others => '0');
-	signal
 		slv_YM_vol,
 		slv_PM_vol,
 		slv_SM_vol
@@ -112,6 +107,8 @@ architecture RTL of AUDIO is
 		sph_ctr
 								: std_logic_vector( 3 downto 0) := (others => '0');
 	signal
+		slv_l,
+		slv_r,
 		slv_12P,
 		slv_IO,
 		slv_16R_ROM_data,
@@ -204,76 +201,9 @@ begin
 		end if;
 	end process;
 
-	-- BRAM_SINGLE_MACRO: Single Port RAM Spartan-6
-	-- Xilinx HDL Language Template, version 14.7
-	-- Note - This Unimacro model assumes the port directions to be "downto".
-	-----------------------------------------------------------------------
-	--  BRAM_SIZE | RW DATA WIDTH | RW Depth | RW ADDR Width | WE Width
-	-- ===========|===============|==========|===============|=========
-	--   "18Kb"   |     19-36     |    512   |      9-bit    |   4-bit
-	--    "9Kb"   |     10-18     |    512   |      9-bit    |   2-bit
-	--   "18Kb"   |     10-18     |   1024   |     10-bit    |   2-bit
-	--    "9Kb"   |      5-9      |   1024   |     10-bit    |   1-bit
-	--   "18Kb"   |      5-9      |   2048   |     11-bit    |   1-bit
-	--    "9Kb"   |      3-4      |   2048   |     11-bit    |   1-bit
-	--   "18Kb"   |      3-4      |   4096   |     12-bit    |   1-bit
-	--   " 9Kb"   |        2      |   4096   |     12-bit    |   1-bit
-	--   "18Kb"   |        2      |   8192   |     13-bit    |   1-bit
-	--    "9Kb"   |        1      |   8192   |     13-bit    |   1-bit
-	--   "18Kb"   |        1      |  16384   |     14-bit    |   1-bit
-	-------------------------------------------------------------------
+	p_RAM_16N : entity work.RAM_2K8 port map (I_MCKR => sl_MCKF, I_EN => sl_RAM_16N_CS, I_WR => sl_SWR, I_ADDR => slv_SBA(10 downto 0), I_DATA => slv_SBDO, O_DATA => slv_16N_RAM_data );
+	p_RAM_16M : entity work.RAM_2K8 port map (I_MCKR => sl_MCKF, I_EN => sl_RAM_16M_CS, I_WR => sl_SWR, I_ADDR => slv_SBA(10 downto 0), I_DATA => slv_SBDO, O_DATA => slv_16M_RAM_data );
 
-	-- 16N RAM
-	p_16N  : BRAM_SINGLE_MACRO
-	generic map (
-		BRAM_SIZE	=> "18Kb",					-- Target BRAM, "9Kb" or "18Kb"
-		DEVICE		=> "SPARTAN6",				-- Target Device: "VIRTEX5", "VIRTEX6", "SPARTAN6"
-		READ_WIDTH	=> 8,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		WRITE_WIDTH => 8,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		DO_REG		=> 0,							-- Optional output register (0 or 1)
-		SRVAL			=> x"000000000",			-- Set/Reset value for port output
-		INIT			=> x"000000000",			-- Initial values on output port
-		INIT_FILE	=> "NONE",
-		WRITE_MODE	=> "WRITE_FIRST"			-- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
-	)
-
-	port map (
-		DO				=> slv_16N_RAM_data,		-- Output data, width defined by READ_WIDTH parameter
-		ADDR			=> slv_SBA(10 downto 0),-- Input address, width defined by read/write port depth
-		CLK			=> sl_MCKF,					-- 1-bit input clock
-		DI				=> slv_SBDO,				-- Input data port, width defined by WRITE_WIDTH parameter
-		EN				=> sl_RAM_16N_CS,			-- 1-bit input RAM enable
-		REGCE			=> '0',						-- 1-bit input output register enable
-		RST			=> '0',						-- 1-bit input reset
-		WE				=> sl_SWR					-- Input write enable, width defined by write port depth
-	);
-
-	-- 16M RAM
-	p_16M  : BRAM_SINGLE_MACRO
-	generic map (
-		BRAM_SIZE	=> "18Kb",					-- Target BRAM, "9Kb" or "18Kb"
-		DEVICE		=> "SPARTAN6",				-- Target Device: "VIRTEX5", "VIRTEX6", "SPARTAN6"
-		READ_WIDTH	=> 8,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		WRITE_WIDTH => 8,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		DO_REG		=> 0,							-- Optional output register (0 or 1)
-		SRVAL			=> x"000000000",			-- Set/Reset value for port output
-		INIT			=> x"000000000",			-- Initial values on output port
-		INIT_FILE	=> "NONE",
-		WRITE_MODE	=> "WRITE_FIRST"			-- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
-	)
-
-	port map (
-		DO				=> slv_16M_RAM_data,		-- Output data, width defined by READ_WIDTH parameter
-		ADDR			=> slv_SBA(10 downto 0),-- Input address, width defined by read/write port depth
-		CLK			=> sl_MCKF,					-- 1-bit input clock
-		DI				=> slv_SBDO,				-- Input data port, width defined by WRITE_WIDTH parameter
-		EN				=> sl_RAM_16M_CS,			-- 1-bit input RAM enable
-		REGCE			=> '0',						-- 1-bit input output register enable
-		RST			=> '0',						-- 1-bit input reset
-		WE				=> sl_SWR					-- Input write enable, width defined by write port depth
-	);
-
-	-- Xilinx Block RAMs are active high, so inverted from schematic
 	sl_ROM_16S_CS	<= not sl_14L4;	-- @8000-FFFF
 	sl_ROM_16R_CS	<= not sl_13L5;	-- @4000-7FFF
 	sl_RAM_16N_CS	<= not sl_14P5;	-- @0800-0FFF
@@ -327,7 +257,7 @@ begin
 	-- 16T/U simplified addressable latch
 	p_16T_U : process
 	begin
-		wait until rising_edge(sl_MCKF);
+		wait until falling_edge(I_MCKR);
 		if I_SNDRESn = '0' then
 			sl_YAMRESn		<= '0';
 			sl_SPHWRRn		<= '0';
@@ -355,8 +285,8 @@ begin
 
 	-- gates 12S
 	sl_SWRn		<= not (sl_B02 and sl_SBW_Rn);
-	sl_SRDn	 	<= not (sl_B02 and sl_SBR_Wn);
-	sl_SWR(0)	<= not sl_SWRn; -- inverted for Xilinx Block RAM
+	sl_SRDn		<= not (sl_B02 and sl_SBR_Wn);
+	sl_SWR		<= not sl_SWRn;
 	sl_SBW_Rn	<= not sl_SBR_Wn;
 	sl_B02		<= sl_PHI2;
 
@@ -518,9 +448,12 @@ begin
 					+   signed(s_audio_TMS(11) & s_audio_TMS(11) & s_audio_TMS) );
 
 		-- convert output back to unsigned for DAC usage
-		O_AUDIO_L <= std_logic_vector(not s_chan_l(13) & s_chan_l(12 downto 6));
-		O_AUDIO_R <= std_logic_vector(not s_chan_r(13) & s_chan_r(12 downto 6));
+		slv_l <= std_logic_vector(not s_chan_l(13) & s_chan_l(12 downto 6));
+		slv_r <= std_logic_vector(not s_chan_r(13) & s_chan_r(12 downto 6));
 	end process;
+
+	O_AUDIO_L <= slv_l;
+	O_AUDIO_R <= slv_r;
 
 	-------------
 	-- sheet 7 --

@@ -68,7 +68,7 @@ entity FPGA_GAUNTLET is
 		O_VSYNC				: out	std_logic;
 		O_CSYNC				: out	std_logic;
 
-		-- GFX ROMs
+		-- GFX ROMs, read from non existent ROMs MUST return FFFFFFFF
 		O_GP_EN				: out	std_logic := '0';
 		O_GP_ADDR			: out	std_logic_vector(17 downto 0) := (others=>'0');
 		I_GP_DATA			: in 	std_logic_vector(31 downto 0) := (others=>'0');
@@ -164,6 +164,7 @@ begin
 	);
 
 	u_video : entity work.VIDEO
+	generic map (slap_type=>slap_type)
 	port map (
 		I_MCKR				=> I_CLK_7M,
 		I_ADDR				=> slv_addr,

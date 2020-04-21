@@ -111,7 +111,12 @@ architecture RTL of VGA_SCANCONV is
 	signal hcnto			: integer range 0 to 1023 := 0;
 	signal hcnti			: integer range 0 to 1023 := 0;
 
-	signal CLK_x2_n		: std_logic := '1';
+	type RAM_ARRAY_1Kx16 is array (0 to 1023) of std_logic_vector(15 downto 0);
+	signal DPRAM : RAM_ARRAY_1Kx16:=(others=>(others=>'0'));
+
+	-- Ask synthesis tools to use block RAMs if possible
+	attribute ram_style : string;
+	attribute ram_style of DPRAM : signal is "block";
 
 begin
 	-- convert input video from 16bit IRGB to 12 bit RGB
@@ -119,54 +124,21 @@ begin
 	u_G : entity work.RGBI port map (ADDR(7 downto 4)=>I_VIDEO(15 downto 12), ADDR(3 downto 0)=>I_VIDEO( 7 downto 4), DATA=>ivideo( 7 downto 4));
 	u_B : entity work.RGBI port map (ADDR(7 downto 4)=>I_VIDEO(15 downto 12), ADDR(3 downto 0)=>I_VIDEO( 3 downto 0), DATA=>ivideo( 3 downto 0));
 
-	-- BRAM_SDP_MACRO: Simple Dual Port RAM Spartan-6
-	-- Xilinx HDL Language Template, version 14.7
-	-- Note - This Unimacro model assumes the port directions to be "downto".
-	-----------------------------------------------------------------------
-	--  BRAM_SIZE | RW DATA WIDTH | RW Depth | RW ADDR Width | WE Width
-	-- ===========|===============|==========|===============|=========
-	--   "18Kb"   |     19-36     |    512   |      9-bit    |   4-bit
-	--    "9Kb"   |     10-18     |    512   |      9-bit    |   2-bit
-	--   "18Kb"   |     10-18     |   1024   |     10-bit    |   2-bit
-	--    "9Kb"   |      5-9      |   1024   |     10-bit    |   1-bit
-	--   "18Kb"   |      5-9      |   2048   |     11-bit    |   1-bit
-	--    "9Kb"   |      3-4      |   2048   |     11-bit    |   1-bit
-	--   "18Kb"   |      3-4      |   4096   |     12-bit    |   1-bit
-	--   " 9Kb"   |        2      |   4096   |     12-bit    |   1-bit
-	--   "18Kb"   |        2      |   8192   |     13-bit    |   1-bit
-	--    "9Kb"   |        1      |   8192   |     13-bit    |   1-bit
-	--   "18Kb"   |        1      |  16384   |     14-bit    |   1-bit
-	-------------------------------------------------------------------
+	-- simple dual port RAM (read port)
+	p_SDP_RAM_RD : process
+	begin
+		wait until falling_edge(CLK_x2);
+		ovideo <= DPRAM(to_integer(unsigned(RDADDR)));
+	end process;
 
-	-- dual port, video line double buffer, max 512 pixels/line
-	u_ram : BRAM_SDP_MACRO
-	generic map (
-		BRAM_SIZE				=> "18Kb",				-- Target BRAM, "9Kb" or "18Kb"
-		DEVICE					=> "SPARTAN6",			-- Target device: "VIRTEX5", "VIRTEX6", "SPARTAN6"
-		READ_WIDTH				=> 16,					-- Valid values are 1-36
-		WRITE_WIDTH				=> 16,					-- Valid values are 1-36
-		DO_REG					=> 0,						-- Optional output register (0 or 1)
-		SRVAL						=> x"000000000",		-- Set/Reset value for port output
-		INIT						=> x"000000000",		-- Initial values on output port
-		INIT_FILE				=> "NONE",
-		SIM_COLLISION_CHECK	=> "ALL"					-- Collision check enable "ALL", "WARNING_ONLY", "GENERATE_X_ONLY" or "NONE"
-	)
-	port map (
-		DO							=> ovideo,				-- Output read data port, width defined by READ_WIDTH parameter
-		RDADDR					=> RDADDR,				-- Input read address, width defined by read port depth
-		RDCLK						=> CLK_x2_n,			-- 1-bit input read clock
-		RDEN						=> '1',					-- 1-bit input read port enable
-
---		DI							=> I_VIDEO,				-- Input write data port, width defined by WRITE_WIDTH parameter
-		DI							=> ivideo,				-- Input write data port, width defined by WRITE_WIDTH parameter
-		WRADDR					=> WRADDR,				-- Input write address, width defined by write port depth
-		WRCLK						=> CLK_x2,				-- 1-bit input write clock
-		WREN						=> CLK,					-- 1-bit input write port enable
-		WE							=> "11",					-- Input write enable, width defined by write port depth
-
-		REGCE						=> '0',					-- 1-bit input read output register enable
-		RST						=> '0'					-- 1-bit input reset
-	);
+	-- simple dual port RAM (write port)
+	p_SDP_RAM_WR : process
+	begin
+		wait until rising_edge(CLK_x2);
+		if CLK = '1' then
+			DPRAM(to_integer(unsigned(WRADDR))) <= ivideo;
+		end if;
+	end process;
 
 	O_VIDEO		<= ovideo;
 	O_HSYNC		<= ohsync;
@@ -177,7 +149,6 @@ begin
 
 	ihsync		<= I_HSYNC;
 	ivsync		<= I_VSYNC;
-	CLK_x2_n 	<= not CLK_x2;
 
 	-- edge transition helper signals
 	p_det_egdes : process

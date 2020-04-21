@@ -13,8 +13,8 @@
 
 library ieee;
 	use ieee.std_logic_1164.all;
-	use ieee.std_logic_arith.all;
 	use ieee.std_logic_unsigned.all;
+	use ieee.numeric_std.all;
 
 entity MAIN is
 	generic (
@@ -141,7 +141,13 @@ architecture RTL of MAIN is
 --		sl_CPU_HALT,
 		sl_CPU_RESET,
 		sl_ROM_H_Ln,
+		sl_RAM0,
+		sl_RAM1,
 
+		sl_WHn,
+		sl_WLn,
+		sl_WRH,
+		sl_WRL,
 		sl_R_Wn,
 --		sl_BR_Wn,
 		sl_BW_Rn,
@@ -162,16 +168,7 @@ architecture RTL of MAIN is
 		sl_VRDTACK
 								: std_logic := '0';
 	signal
-		sl_WH,
-		sl_WL,
-		sl_WHn,
-		sl_WLn
-								: std_logic_vector( 0 downto 0) := (others=>'1');
-
-	signal
-		slv_BS,
-		slv_RAMn,
-		slv_RAM
+		slv_BS
 								: std_logic_vector( 1 downto 0) := (others=>'1');
 	signal
 		slv_FC,
@@ -206,7 +203,6 @@ architecture RTL of MAIN is
 	signal
 		slv_cpu_ad
 								: std_logic_vector(23 downto 0) := (others=>'0');
-
 begin
 	O_ADDR		<= slv_cpu_ad(14 downto 1);
 	O_DATA		<= slv_cpu_do;
@@ -245,16 +241,12 @@ begin
 	end process;
 
 	sl_SYSRESn		<= ctr_11R(3);
---	sl_CPU_HALT		<= ctr_11R(3); -- softcore CPU doesn't have HALT
+--	sl_CPU_HALT		<= ctr_11R(3);		-- softcore CPU doesn't have HALT
 	sl_CPU_RESET	<= sl_SYSRESn;
 
-	-- Xilinx BRAMs have positive logic
-	sl_WH(0)			<= not sl_WHn(0);
-	sl_WL(0)			<= not sl_WLn(0);
-
 	-- gates 12N, 14L
-	sl_WHn(0)		<= sl_UDSn or sl_R_Wn;
-	sl_WLn(0)		<= sl_LDSn or sl_R_Wn;
+	sl_WHn			<= sl_UDSn or sl_R_Wn;
+	sl_WLn			<= sl_LDSn or sl_R_Wn;
 --	sl_BR_Wn			<= sl_R_Wn;
 	sl_BW_Rn			<= not sl_R_Wn;
 	sl_BAS			<= not sl_ASn;
@@ -317,7 +309,7 @@ begin
 	sl_8T_Y1		<= sl_VBUSn or (     slv_cpu_ad(17) ) or ( not slv_cpu_ad(16) );
 	sl_8T_Y0		<= sl_VBUSn or (     slv_cpu_ad(17) ) or (     slv_cpu_ad(16) );
 
-	sl_HSCRLDn	<= sl_8T_Y3 or sl_WLn(0);
+	sl_HSCRLDn	<= sl_8T_Y3 or sl_WLn;
 	sl_CRAMn		<= sl_8T_Y1;
 	sl_VRAMn		<= sl_8T_Y0;
 
@@ -328,22 +320,18 @@ begin
 	sl_13M_Y0	<= sl_MBUSn or (     slv_cpu_ad(13) ) or (     slv_cpu_ad(12) );
 
 	sl_EEP_CEn	<= sl_13M_Y2;
-	slv_RAMn(1)	<= sl_13M_Y1;
-	slv_RAMn(0)	<= sl_13M_Y0;
-
-	-- Xilinx BRAMS positive logic
-	slv_RAM(1)	<= not slv_RAMn(1);
-	slv_RAM(0)	<= not slv_RAMn(0);
+	sl_RAM1	<= not sl_13M_Y1;
+	sl_RAM0	<= not sl_13M_Y0;
 
 	-- 14K 3:8 decoder
-	sl_14K_Y7	<= sl_13M_Y3 or sl_WLn(0) or (not slv_cpu_ad(8)) or ( not slv_cpu_ad( 6) ) or ( not slv_cpu_ad( 5) ) or ( not slv_cpu_ad( 4) );
---	sl_14K_Y6	<= sl_13M_Y3 or sl_WLn(0) or (not slv_cpu_ad(8)) or ( not slv_cpu_ad( 6) ) or ( not slv_cpu_ad( 5) ) or (     slv_cpu_ad( 4) );	-- unused
-	sl_14K_Y5	<= sl_13M_Y3 or sl_WLn(0) or (not slv_cpu_ad(8)) or ( not slv_cpu_ad( 6) ) or (     slv_cpu_ad( 5) ) or ( not slv_cpu_ad( 4) );
-	sl_14K_Y4	<= sl_13M_Y3 or sl_WLn(0) or (not slv_cpu_ad(8)) or ( not slv_cpu_ad( 6) ) or (     slv_cpu_ad( 5) ) or (     slv_cpu_ad( 4) );
---	sl_14K_Y3	<= sl_13M_Y3 or sl_WLn(0) or (not slv_cpu_ad(8)) or (     slv_cpu_ad( 6) ) or ( not slv_cpu_ad( 5) ) or ( not slv_cpu_ad( 4) );	-- unused
-	sl_14K_Y2	<= sl_13M_Y3 or sl_WLn(0) or (not slv_cpu_ad(8)) or (     slv_cpu_ad( 6) ) or ( not slv_cpu_ad( 5) ) or (     slv_cpu_ad( 4) );
---	sl_14K_Y1	<= sl_13M_Y3 or sl_WLn(0) or (not slv_cpu_ad(8)) or (     slv_cpu_ad( 6) ) or (     slv_cpu_ad( 5) ) or ( not slv_cpu_ad( 4) );	-- unused
-	sl_14K_Y0	<= sl_13M_Y3 or sl_WLn(0) or (not slv_cpu_ad(8)) or (     slv_cpu_ad( 6) ) or (     slv_cpu_ad( 5) ) or (     slv_cpu_ad( 4) );
+	sl_14K_Y7	<= sl_13M_Y3 or sl_WLn or (not slv_cpu_ad(8)) or ( not slv_cpu_ad( 6) ) or ( not slv_cpu_ad( 5) ) or ( not slv_cpu_ad( 4) );
+--	sl_14K_Y6	<= sl_13M_Y3 or sl_WLn or (not slv_cpu_ad(8)) or ( not slv_cpu_ad( 6) ) or ( not slv_cpu_ad( 5) ) or (     slv_cpu_ad( 4) );	-- unused
+	sl_14K_Y5	<= sl_13M_Y3 or sl_WLn or (not slv_cpu_ad(8)) or ( not slv_cpu_ad( 6) ) or (     slv_cpu_ad( 5) ) or ( not slv_cpu_ad( 4) );
+	sl_14K_Y4	<= sl_13M_Y3 or sl_WLn or (not slv_cpu_ad(8)) or ( not slv_cpu_ad( 6) ) or (     slv_cpu_ad( 5) ) or (     slv_cpu_ad( 4) );
+--	sl_14K_Y3	<= sl_13M_Y3 or sl_WLn or (not slv_cpu_ad(8)) or (     slv_cpu_ad( 6) ) or ( not slv_cpu_ad( 5) ) or ( not slv_cpu_ad( 4) );	-- unused
+	sl_14K_Y2	<= sl_13M_Y3 or sl_WLn or (not slv_cpu_ad(8)) or (     slv_cpu_ad( 6) ) or ( not slv_cpu_ad( 5) ) or (     slv_cpu_ad( 4) );
+--	sl_14K_Y1	<= sl_13M_Y3 or sl_WLn or (not slv_cpu_ad(8)) or (     slv_cpu_ad( 6) ) or (     slv_cpu_ad( 5) ) or ( not slv_cpu_ad( 4) );	-- unused
+	sl_14K_Y0	<= sl_13M_Y3 or sl_WLn or (not slv_cpu_ad(8)) or (     slv_cpu_ad( 6) ) or (     slv_cpu_ad( 5) ) or (     slv_cpu_ad( 4) );
 
 	sl_SNDWRn	<= sl_14K_Y7;
 	sl_UNLOCKn	<= sl_14K_Y5;
@@ -423,122 +411,15 @@ begin
 	-- sheet 3
 	----------------------------
 
-	-- BRAM_SINGLE_MACRO: Single Port RAM Spartan-6
-	-- Xilinx HDL Language Template, version 14.7
-	-- Note - This Unimacro model assumes the port directions to be "downto".
-	-----------------------------------------------------------------------
-	--  BRAM_SIZE | RW DATA WIDTH | RW Depth | RW ADDR Width | WE Width
-	-- ===========|===============|==========|===============|=========
-	--   "18Kb"   |     19-36     |    512   |      9-bit    |   4-bit
-	--   "18Kb"   |     10-18     |   1024   |     10-bit    |   2-bit
-	--    "9Kb"   |     10-18     |    512   |      9-bit    |   2-bit
-	--   "18Kb"   |      5-9      |   2048   |     11-bit    |   1-bit
-	--    "9Kb"   |      5-9      |   1024   |     10-bit    |   1-bit
-	--   "18Kb"   |      3-4      |   4096   |     12-bit    |   1-bit
-	--    "9Kb"   |      3-4      |   2048   |     11-bit    |   1-bit
-	--   "18Kb"   |        2      |   8192   |     13-bit    |   1-bit
-	--   " 9Kb"   |        2      |   4096   |     12-bit    |   1-bit
-	--   "18Kb"   |        1      |  16384   |     14-bit    |   1-bit
-	--    "9Kb"   |        1      |   8192   |     13-bit    |   1-bit
-	-------------------------------------------------------------------
-
---	-- System RAMs 11A, 11B at address 800000-800FFF (NOT FITTED ON SYSTEM BOARD)
---	u_11A  : BRAM_SINGLE_MACRO
---	generic map (
---		BRAM_SIZE	=> "18Kb",						-- Target BRAM, "9Kb" or "18Kb"
---		DEVICE		=> "SPARTAN6",					-- Target Device: "VIRTEX5", "VIRTEX6", "SPARTAN6"
---		READ_WIDTH	=> 8,								-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
---		WRITE_WIDTH => 8,								-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
---		DO_REG		=> 0,								-- Optional output register (0 or 1)
---		SRVAL			=> x"000000000",				-- Set/Reset value for port output
---		INIT			=> x"000000000",				-- Initial values on output port
---		INIT_FILE	=> "NONE",
---		WRITE_MODE	=> "WRITE_FIRST"				-- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
---	)
---
---	port map (
---		DO				=> slv_11A_data,				-- Output data, width defined by READ_WIDTH parameter
---		ADDR			=> slv_cpu_ad(11 downto 1),-- Input address, width defined by read/write port depth
---		CLK			=> I_XCKR,						-- 1-bit input clock
---		DI				=> slv_cpu_do(15 downto 8),-- Input data port, width defined by WRITE_WIDTH parameter
---		EN				=> slv_RAM(0),					-- 1-bit input RAM enable
---		REGCE			=> '0',							-- 1-bit input output register enable
---		RST			=> '0',							-- 1-bit input reset
---		WE				=> sl_WH							-- Input write enable, width defined by write port depth
---	);
---
---	u_11B  : BRAM_SINGLE_MACRO
---	generic map (
---		BRAM_SIZE	=> "18Kb",						-- Target BRAM, "9Kb" or "18Kb"
---		DEVICE		=> "SPARTAN6",					-- Target Device: "VIRTEX5", "VIRTEX6", "SPARTAN6"
---		READ_WIDTH	=> 8,								-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
---		WRITE_WIDTH => 8,								-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
---		DO_REG		=> 0,								-- Optional output register (0 or 1)
---		SRVAL			=> x"000000000",				-- Set/Reset value for port output
---		INIT			=> x"000000000",				-- Initial values on output port
---		INIT_FILE	=> "NONE",
---		WRITE_MODE	=> "WRITE_FIRST"				-- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
---	)
---
---	port map (
---		DO				=> slv_11B_data,				-- Output data, width defined by READ_WIDTH parameter
---		ADDR			=> slv_cpu_ad(11 downto 1),-- Input address, width defined by read/write port depth
---		CLK			=> I_XCKR,						-- 1-bit input clock
---		DI				=> slv_cpu_do( 7 downto 0),-- Input data port, width defined by WRITE_WIDTH parameter
---		EN				=> slv_RAM(0),					-- 1-bit input RAM enable
---		REGCE			=> '0',							-- 1-bit input output register enable
---		RST			=> '0',							-- 1-bit input reset
---		WE				=> sl_WL							-- Input write enable, width defined by write port depth
---	);
---
---	-- System RAMs 12A, 12B at address 801000-801FFF (NOT FITTED ON SYSTEM BOARD)
---	u_12A  : BRAM_SINGLE_MACRO
---	generic map (
---		BRAM_SIZE	=> "18Kb",						-- Target BRAM, "9Kb" or "18Kb"
---		DEVICE		=> "SPARTAN6",					-- Target Device: "VIRTEX5", "VIRTEX6", "SPARTAN6"
---		READ_WIDTH	=> 8,								-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
---		WRITE_WIDTH => 8,								-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
---		DO_REG		=> 0,								-- Optional output register (0 or 1)
---		SRVAL			=> x"000000000",				-- Set/Reset value for port output
---		INIT			=> x"000000000",				-- Initial values on output port
---		INIT_FILE	=> "NONE",
---		WRITE_MODE	=> "WRITE_FIRST"				-- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
---	)
---
---	port map (
---		DO				=> slv_12A_data,				-- Output data, width defined by READ_WIDTH parameter
---		ADDR			=> slv_cpu_ad(11 downto 1),-- Input address, width defined by read/write port depth
---		CLK			=> I_XCKR,						-- 1-bit input clock
---		DI				=> slv_cpu_do(15 downto 8),-- Input data port, width defined by WRITE_WIDTH parameter
---		EN				=> slv_RAM(1),					-- 1-bit input RAM enable
---		REGCE			=> '0',							-- 1-bit input output register enable
---		RST			=> '0',							-- 1-bit input reset
---		WE				=> sl_WH							-- Input write enable, width defined by write port depth
---	);
---
---	u_12B  : BRAM_SINGLE_MACRO
---	generic map (
---		BRAM_SIZE	=> "18Kb",						-- Target BRAM, "9Kb" or "18Kb"
---		DEVICE		=> "SPARTAN6",					-- Target Device: "VIRTEX5", "VIRTEX6", "SPARTAN6"
---		READ_WIDTH	=> 8,								-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
---		WRITE_WIDTH => 8,								-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
---		DO_REG		=> 0,								-- Optional output register (0 or 1)
---		SRVAL			=> x"000000000",				-- Set/Reset value for port output
---		INIT			=> x"000000000",				-- Initial values on output port
---		INIT_FILE	=> "NONE",
---		WRITE_MODE	=> "WRITE_FIRST"				-- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
---	)
---
---	port map (
---		DO				=> slv_12B_data,				-- Output data, width defined by READ_WIDTH parameter
---		ADDR			=> slv_cpu_ad(11 downto 1),-- Input address, width defined by read/write port depth
---		CLK			=> I_XCKR,						-- 1-bit input clock
---		DI				=> slv_cpu_do( 7 downto 0),-- Input data port, width defined by WRITE_WIDTH parameter
---		EN				=> slv_RAM(1),					-- 1-bit input RAM enable
---		REGCE			=> '0',							-- 1-bit input output register enable
---		RST			=> '0',							-- 1-bit input reset
---		WE				=> sl_WL							-- Input write enable, width defined by write port depth
---	);
+	-- RAM at address 800000-801FFF only fitted on system board for Vindicators II
+	gen_ram : if slap_type = 118 generate
+		sl_WRH <= not sl_WHn;
+		sl_WRL <= not sl_WLn;
+		p_RAM_11A : entity work.RAM_2K8 port map (I_MCKR => I_XCKR, I_EN => sl_RAM0, I_WR => sl_WRH, I_ADDR => slv_cpu_ad(11 downto 1), I_DATA => slv_cpu_do(15 downto 8), O_DATA => slv_11A_data );
+		p_RAM_11B : entity work.RAM_2K8 port map (I_MCKR => I_XCKR, I_EN => sl_RAM0, I_WR => sl_WRL, I_ADDR => slv_cpu_ad(11 downto 1), I_DATA => slv_cpu_do( 7 downto 0), O_DATA => slv_11B_data );
+		p_RAM_12A : entity work.RAM_2K8 port map (I_MCKR => I_XCKR, I_EN => sl_RAM1, I_WR => sl_WRH, I_ADDR => slv_cpu_ad(11 downto 1), I_DATA => slv_cpu_do(15 downto 8), O_DATA => slv_12A_data );
+		p_RAM_12B : entity work.RAM_2K8 port map (I_MCKR => I_XCKR, I_EN => sl_RAM1, I_WR => sl_WRL, I_ADDR => slv_cpu_ad(11 downto 1), I_DATA => slv_cpu_do( 7 downto 0), O_DATA => slv_12B_data );
+	end generate;
 
 	-- gate 14L, buffer 13C
 	sl_ROM_H_Ln	<=	not slv_cpu_ad(15);
@@ -558,10 +439,10 @@ begin
 		if sl_UNLOCKn = '0' then
 			sl_13N9 <= '1';
 		elsif rising_edge(I_MCKR) then
-			sl_WLn_last <= sl_WLn(0);
+			sl_WLn_last <= sl_WLn;
 			if sl_SYSRESn = '0' then
 				sl_13N9 <= '0';
-			elsif sl_WLn_last = '0' and sl_WLn(0) = '1' then
+			elsif sl_WLn_last = '0' and sl_WLn = '1' then
 				sl_13N9 <= '0';
 			end if;
 		end if;
@@ -642,7 +523,7 @@ begin
 	p_EEP_14A	: entity work.EEP_14A
 	port map (
 		CLK => I_XCKR,
-		WEn => sl_WLn(0),
+		WEn => sl_WLn,
 		CEn => sl_EEP_CEn,
 		OEn => sl_EEP_OEn,
 		AD  => slv_cpu_ad( 9 downto 1),
@@ -684,16 +565,16 @@ begin
 
 	-- CPU input data bus mux
 	slv_cpu_di <=
-									 I_MP_DATA when sl_ROM='0'                     else -- ROMs 10A/B, 9A/B, 7A/B
---		slv_11A_data  & slv_11B_data    when sl_R_Wn='1' and slv_RAM(0)='0' else -- RAMs 11A/B
---		slv_12A_data  & slv_12B_data    when sl_R_Wn='1' and slv_RAM(1)='0' else -- RAMs 12A/B
-								  I_DATA      when sl_R_Wn='1' and sl_VBUSn  ='0' else -- 9E, 10E VID BUS
-						x"00" & slv_EEP_14A when sl_R_Wn='1' and sl_EEP_CEn='0' and sl_EEP_OEn='0' else -- EEPROM
-						x"00" & slv_SBDI    when                 sl_SNDRDn ='0' else -- 14J sound latch
-						x"00" & I_P1        when                 sl_PL1n   ='0' else -- 14AB
-						x"00" & I_P2        when                 sl_PL2n   ='0' else -- 14B
-						x"00" & I_P3        when                 sl_PL3n   ='0' else -- 14C
-						x"00" & I_P4        when                 sl_PL4n   ='0' else -- 14E
-						x"00" & slv_14F     when                 sl_INPUTn ='0' else -- 14F
+										  I_MP_DATA when sl_R_Wn='1' and sl_13L_Y0 ='0' else -- ROMs 10A/B, 9A/B, 7A/B
+											  I_DATA when sl_R_Wn='1' and sl_VBUSn  ='0' else -- 9E, 10E VID BUS
+		  slv_11A_data & slv_11B_data when sl_R_Wn='1' and sl_13M_Y0 ='0' else -- RAMs 11A/B
+		  slv_12A_data & slv_12B_data when sl_R_Wn='1' and sl_13M_Y1 ='0' else -- RAMs 12A/B
+						x"00" & slv_EEP_14A  when sl_R_Wn='1' and sl_EEP_CEn='0' and sl_EEP_OEn='0' else -- EEPROM
+						x"00" & slv_SBDI     when                 sl_SNDRDn ='0' else -- 14J sound latch
+						x"00" & I_P1         when                 sl_PL1n   ='0' else -- 14AB
+						x"00" & I_P2         when                 sl_PL2n   ='0' else -- 14B
+						x"00" & I_P3         when                 sl_PL3n   ='0' else -- 14C
+						x"00" & I_P4         when                 sl_PL4n   ='0' else -- 14E
+						x"00" & slv_14F      when                 sl_INPUTn ='0' else -- 14F
 		(others=>'0');
 end RTL;

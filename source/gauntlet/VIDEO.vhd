@@ -17,6 +17,9 @@ library ieee;
 	use ieee.numeric_std.all;
 
 entity VIDEO is
+	generic (
+		slap_type			: integer range 100 to 118 := 104
+	);
 	port(
 		I_MCKR				: in	std_logic;	-- MCKR  7.159 MHz
 		I_ADDR				: in	std_logic_vector(14 downto 1);
@@ -84,6 +87,8 @@ architecture RTL of VIDEO is
 		sl_NXLDL,
 		sl_VCPU,
 --		sl_VERTDL,
+		sl_GPC_P7,
+		sl_GPC_M7,
 		sl_VRAMWE
 --		sl_PICTDL
 								: std_logic := '0';
@@ -309,9 +314,7 @@ begin
 	sl_9D9		<= sl_UDSn		when sl_VCPU = '1' else '0';
 	sl_9D12		<= sl_LDSn		when sl_VCPU = '1' else '0';
 
-	-- gate 11J  -- inverted for Xilinx Block RAMs
-	-- The FCLOCK is connected to the BRAM clock input to achieve the intended result, or else we
-	-- have timing problem as WE and FCLOCK become active simultaneously and WE signal is missed
+	-- gate 11J
 	sl_VRAMWE	<= sl_VCPU and sl_VRDTACK and sl_BW_Rn; -- and sl_MCKF
 
 	-- 9E, 10E transceivers to/from 68K data bus
@@ -387,7 +390,7 @@ begin
 	slv_GP_ADDR(0) <= slv_4E(1) when sl_4HDLn = '0' else slv_PFV(0);
 	sl_GP_EN       <= slv_4E(0) when sl_4HDLn = '0' else '1';
 
-	-- bit 14 inverted as per XOR gate 4J, slv_GP_ADDR(17 downto 16) not decoded (ROMS at GCS2..5 not fitted)
+	-- bit 14 inverted as per XOR gate 4J
 	sl_GP_ADDR14 <= (not slv_GP_ADDR(14));
 
 	-- adder 6L
@@ -784,9 +787,29 @@ begin
 	----------------------------
 	-- sheet 15
 	----------------------------
+	opt_gen_g1 : if slap_type = 104 generate
+		-- Original Gauntlet gates 6T, 9R
+		sl_6T8 <= not ((not slv_MPX(0)) and slv_MPX(1) and slv_MPX(2) and slv_MPX(3));
+		sl_GPC_P7 <= sl_6T8;
+		sl_GPC_M7 <= sl_6T8;
+	end generate;
 
-	-- gates 6T, 9R
-	sl_6T8 <= not ((not slv_MPX(0)) and slv_MPX(1) and slv_MPX(2) and slv_MPX(3));
+	opt_gen_g2 : if slap_type = 106 generate
+		-- Original Gauntlet gates 6T, 9R
+		sl_6T8 <= not ((not slv_MPX(0)) and slv_MPX(1) and slv_MPX(2) and slv_MPX(3));
+		sl_GPC_P7 <= sl_6T8;
+		sl_GPC_M7 <= sl_6T8;
+	end generate;
+
+	opt_gen_v2 : if slap_type = 118 generate
+		-- Vindicators II conversion daughter board
+		sl_GPC_P7 <= (
+			(not slv_MPX(0) ) and
+			(not (slv_MPX(4) and slv_MPX(5) and slv_MPX(6)) ) and
+			(slv_MPX(1) and slv_MPX(2) and slv_MPX(3))
+		);
+		sl_GPC_M7 <= not ((not slv_MPX(0) ) and (slv_MPX(1) and slv_MPX(2) and slv_MPX(3)));
+	end generate;
 
 	-- Graphic Priority Control
 	u_12M : entity work.GPC
@@ -808,11 +831,11 @@ begin
 		I_D(0)				=> slv_VRD(10),	-- to ALC0 inside GPC
 
 		-- PF data
-		I_P(7)				=> sl_6T8,
+		I_P(7)				=> sl_GPC_P7,
 		I_P(6 downto 0)	=> slv_PFX(6 downto 0),
 
 		-- MO data
-		I_M(7)				=> sl_6T8,
+		I_M(7)				=> sl_GPC_M7,
 		I_M(6 downto 0)	=> slv_MPX(6 downto 0),
 
 		O_CA					=> slv_GPC_CA

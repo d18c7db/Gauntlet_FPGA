@@ -13,12 +13,7 @@
 
 library ieee;
 	use ieee.std_logic_1164.all;
-
-library unisim;
-	use unisim.vcomponents.all;
-
-library unimacro;
-	use unimacro.vcomponents.all;
+	use ieee.numeric_std.all;
 
 entity VRAMS is
 	port(
@@ -47,13 +42,27 @@ architecture RTL of VRAMS is
 		sl_AL_CSn
 								: std_logic := '1';
 	signal
-		sl_VRAMWE
-								: std_logic_vector( 0 downto 0) := (others=>'0');
-	signal
 		slv_PF,
 		slv_MO,
 		slv_AL
 								: std_logic_vector(15 downto 0) := (others=>'0');
+
+	type RAM_ARRAY_4Kx8 is array (0 to 4095) of std_logic_vector(7 downto 0);
+	signal RAM_PF_LO : RAM_ARRAY_4Kx8:=(others=>(others=>'0'));
+	signal RAM_MO_LO : RAM_ARRAY_4Kx8:=(others=>(others=>'0'));
+	signal RAM_AL_LO : RAM_ARRAY_4Kx8:=(others=>(others=>'0'));
+	signal RAM_PF_HI : RAM_ARRAY_4Kx8:=(others=>(others=>'0'));
+	signal RAM_MO_HI : RAM_ARRAY_4Kx8:=(others=>(others=>'0'));
+	signal RAM_AL_HI : RAM_ARRAY_4Kx8:=(others=>(others=>'0'));
+
+	-- Tell synthesis to use block RAMs if possible
+	attribute ram_style : string;
+	attribute ram_style of RAM_PF_LO : signal is "block";
+	attribute ram_style of RAM_MO_LO : signal is "block";
+	attribute ram_style of RAM_AL_LO : signal is "block";
+	attribute ram_style of RAM_PF_HI : signal is "block";
+	attribute ram_style of RAM_MO_HI : signal is "block";
+	attribute ram_style of RAM_AL_HI : signal is "block";
 begin
 	-------------------------
 	-- sheet 9 RAM decoder --
@@ -63,7 +72,7 @@ begin
 	sl_MO_CSn <= (     I_SELB ) or ( not I_SELA );
 	sl_AL_CSn <= ( not I_SELB ) or (     I_SELA );
 
-	-- Xilinx Block RAM chip selects
+	-- active high memory chip selects
 	sl_PF_HI <= not (I_UDSn or sl_PF_CSn);
 	sl_MO_HI <= not (I_UDSn or sl_MO_CSn);
 	sl_AL_HI <= not (I_UDSn or sl_AL_CSn);
@@ -75,7 +84,6 @@ begin
 	-----------------------
 	-- sheet 8 RAM banks --
 	-----------------------
-	sl_VRAMWE(0) <= I_VRAMWE;
 
 	O_VRD <=
 		slv_PF when sl_PF_CSn = '0' else
@@ -84,313 +92,81 @@ begin
 --		slv_AL when sl_AL_CSn = '0' and (I_VRA < x"800" or I_VRA > x"F69") else 	-- disables reads from alphanumerics range 905000-905BB0
 		(others=>'Z'); -- floating
 
-	-- BRAM_SINGLE_MACRO: Single Port RAM Spartan-6
-	-- Xilinx HDL Language Template, version 14.7
-	-- Note - This Unimacro model assumes the port directions to be "downto".
-	-----------------------------------------------------------------------
-	--  BRAM_SIZE | RW DATA WIDTH | RW Depth | RW ADDR Width | WE Width
-	-- ===========|===============|==========|===============|=========
-	--   "18Kb"   |     19-36     |    512   |      9-bit    |   4-bit
-	--    "9Kb"   |     10-18     |    512   |      9-bit    |   2-bit
-	--   "18Kb"   |     10-18     |   1024   |     10-bit    |   2-bit
-	--    "9Kb"   |      5-9      |   1024   |     10-bit    |   1-bit
-	--   "18Kb"   |      5-9      |   2048   |     11-bit    |   1-bit
-	--    "9Kb"   |      3-4      |   2048   |     11-bit    |   1-bit
-	--   "18Kb"   |      3-4      |   4096   |     12-bit    |   1-bit
-	--   " 9Kb"   |        2      |   4096   |     12-bit    |   1-bit
-	--   "18Kb"   |        2      |   8192   |     13-bit    |   1-bit
-	--    "9Kb"   |        1      |   8192   |     13-bit    |   1-bit
-	--   "18Kb"   |        1      |  16384   |     14-bit    |   1-bit
-	-------------------------------------------------------------------
+-- PF video RAMs 6J, 7J
+	p_RAM_PF_LO : process
+	begin
+		wait until rising_edge(I_CK);
+		if sl_PF_LO = '1' then
+			if I_VRAMWE = '1' then
+				RAM_PF_LO(to_integer(unsigned(I_VRA))) <= I_VRD(7 downto 0);
+			else
+				slv_PF(7 downto 0) <= RAM_PF_LO(to_integer(unsigned(I_VRA)));
+			end if;
+		end if;
+	end process;
 
-	-- PF video RAMs 6D, 7D, 6J, 7J
-	p_7J_RAM : BRAM_SINGLE_MACRO
-	generic map (
-		BRAM_SIZE	=> "18Kb",					-- Target BRAM, "9Kb" or "18Kb"
-		DEVICE		=> "SPARTAN6",				-- Target Device: "VIRTEX5", "VIRTEX6", "SPARTAN6"
-		READ_WIDTH	=> 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		WRITE_WIDTH => 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		DO_REG		=> 0,							-- Optional output register (0 or 1)
-		SRVAL			=> x"000000000",			-- Set/Reset value for port output
-		INIT			=> x"000000000",			-- Initial values on output port
-		INIT_FILE	=> "NONE",
-		WRITE_MODE	=> "WRITE_FIRST"			-- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
-	)
+-- PF video RAMs 6D, 7D
+	p_RAM_PF_HI : process
+	begin
+		wait until rising_edge(I_CK);
+		if sl_PF_HI = '1' then
+			if I_VRAMWE = '1' then
+				RAM_PF_HI(to_integer(unsigned(I_VRA))) <= I_VRD(15 downto 8);
+			else
+				slv_PF(15 downto 8) <= RAM_PF_HI(to_integer(unsigned(I_VRA)));
+			end if;
+		end if;
+	end process;
 
-	port map (
-		DO				=> slv_PF(3 downto 0),	-- Output data, width defined by READ_WIDTH parameter
-		ADDR			=> I_VRA,					-- Input address, width defined by read/write port depth
-		CLK			=> I_CK,						-- 1-bit input clock
-		DI				=> I_VRD(3 downto 0),	-- Input data port, width defined by WRITE_WIDTH parameter
-		EN				=> sl_PF_LO,				-- 1-bit input RAM enable
-		REGCE			=> '0',						-- 1-bit input output register enable
-		RST			=> '0',						-- 1-bit input reset
-		WE				=> sl_VRAMWE				-- Input write enable, width defined by write port depth
-	);
+-- MO video RAMs 6F, 7F
+	p_RAM_MO_LO : process
+	begin
+		wait until rising_edge(I_CK);
+		if sl_MO_LO = '1' then
+			if I_VRAMWE = '1' then
+				RAM_MO_LO(to_integer(unsigned(I_VRA))) <= I_VRD(7 downto 0);
+			else
+				slv_MO(7 downto 0) <= RAM_MO_LO(to_integer(unsigned(I_VRA)));
+			end if;
+		end if;
+	end process;
 
-	p_6J_RAM : BRAM_SINGLE_MACRO
-	generic map (
-		BRAM_SIZE	=> "18Kb",					-- Target BRAM, "9Kb" or "18Kb"
-		DEVICE		=> "SPARTAN6",				-- Target Device: "VIRTEX5", "VIRTEX6", "SPARTAN6"
-		READ_WIDTH	=> 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		WRITE_WIDTH => 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		DO_REG		=> 0,							-- Optional output register (0 or 1)
-		SRVAL			=> x"000000000",			-- Set/Reset value for port output
-		INIT			=> x"000000000",			-- Initial values on output port
-		INIT_FILE	=> "NONE",
-		WRITE_MODE	=> "WRITE_FIRST"			-- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
-	)
+-- MO video RAMs 6C, 7C
+	p_RAM_MO_HI : process
+	begin
+		wait until rising_edge(I_CK);
+		if sl_MO_HI = '1' then
+			if I_VRAMWE = '1' then
+				RAM_MO_HI(to_integer(unsigned(I_VRA))) <= I_VRD(15 downto 8);
+			else
+				slv_MO(15 downto 8) <= RAM_MO_HI(to_integer(unsigned(I_VRA)));
+			end if;
+		end if;
+	end process;
 
-	port map (
-		DO				=> slv_PF(7 downto 4),	-- Output data, width defined by READ_WIDTH parameter
-		ADDR			=> I_VRA,					-- Input address, width defined by read/write port depth
-		CLK			=> I_CK,						-- 1-bit input clock
-		DI				=> I_VRD(7 downto 4),	-- Input data port, width defined by WRITE_WIDTH parameter
-		EN				=> sl_PF_LO,				-- 1-bit input RAM enable
-		REGCE			=> '0',						-- 1-bit input output register enable
-		RST			=> '0',						-- 1-bit input reset
-		WE				=> sl_VRAMWE				-- Input write enable, width defined by write port depth
-	);
+-- AL video RAMs 6K, 7K
+	p_RAM_AL_LO : process
+	begin
+		wait until rising_edge(I_CK);
+		if sl_AL_LO = '1' then
+			if I_VRAMWE = '1' then
+				RAM_AL_LO(to_integer(unsigned(I_VRA))) <= I_VRD(7 downto 0);
+			else
+				slv_AL(7 downto 0) <= RAM_AL_LO(to_integer(unsigned(I_VRA)));
+			end if;
+		end if;
+	end process;
 
-	p_7D_RAM : BRAM_SINGLE_MACRO
-	generic map (
-		BRAM_SIZE	=> "18Kb",					-- Target BRAM, "9Kb" or "18Kb"
-		DEVICE		=> "SPARTAN6",				-- Target Device: "VIRTEX5", "VIRTEX6", "SPARTAN6"
-		READ_WIDTH	=> 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		WRITE_WIDTH => 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		DO_REG		=> 0,							-- Optional output register (0 or 1)
-		SRVAL			=> x"000000000",			-- Set/Reset value for port output
-		INIT			=> x"000000000",			-- Initial values on output port
-		INIT_FILE	=> "NONE",
-		WRITE_MODE	=> "WRITE_FIRST"			-- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
-	)
-
-	port map (
-		DO				=> slv_PF(11 downto 8),	-- Output data, width defined by READ_WIDTH parameter
-		ADDR			=> I_VRA,					-- Input address, width defined by read/write port depth
-		CLK			=> I_CK,						-- 1-bit input clock
-		DI				=> I_VRD(11 downto 8),	-- Input data port, width defined by WRITE_WIDTH parameter
-		EN				=> sl_PF_HI,				-- 1-bit input RAM enable
-		REGCE			=> '0',						-- 1-bit input output register enable
-		RST			=> '0',						-- 1-bit input reset
-		WE				=> sl_VRAMWE				-- Input write enable, width defined by write port depth
-	);
-
-	p_6D_RAM : BRAM_SINGLE_MACRO
-	generic map (
-		BRAM_SIZE	=> "18Kb",					-- Target BRAM, "9Kb" or "18Kb"
-		DEVICE		=> "SPARTAN6",				-- Target Device: "VIRTEX5", "VIRTEX6", "SPARTAN6"
-		READ_WIDTH	=> 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		WRITE_WIDTH => 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		DO_REG		=> 0,							-- Optional output register (0 or 1)
-		SRVAL			=> x"000000000",			-- Set/Reset value for port output
-		INIT			=> x"000000000",			-- Initial values on output port
-		INIT_FILE	=> "NONE",
-		WRITE_MODE	=> "WRITE_FIRST"			-- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
-	)
-
-	port map (
-		DO				=> slv_PF(15 downto 12),-- Output data, width defined by READ_WIDTH parameter
-		ADDR			=> I_VRA,					-- Input address, width defined by read/write port depth
-		CLK			=> I_CK,						-- 1-bit input clock
-		DI				=> I_VRD(15 downto 12),	-- Input data port, width defined by WRITE_WIDTH parameter
-		EN				=> sl_PF_HI,				-- 1-bit input RAM enable
-		REGCE			=> '0',						-- 1-bit input output register enable
-		RST			=> '0',						-- 1-bit input reset
-		WE				=> sl_VRAMWE				-- Input write enable, width defined by write port depth
-	);
-
-	-- MO video RAMs 6C, 7C, 6F, 7F
-	p_7F_RAM : BRAM_SINGLE_MACRO
-	generic map (
-		BRAM_SIZE	=> "18Kb",					-- Target BRAM, "9Kb" or "18Kb"
-		DEVICE		=> "SPARTAN6",				-- Target Device: "VIRTEX5", "VIRTEX6", "SPARTAN6"
-		READ_WIDTH	=> 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		WRITE_WIDTH => 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		DO_REG		=> 0,							-- Optional output register (0 or 1)
-		SRVAL			=> x"000000000",			-- Set/Reset value for port output
-		INIT			=> x"000000000",			-- Initial values on output port
-		INIT_FILE	=> "NONE",
-		WRITE_MODE	=> "WRITE_FIRST"			-- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
-	)
-
-	port map (
-		DO				=> slv_MO(3 downto 0),	-- Output data, width defined by READ_WIDTH parameter
-		ADDR			=> I_VRA,					-- Input address, width defined by read/write port depth
-		CLK			=> I_CK,						-- 1-bit input clock
-		DI				=> I_VRD(3 downto 0),	-- Input data port, width defined by WRITE_WIDTH parameter
-		EN				=> sl_MO_LO,				-- 1-bit input RAM enable
-		REGCE			=> '0',						-- 1-bit input output register enable
-		RST			=> '0',						-- 1-bit input reset
-		WE				=> sl_VRAMWE				-- Input write enable, width defined by write port depth
-	);
-
-	p_6F_RAM : BRAM_SINGLE_MACRO
-	generic map (
-		BRAM_SIZE	=> "18Kb",					-- Target BRAM, "9Kb" or "18Kb"
-		DEVICE		=> "SPARTAN6",				-- Target Device: "VIRTEX5", "VIRTEX6", "SPARTAN6"
-		READ_WIDTH	=> 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		WRITE_WIDTH => 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		DO_REG		=> 0,							-- Optional output register (0 or 1)
-		SRVAL			=> x"000000000",			-- Set/Reset value for port output
-		INIT			=> x"000000000",			-- Initial values on output port
-		INIT_FILE	=> "NONE",
-		WRITE_MODE	=> "WRITE_FIRST"			-- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
-	)
-
-	port map (
-		DO				=> slv_MO(7 downto 4),	-- Output data, width defined by READ_WIDTH parameter
-		ADDR			=> I_VRA,					-- Input address, width defined by read/write port depth
-		CLK			=> I_CK,						-- 1-bit input clock
-		DI				=> I_VRD(7 downto 4),	-- Input data port, width defined by WRITE_WIDTH parameter
-		EN				=> sl_MO_LO,				-- 1-bit input RAM enable
-		REGCE			=> '0',						-- 1-bit input output register enable
-		RST			=> '0',						-- 1-bit input reset
-		WE				=> sl_VRAMWE				-- Input write enable, width defined by write port depth
-	);
-
-	p_7C_RAM : BRAM_SINGLE_MACRO
-	generic map (
-		BRAM_SIZE	=> "18Kb",					-- Target BRAM, "9Kb" or "18Kb"
-		DEVICE		=> "SPARTAN6",				-- Target Device: "VIRTEX5", "VIRTEX6", "SPARTAN6"
-		READ_WIDTH	=> 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		WRITE_WIDTH => 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		DO_REG		=> 0,							-- Optional output register (0 or 1)
-		SRVAL			=> x"000000000",			-- Set/Reset value for port output
-		INIT			=> x"000000000",			-- Initial values on output port
-		INIT_FILE	=> "NONE",
-		WRITE_MODE	=> "WRITE_FIRST"			-- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
-	)
-
-	port map (
-		DO				=> slv_MO(11 downto 8),	-- Output data, width defined by READ_WIDTH parameter
-		ADDR			=> I_VRA,					-- Input address, width defined by read/write port depth
-		CLK			=> I_CK,						-- 1-bit input clock
-		DI				=> I_VRD(11 downto 8),	-- Input data port, width defined by WRITE_WIDTH parameter
-		EN				=> sl_MO_HI,				-- 1-bit input RAM enable
-		REGCE			=> '0',						-- 1-bit input output register enable
-		RST			=> '0',						-- 1-bit input reset
-		WE				=> sl_VRAMWE				-- Input write enable, width defined by write port depth
-	);
-
-	p_6C_RAM : BRAM_SINGLE_MACRO
-	generic map (
-		BRAM_SIZE	=> "18Kb",					-- Target BRAM, "9Kb" or "18Kb"
-		DEVICE		=> "SPARTAN6",				-- Target Device: "VIRTEX5", "VIRTEX6", "SPARTAN6"
-		READ_WIDTH	=> 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		WRITE_WIDTH => 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		DO_REG		=> 0,							-- Optional output register (0 or 1)
-		SRVAL			=> x"000000000",			-- Set/Reset value for port output
-		INIT			=> x"000000000",			-- Initial values on output port
-		INIT_FILE	=> "NONE",
-		WRITE_MODE	=> "WRITE_FIRST"			-- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
-	)
-
-	port map (
-		DO				=> slv_MO(15 downto 12),-- Output data, width defined by READ_WIDTH parameter
-		ADDR			=> I_VRA,					-- Input address, width defined by read/write port depth
-		CLK			=> I_CK,						-- 1-bit input clock
-		DI				=> I_VRD(15 downto 12),	-- Input data port, width defined by WRITE_WIDTH parameter
-		EN				=> sl_MO_HI,				-- 1-bit input RAM enable
-		REGCE			=> '0',						-- 1-bit input output register enable
-		RST			=> '0',						-- 1-bit input reset
-		WE				=> sl_VRAMWE				-- Input write enable, width defined by write port depth
-	);
-
-	-- AL video RAMs 6E, 7E, 6K, 7K
-	p_7K_RAM : BRAM_SINGLE_MACRO
-	generic map (
-		BRAM_SIZE	=> "18Kb",					-- Target BRAM, "9Kb" or "18Kb"
-		DEVICE		=> "SPARTAN6",				-- Target Device: "VIRTEX5", "VIRTEX6", "SPARTAN6"
-		READ_WIDTH	=> 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		WRITE_WIDTH => 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		DO_REG		=> 0,							-- Optional output register (0 or 1)
-		SRVAL			=> x"000000000",			-- Set/Reset value for port output
-		INIT			=> x"000000000",			-- Initial values on output port
-		INIT_FILE	=> "NONE",
-		WRITE_MODE	=> "WRITE_FIRST"			-- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
-	)
-
-	port map (
-		DO				=> slv_AL(3 downto 0),	-- Output data, width defined by READ_WIDTH parameter
-		ADDR			=> I_VRA,					-- Input address, width defined by read/write port depth
-		CLK			=> I_CK,						-- 1-bit input clock
-		DI				=> I_VRD(3 downto 0),	-- Input data port, width defined by WRITE_WIDTH parameter
-		EN				=> sl_AL_LO,				-- 1-bit input RAM enable
-		REGCE			=> '0',						-- 1-bit input output register enable
-		RST			=> '0',						-- 1-bit input reset
-		WE				=> sl_VRAMWE				-- Input write enable, width defined by write port depth
-	);
-
-	p_6K_RAM : BRAM_SINGLE_MACRO
-	generic map (
-		BRAM_SIZE	=> "18Kb",					-- Target BRAM, "9Kb" or "18Kb"
-		DEVICE		=> "SPARTAN6",				-- Target Device: "VIRTEX5", "VIRTEX6", "SPARTAN6"
-		READ_WIDTH	=> 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		WRITE_WIDTH => 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		DO_REG		=> 0,							-- Optional output register (0 or 1)
-		SRVAL			=> x"000000000",			-- Set/Reset value for port output
-		INIT			=> x"000000000",			-- Initial values on output port
-		INIT_FILE	=> "NONE",
-		WRITE_MODE	=> "WRITE_FIRST"			-- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
-	)
-
-	port map (
-		DO				=> slv_AL(7 downto 4),	-- Output data, width defined by READ_WIDTH parameter
-		ADDR			=> I_VRA,					-- Input address, width defined by read/write port depth
-		CLK			=> I_CK,						-- 1-bit input clock
-		DI				=> I_VRD(7 downto 4),	-- Input data port, width defined by WRITE_WIDTH parameter
-		EN				=> sl_AL_LO,				-- 1-bit input RAM enable
-		REGCE			=> '0',						-- 1-bit input output register enable
-		RST			=> '0',						-- 1-bit input reset
-		WE				=> sl_VRAMWE				-- Input write enable, width defined by write port depth
-	);
-
-	p_7E_RAM : BRAM_SINGLE_MACRO
-	generic map (
-		BRAM_SIZE	=> "18Kb",					-- Target BRAM, "9Kb" or "18Kb"
-		DEVICE		=> "SPARTAN6",				-- Target Device: "VIRTEX5", "VIRTEX6", "SPARTAN6"
-		READ_WIDTH	=> 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		WRITE_WIDTH => 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		DO_REG		=> 0,							-- Optional output register (0 or 1)
-		SRVAL			=> x"000000000",			-- Set/Reset value for port output
-		INIT			=> x"000000000",			-- Initial values on output port
-		INIT_FILE	=> "NONE",
-		WRITE_MODE	=> "WRITE_FIRST"			-- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
-	)
-
-	port map (
-		DO				=> slv_AL(11 downto 8),	-- Output data, width defined by READ_WIDTH parameter
-		ADDR			=> I_VRA,					-- Input address, width defined by read/write port depth
-		CLK			=> I_CK,						-- 1-bit input clock
-		DI				=> I_VRD(11 downto 8),	-- Input data port, width defined by WRITE_WIDTH parameter
-		EN				=> sl_AL_HI,				-- 1-bit input RAM enable
-		REGCE			=> '0',						-- 1-bit input output register enable
-		RST			=> '0',						-- 1-bit input reset
-		WE				=> sl_VRAMWE				-- Input write enable, width defined by write port depth
-	);
-
-	p_6E_RAM : BRAM_SINGLE_MACRO
-	generic map (
-		BRAM_SIZE	=> "18Kb",					-- Target BRAM, "9Kb" or "18Kb"
-		DEVICE		=> "SPARTAN6",				-- Target Device: "VIRTEX5", "VIRTEX6", "SPARTAN6"
-		READ_WIDTH	=> 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		WRITE_WIDTH => 4,							-- Valid values are 1-36 (19-36 only valid when BRAM_SIZE="18Kb")
-		DO_REG		=> 0,							-- Optional output register (0 or 1)
-		SRVAL			=> x"000000000",			-- Set/Reset value for port output
-		INIT			=> x"000000000",			-- Initial values on output port
-		INIT_FILE	=> "NONE",
-		WRITE_MODE	=> "WRITE_FIRST"			-- "WRITE_FIRST", "READ_FIRST" or "NO_CHANGE"
-	)
-
-	port map (
-		DO				=> slv_AL(15 downto 12),-- Output data, width defined by READ_WIDTH parameter
-		ADDR			=> I_VRA,					-- Input address, width defined by read/write port depth
-		CLK			=> I_CK,						-- 1-bit input clock
-		DI				=> I_VRD(15 downto 12),	-- Input data port, width defined by WRITE_WIDTH parameter
-		EN				=> sl_AL_HI,				-- 1-bit input RAM enable
-		REGCE			=> '0',						-- 1-bit input output register enable
-		RST			=> '0',						-- 1-bit input reset
-		WE				=> sl_VRAMWE				-- Input write enable, width defined by write port depth
-	);
+-- AL video RAMs 6E, 7E
+	p_RAM_AL_HI : process
+	begin
+		wait until rising_edge(I_CK);
+		if sl_AL_HI = '1' then
+			if I_VRAMWE = '1' then
+				RAM_AL_HI(to_integer(unsigned(I_VRA))) <= I_VRD(15 downto 8);
+			else
+				slv_AL(15 downto 8) <= RAM_AL_HI(to_integer(unsigned(I_VRA)));
+			end if;
+		end if;
+	end process;
 end RTL;

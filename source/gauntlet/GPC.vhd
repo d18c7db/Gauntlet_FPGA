@@ -107,7 +107,8 @@ begin
 		end if;
 	end process;
 
-	-- recreate part of the horizontal counter to generate the 3H signal
+	-- The old circuit built with discrete chips is gated by "/H03 = 1H nand 2H;" but LSI chip does not have
+	-- 1H, 2H or /H03 coming in so here we recreate part of the horizontal counter to generate the 3H signal
 	p_hcnt : process
 	begin
 		wait until rising_edge(I_CK);
@@ -120,8 +121,6 @@ begin
 	end process;
 	sl_3H <= slv_hcnt(1) and slv_hcnt(0);
 
-	-- The old circuit built with discrete chips is gated by "/H03 = 1H nand 2H;" but LSI chip does not
-	-- have 1H, 2H or /H03 coming in so here we bring H03 from outside the chip
 	-- 3F latch
 	p_3F : process
 	begin

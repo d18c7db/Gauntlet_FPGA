@@ -539,11 +539,11 @@ begin
 --	ROM_3A  : entity work.ROM_3A  port map ( CLK=>gclk_28M, DATA=>slv_ROM_3A,  ADDR=>s_MP_ADDR(14 downto 0) );
 --	ROM_3B  : entity work.ROM_3B  port map ( CLK=>gclk_28M, DATA=>slv_ROM_3B,  ADDR=>s_MP_ADDR(14 downto 0) );
 --	s_MP_DATA <=
---		slv_ROM_9A  & slv_ROM_9B  when s_MP_ADDR(17 downto 15)="000" else -- /ROM0 00000
---		slv_ROM_10A & slv_ROM_10B when s_MP_ADDR(17 downto 15)="011" else -- /SLAP 38000
---		slv_ROM_7A  & slv_ROM_7B  when s_MP_ADDR(17 downto 15)="100" else -- /ROM1 40000
---		slv_ROM_6A  & slv_ROM_6B  when s_MP_ADDR(17 downto 15)="101" else -- /ROM2 50000
---		slv_ROM_5A  & slv_ROM_5B  when s_MP_ADDR(17 downto 15)="110" else -- /ROM3 60000
---		slv_ROM_3A  & slv_ROM_3B  when s_MP_ADDR(17 downto 15)="111" else -- /ROM4 70000
+--		slv_ROM_9A  & slv_ROM_9B  when s_MP_ADDR(18 downto 15)="0000" else -- /ROM0 00000
+--		slv_ROM_10A & slv_ROM_10B when s_MP_ADDR(18 downto 15)="0011" else -- /SLAP 38000
+--		slv_ROM_7A  & slv_ROM_7B  when s_MP_ADDR(18 downto 15)="0100" else -- /ROM1 40000
+--		slv_ROM_6A  & slv_ROM_6B  when s_MP_ADDR(18 downto 15)="0101" else -- /ROM2 50000
+--		slv_ROM_5A  & slv_ROM_5B  when s_MP_ADDR(18 downto 15)="0110" else -- /ROM3 60000
+--		slv_ROM_3A  & slv_ROM_3B  when s_MP_ADDR(18 downto 15)="0111" else -- /ROM4 70000
 --		(others=>'1');
 end RTL;

@@ -19,4 +19,4 @@ The game is mostly functional right now, can coin up and start game, known probl
 * Game EPROM is implemented as RAM so game settings are lost on power off.
 * Some game ROMs are stored external to FPGA, multiplexing may need improvement.
 * Only player 1 controls are connected (minor).
-* Vindicators II doesn't run at all, troubleshooting ongoing
+* Vindicators II runs but some sprites are corrupt, troubleshooting ongoing

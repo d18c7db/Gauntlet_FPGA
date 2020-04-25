@@ -2,11 +2,13 @@
 
 ## About
 This is an FPGA implementation of Atari's arcade game "Gauntlet" from 1985, based on the SP-284 schematic circuit diagram.  
-It successfully runs all three games Gauntlet, Gauntlet 2 and Vindicators II that were used on the original arcade.  
+It successfully runs all three games Gauntlet, Gauntlet II and Vindicators II that were used on the original arcade.  
 
+<p align="center">
 [![Gauntlet Tile](doc/images/MAME_G1.png)](doc/images/MAME_G1.png)  
 [![Gauntlet 2 Title](doc/images/MAME_G2.png)](doc/images/MAME_G2.png)  
 [![Vindicators II Tile](doc/images/MAME_V2.png)](doc/images/MAME_V2.png)  
+</p>
 
 The videos below show some of the problems encountered earlier in the development.
 

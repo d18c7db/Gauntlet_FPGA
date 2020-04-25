@@ -21,5 +21,4 @@ The implementation is functional right now, can coin up and start game, known pr
 * The TMS5220 speech synth is not implemented
 * Audio mixing is not ideal, sound quality needs improvement.
 * Game EPROM is implemented as RAM so game settings are lost on power off.
-* Some game ROMs are stored external to FPGA, multiplexing may need improvement.
 * Only player 1 controls are connected (minor).

@@ -445,21 +445,21 @@ begin
 
 --	s_GP_ADDR(17 downto 0) s_GP_DATA(31 downto 0)
 --			GP17..15	P-0 P-1 P-2 P-3
---	GCS0	0 0 0		1A  1L  2A  2L
---	GCS1	0 0 1		1B  1MN 2B  2MN
---	GCS2	0 1 0		1C  1P  2C  2P
---	GCS3	0 1 1		1D  1R  2D  2R
---	GCS4	1 0 0		1EF 1ST 2EF 2ST
---	GCS5	1 0 1		1J  1U  2J  2U
+--	GCS0	0  0  0	1A  1L  2A  2L
+--	GCS1	0  0  1	1B  1MN 2B  2MN
+--	GCS2	0  1  0	1C  1P  2C  2P
+--	GCS3	0  1  1	1D  1R  2D  2R
+--	GCS4	1  0  0	1EF 1ST 2EF 2ST
+--	GCS5	1  0  1	1J  1U  2J  2U
 
 --	s_MP_ADDR(18 downto 0) s_MP_DATA(15 downto 0)
 --			A17..15
---	ROM0	0 0 0		9A  9B
---	SLAP	0 1 1		10A 10B
---	ROM1	1 0 0		7A  7B
---	ROM2	1 0 1		6A  6B
---	ROM3	1 1 0		5A  5B
---	ROM4	1 1 1		3A  3B
+--	ROM0	0  0  0	9A  9B
+--	SLAP	0  1  1	10A 10B
+--	ROM1	1  0  0	7A  7B
+--	ROM2	1  0  1	6A  6B
+--	ROM3	1  1  0	5A  5B
+--	ROM4	1  1  1	3A  3B
 
 --	Mapping of 16K Selectors in SRAM to ROMs
 -- SRAM			ROMS

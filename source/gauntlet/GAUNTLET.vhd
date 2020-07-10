@@ -56,8 +56,8 @@ entity FPGA_GAUNTLET is
 		O_LEDS				: out	std_logic_vector(4 downto 1);
 
 		-- Audio out
-		O_AUDIO_L			: out	std_logic_vector( 7 downto 0) := (others=>'0');
-		O_AUDIO_R			: out	std_logic_vector( 7 downto 0) := (others=>'0');
+		O_AUDIO_L			: out	std_logic_vector(15 downto 0) := (others=>'0');
+		O_AUDIO_R			: out	std_logic_vector(15 downto 0) := (others=>'0');
 
 		-- Monitor output
 		O_VIDEO_I			: out	std_logic_vector(3 downto 0);
@@ -67,6 +67,8 @@ entity FPGA_GAUNTLET is
 		O_HSYNC				: out	std_logic;
 		O_VSYNC				: out	std_logic;
 		O_CSYNC				: out	std_logic;
+		O_HBLANK				: out	std_logic;
+		O_VBLANK				: out	std_logic;
 
 		-- GFX ROMs, read from non existent ROMs MUST return FFFFFFFF
 		O_GP_EN				: out	std_logic := '0';
@@ -101,12 +103,13 @@ architecture RTL of FPGA_GAUNTLET is
 		sl_MBUSn,
 		sl_VRDTACK,
 		sl_VBLANKn,
+		sl_HBLANKn,
 		sl_VBKACKn,
 		sl_VBKINTn,
 		sl_HSCRLDn
 								: std_logic := '1';
-	signal sl_WR68K : std_logic := '0';
-	signal sl_RD68K : std_logic := '0';
+	signal sl_WR68Kn : std_logic := '0';
+	signal sl_RD68Kn : std_logic := '0';
 	signal
 		slv_SBDI,
 		slv_SBDO
@@ -119,6 +122,9 @@ architecture RTL of FPGA_GAUNTLET is
 		slv_data
 								: std_logic_vector(15 downto 0) := (others=>'0');
 begin
+	O_HBLANK <= not sl_HBLANKn;
+	O_VBLANK <= not sl_VBLANKn;
+
 	u_main : entity work.MAIN
 	generic map (slap_type=>slap_type)
 	port map (
@@ -128,8 +134,8 @@ begin
 		I_VBLANKn			=> sl_VBLANKn,
 		I_VBKINTn			=> sl_VBKINTn,
 		I_VCPU				=> sl_VCPU,
-		I_WR68K				=> sl_WR68K,
-		I_RD68K				=> sl_RD68K,
+		I_WR68K				=> sl_WR68Kn,
+		I_RD68K				=> sl_RD68Kn,
 		I_SBD					=> slv_SBDO,
 		I_DATA				=> slv_vdata,
 
@@ -184,6 +190,7 @@ begin
 		O_32V					=> sl_32V,
 		O_VBKINTn			=> sl_VBKINTn,
 		O_VBLANKn			=> sl_VBLANKn,
+		O_HBLANKn			=> sl_HBLANKn,
 		O_DATA				=> slv_vdata,
 		O_I					=> O_VIDEO_I,
 		O_R					=> O_VIDEO_R,
@@ -217,8 +224,8 @@ begin
 
 		I_SBD					=> slv_SBDI,
 		O_SBD					=> slv_SBDO,
-		O_WR68K				=> sl_WR68K,
-		O_RD68K				=> sl_RD68K,
+		O_WR68Kn				=> sl_WR68Kn,
+		O_RD68Kn				=> sl_RD68Kn,
 
 		O_CCTR1n				=> open,	-- coin counter open collector active low
 		O_CCTR2n				=> open,	-- coin counter open collector active low

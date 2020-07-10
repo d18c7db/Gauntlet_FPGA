@@ -36,6 +36,7 @@ entity VIDEO is
 		O_VCPU				: out	std_logic;
 		O_VBKINTn			: out	std_logic;
 		O_VBLANKn			: out	std_logic;
+		O_HBLANKn			: out	std_logic;
 		O_1H					: out	std_logic;
 		O_2H					: out	std_logic;
 		O_32V					: out	std_logic;
@@ -134,6 +135,7 @@ architecture RTL of VIDEO is
 		sl_PICTDLn_tap,
 		sl_VBKACKn,
 		sl_VBLANKn,
+		sl_HBLANKn,
 		sl_VBLANKn_en,
 		sl_VERTDLn,
 		sl_VERTDLn_tap,
@@ -229,6 +231,7 @@ begin
 	O_DATA    <= slv_VBD;
 	O_VCPU    <= sl_VCPU;
 	O_VBLANKn <= sl_VBLANKn;
+	O_HBLANKn <= sl_HBLANKn;
 
 	O_HSYNC   <= sl_HSYNCn;
 	O_VSYNC   <= sl_VSYNCn;
@@ -753,7 +756,6 @@ begin
 		O_C1					=> open,		-- UNUSED
 		O_C2					=> open,		-- UNUSED
 		O_LMPDn				=> sl_LMPDn,
-		O_HBKn				=> open,		-- UNUSED
 		O_VIDBn				=> sl_VIDBLANKn,
 		O_VRESn				=> open,		-- UNUSED
 
@@ -762,6 +764,7 @@ begin
 		O_PFHSTn				=> sl_PFHSTn,
 		O_BUFCLRn			=> open,		-- UNUSED this /BUFCLR replaced by signal from PROM 7U
 
+		O_HBLKn				=> sl_HBLANKn,
 		O_VBLKn				=> sl_VBLANKn,
 		O_VSCK				=> open,		-- UNUSED
 		O_CK0n				=> open,		-- same as MCKF

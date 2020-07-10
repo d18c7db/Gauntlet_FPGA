@@ -33,13 +33,13 @@ entity AUDIO is
 
 		I_SBD					: in	std_logic_vector( 7 downto 0);
 		O_SBD					: out std_logic_vector( 7 downto 0) := (others=>'1');
-		O_WR68K				: out std_logic;
-		O_RD68K				: out std_logic;
+		O_WR68Kn				: out std_logic;
+		O_RD68Kn				: out std_logic;
 
 		O_CCTR1n				: out	std_logic;
 		O_CCTR2n				: out	std_logic;
-		O_AUDIO_L			: out	std_logic_vector( 7 downto 0) := (others=>'1');
-		O_AUDIO_R			: out	std_logic_vector( 7 downto 0) := (others=>'1');
+		O_AUDIO_L			: out	std_logic_vector(15 downto 0) := (others=>'1');
+		O_AUDIO_R			: out	std_logic_vector(15 downto 0) := (others=>'1');
 
 		-- ROMs are external
 		O_AP_EN	 			: out std_logic;
@@ -49,6 +49,30 @@ entity AUDIO is
 end AUDIO;
 
 architecture RTL of AUDIO is
+	component jt51
+	port (
+		rst		:	 in std_logic;
+		clk		:	 in std_logic;
+		cen		:	 in std_logic;
+		cen_p1		:	 in std_logic;
+		cs_n		:	 in std_logic;
+		wr_n		:	 in std_logic;
+		a0		:	 in std_logic;
+		din		:	 in std_logic_vector(7 downto 0);
+		dout		:	 out std_logic_vector(7 downto 0);
+		ct1		:	 out std_logic;
+		ct2		:	 out std_logic;
+		irq_n		:	 out std_logic;
+		sample		:	 out std_logic;
+		left		:	 out std_logic_vector(15 downto 0);
+		right		:	 out std_logic_vector(15 downto 0);
+		xleft		:	 out signed(15 downto 0);
+		xright		:	 out signed(15 downto 0);
+		dacleft		:	 out std_logic_vector(15 downto 0);
+		dacright		:	 out std_logic_vector(15 downto 0)
+	);
+	end component;
+
 	signal
 		sl_COINn,
 		sl_MIXn,
@@ -77,6 +101,7 @@ architecture RTL of AUDIO is
 								: std_logic := '0';
 	signal
 		sl_SWR,
+		sl_TMS_ckena,
 		sl_SYNC,
 		sl_MCKF,
 		sl_PHI2,
@@ -107,8 +132,13 @@ architecture RTL of AUDIO is
 		sph_ctr
 								: std_logic_vector( 3 downto 0) := (others => '0');
 	signal
+		out_l,
+		out_r,
 		slv_l,
-		slv_r,
+		slv_r
+								: std_logic_vector(15 downto 0) := (others => '0');
+	signal
+		tctr,
 		slv_12P,
 		slv_IO,
 		slv_16R_ROM_data,
@@ -122,19 +152,21 @@ architecture RTL of AUDIO is
 		slv_POKEY_data
 								: std_logic_vector( 7 downto 0) := (others => '0');
 	signal
-		s_TMS_out,
+		s_TMS_out
+								: signed(11 downto 0) := (others => '0');
+	signal
 		s_POK_out
-								: signed( 7 downto 0) := (others => '0');
+								: signed( 4 downto 0) := (others => '0');
 	signal
 		s_audio_TMS,
 		s_audio_POK,
 		s_audio_YML,
 		s_audio_YMR
-								: signed(11 downto 0) := (others => '0');
+								: signed(15 downto 0) := (others => '0');
 	signal
 		s_chan_l,
 		s_chan_r
-								: signed(13 downto 0) := (others => '0');
+								: signed(15 downto 0) := (others => '0');
 	signal
 		s_YML_out,
 		s_YMR_out
@@ -143,7 +175,34 @@ architecture RTL of AUDIO is
 		slv_SBA
 								: std_logic_vector(23 downto 0) := (others => '0');
 begin
-	O_RD68K <= sl_RD68Kn;
+	p_volmux : process
+	begin
+		wait until rising_edge(I_MCKR);
+
+		-- apply volume control to outputs normalized to 10 bits, result extended to 16 bits for later addition
+		s_audio_TMS <= signed("000" & slv_SM_vol) * s_TMS_out(s_TMS_out'left downto s_TMS_out'left-9);
+		s_audio_YML <= signed("000" & slv_YM_vol) * s_YML_out(s_YML_out'left downto s_YML_out'left-9);
+		s_audio_YMR <= signed("000" & slv_YM_vol) * s_YMR_out(s_YMR_out'left downto s_YMR_out'left-9);
+		s_audio_POK <= signed("000" & slv_PM_vol) * s_POK_out & "00000";
+
+		-- add signed outputs together, already have extra spare bits for overflow
+		s_chan_l <= ( (s_audio_TMS + s_audio_YML) + ( s_audio_POK ) );
+		s_chan_r <= ( (s_audio_TMS + s_audio_YMR) + ( s_audio_POK ) );
+
+--		at this point, when simulating in ISIM the sound test that plays sounds through YM2151, Pokey and TMS5220 sequentially
+--		and dumping the data on s_chan_l and s_chan_r into a file then importing into audacity as raw 16 bit signed values,
+--		it sounds perfect and data values across both channels range from -1708 to 3360, but after the next step and playing
+--		through the DACs, the sound for the speech only sounds "clipped" even though the volume is low, this is very puzzling
+
+		-- convert to unsigned slv for DAC usage
+		out_l <= std_logic_vector(s_chan_l + 2047);
+		out_r <= std_logic_vector(s_chan_r + 2047);
+
+		O_AUDIO_L <= out_l;
+		O_AUDIO_R <= out_r;
+	end process;
+
+	O_RD68Kn <= sl_RD68Kn;
 
 -- Delay CPU enable to create an artificial PHI2 clock enable, PHI1 is not used
 	p_cpuena : process
@@ -156,7 +215,7 @@ begin
 
 	sl_MCKF <= not I_MCKR;
 
-	O_WR68K <= sl_WR68kn;
+	O_WR68Kn <= sl_WR68kn;
 	-------------
 	-- sheet 5 --
 	-------------
@@ -294,20 +353,23 @@ begin
 	-- sheet 6 --
 	-------------
 
-	-- 14S counter is clocked by 1H = 3.5795MHz and provides TMS5220 clock
+	-- 14S counter is clocked by 7.159MHz (not 1H, schema is wrong) and provides TMS5220 clock
 	-- when SQUEAK is 0 counter is preset with 5, else 7 then counts up to F before being preset again
-	--	divide by 11 gives 325.4KHz, divide by 9 gives 397.7KHz
+	--	divide by 11 gives 650.8KHz, divide by 9 gives 795.4KHz
 	p_14S : process
 	begin
 		wait until rising_edge(I_MCKR);
-		if I_1H = '0' then
+--		if I_1H = '0' then
 			if sph_ctr = "1111" then
 				sph_ctr <= "01" & sl_SQUEAKn & '1';
 			else
 				sph_ctr <= sph_ctr + 1;
 			end if;
-		end if;
+--		end if;
 	end process;
+
+	-- generate TMS5220 clock enable
+	sl_TMS_ckena <= '1' when (sph_ctr="1111") else '0';
 
 	-- 13P
 	p_13P : process
@@ -339,12 +401,12 @@ begin
 	sl_YAMRES <= not sl_YAMRESn;
 
 	-- YM2151 sound
-	u_15R : entity work.JT51
+	u_15R : JT51
 	port map(
 		-- inputs
 		rst		=> sl_YAMRES,	-- active high reset
-		clk		=> I_1H,			-- FIXME
-		cen		=> '1',
+		clk		=> I_MCKR,
+		cen		=> I_1H,
 		cen_p1	=> I_2H,
 		a0			=> slv_SBA(0),
 		wr_n		=> sl_SWRn,
@@ -404,7 +466,8 @@ begin
 	-- TMS5220 Voice Synthesis
 	u_13R : entity work.TMS5220
 	port map (
-		I_OSC			=> sph_ctr(2),
+		I_OSC			=> I_MCKR,
+		I_ENA			=> sl_TMS_ckena,
 		I_WSn			=> sl_SPHWRn,
 		I_RSn			=> sl_SPHRESn,
 		I_DATA		=> '1',
@@ -426,34 +489,6 @@ begin
 		O_PRMOUT		=> open,
 		O_SPKR		=> s_TMS_out
 	);
-
-	-- FIXME this mixing isn't ideal, sound volume ends up too low
-	-- Pokey sounds OK, but YM seems a bit distorted, try and do better
-	p_volmux : process
-	begin
-		wait until rising_edge(I_MCKR);
-
-		-- volume control applied to signed outputs
-		s_audio_TMS <= signed('0' & slv_SM_vol) * signed(s_TMS_out);
-		s_audio_POK <= signed('0' & slv_PM_vol) * signed(s_POK_out);
-		s_audio_YML <= signed('0' & slv_YM_vol) * signed(s_YML_out(15 downto 8));
-		s_audio_YMR <= signed('0' & slv_YM_vol) * signed(s_YMR_out(15 downto 8));
-
-		-- sign extend to 14 bits and add all outputs together as signed integers
-		s_chan_l <=  signed(s_audio_YML(11) & s_audio_YML(11) & s_audio_YML)
-					+ ( signed(s_audio_POK(11) & s_audio_POK(11) & s_audio_POK)
-					+   signed(s_audio_TMS(11) & s_audio_TMS(11) & s_audio_TMS) );
-		s_chan_r <=  signed(s_audio_YMR(11) & s_audio_YMR(11) & s_audio_YMR)
-					+ ( signed(s_audio_POK(11) & s_audio_POK(11) & s_audio_POK)
-					+   signed(s_audio_TMS(11) & s_audio_TMS(11) & s_audio_TMS) );
-
-		-- convert output back to unsigned for DAC usage
-		slv_l <= std_logic_vector(not s_chan_l(13) & s_chan_l(12 downto 6));
-		slv_r <= std_logic_vector(not s_chan_r(13) & s_chan_r(12 downto 6));
-	end process;
-
-	O_AUDIO_L <= slv_l;
-	O_AUDIO_R <= slv_r;
 
 	-------------
 	-- sheet 7 --

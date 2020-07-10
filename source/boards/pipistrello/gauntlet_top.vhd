@@ -155,8 +155,6 @@ architecture RTL of GAUNTLET_TOP is
 		VideoB
 								: std_logic_vector(3 downto 0) := (others => '0');
 	signal
-		slv_ROM_16R,
-		slv_ROM_16S,
 --		slv_ROM_10A,
 --		slv_ROM_10B,
 --		slv_ROM_9A,
@@ -169,20 +167,24 @@ architecture RTL of GAUNTLET_TOP is
 --		slv_ROM_5B,
 --		slv_ROM_3A,
 --		slv_ROM_3B,
+		slv_ROM_16R,
+		slv_ROM_16S
+								: std_logic_vector( 7 downto 0) := (others => '0');
+	signal
 		s_audio_l,
 		s_audio_r
-								: std_logic_vector( 7 downto 0) := (others => '0');
+								: std_logic_vector(15 downto 0) := (others => '0');
 
-	signal s_GP_DATA			: std_logic_vector(31 downto 0) := (others => '0');
-	signal s_MP_DATA			: std_logic_vector(15 downto 0) := (others => '0');
-	signal s_AP_DATA			: std_logic_vector( 7 downto 0) := (others => '0');
+	signal s_GP_DATA		: std_logic_vector(31 downto 0) := (others => '0');
+	signal s_MP_DATA		: std_logic_vector(15 downto 0) := (others => '0');
+	signal s_AP_DATA		: std_logic_vector( 7 downto 0) := (others => '0');
 
-	signal s_GP_ADDR			: std_logic_vector(17 downto 0) := (others => '0');
-	signal s_MP_ADDR			: std_logic_vector(18 downto 0) := (others => '0');
-	signal s_AP_ADDR			: std_logic_vector(15 downto 0) := (others => '0');
+	signal s_GP_ADDR		: std_logic_vector(17 downto 0) := (others => '0');
+	signal s_MP_ADDR		: std_logic_vector(18 downto 0) := (others => '0');
+	signal s_AP_ADDR		: std_logic_vector(15 downto 0) := (others => '0');
 
-	signal user_AD				: std_logic_vector(20 downto 0) := (others => '0');
-	signal user_DI				: std_logic_vector(15 downto 0) := (others => '0');
+	signal user_AD			: std_logic_vector(20 downto 0) := (others => '0');
+	signal user_DI			: std_logic_vector(15 downto 0) := (others => '0');
 
 begin
 ------------------------------------------------------------------------------
@@ -423,7 +425,7 @@ begin
 	-- 1 bit D/A converters
 	-----------------------
 	u_dacl : entity work.DAC
-	generic map (msbi_g => 7)
+	generic map (msbi_g => 15)
 	port map (
 		clk_i	=> gclk_28M,
 		res_i	=> int_reset,
@@ -432,7 +434,7 @@ begin
 	);
 
 	u_dacr : entity work.DAC
-	generic map (msbi_g => 7)
+	generic map (msbi_g => 15)
 	port map (
 		clk_i	=> gclk_28M,
 		res_i	=> int_reset,

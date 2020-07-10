@@ -56,7 +56,7 @@ port (
 	CS        : in  std_logic; -- used as enable
 	CS_L      : in  std_logic;
 	--
-	AUDIO_OUT : out signed(7 downto 0);
+	AUDIO_OUT : out signed(4 downto 0);
 	--
 	PIN       : in  std_logic_vector(7 downto 0);
 	ENA       : in  std_logic;
@@ -540,17 +540,17 @@ begin
 
 			sum12 := ('0' & vol(1)) + ('0' & vol(2));
 			sum34 := ('0' & vol(3)) + ('0' & vol(4));
-			sum := ('0' & sum12) + ('0' & sum34);
+			sum   := ('0' & sum12 ) + ('0' & sum34 );
 
 			if (reset = '1') then
 				AUDIO_OUT <= (others=>'0');
 			else
 				if (sum(5) = '1') then
 					-- clip to max
-					AUDIO_OUT <= x"7F";
+					AUDIO_OUT <= "01111";
 				else
 					-- signed output
-					AUDIO_OUT <= signed((sum(4 downto 0) & "000") - x"80");
+					AUDIO_OUT <= signed(sum(4 downto 0));
 				end if;
 			end if;
 		end if;

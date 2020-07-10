@@ -15,9 +15,6 @@ library ieee;
 	use ieee.std_logic_1164.all;
 	use ieee.numeric_std.all;
 
-library unimacro;
-	use unimacro.vcomponents.all;
-
 entity CRAMS is
 	port(
 		I_MCKR				: in	std_logic;

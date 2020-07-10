@@ -26,7 +26,6 @@ entity SYNGEN is
 		O_C1					: out	std_logic := '0';
 		O_C2					: out	std_logic := '0';
 		O_LMPDn				: out	std_logic := '0';
-		O_HBKn				: out	std_logic;
 		O_VIDBn				: out	std_logic;	-- VIDBLANK
 		O_VRESn				: out	std_logic;
 
@@ -35,6 +34,7 @@ entity SYNGEN is
 		O_PFHSTn				: out	std_logic;
 		O_BUFCLRn			: out	std_logic;
 
+		O_HBLKn				: out	std_logic;	-- HBLANK
 		O_VBLKn				: out	std_logic;	-- VBLANK
 		O_VSCK				: out	std_logic;
 		O_CK0n				: out	std_logic;	-- pin  4 RCLOCK
@@ -83,7 +83,7 @@ architecture RTL of SYNGEN is
 								: std_logic_vector( 7 downto 0) := (others => '1');
 	signal
 		slv_vcnt
-								: std_logic_vector( 7 downto 0) := x"EF"; --(others => '1');
+								: std_logic_vector( 7 downto 0) := x"6A"; --(others => '1');
 	signal
 		slv_hcnt
 								: std_logic_vector( 8 downto 0) := (others => '0');
@@ -98,12 +98,12 @@ begin
 	O_CK0			<=     I_CK;
 	O_CK0n		<= not I_CK;
 	O_H			<= slv_hcnt;
-	O_HBKn		<= sl_HBLANKn;				-- From SP-313 this is /HBLANK
 	O_HSYNCn		<= sl_HSYNCn;
 	O_LMPDn		<= sl_LMPDn;
 	O_NXLn		<= not sl_o19;
 	O_PFHSTn		<= not sl_o12;
 	O_V			<= slv_vcnt;
+	O_HBLKn		<= sl_HBLANKn;				-- From SP-313 this is /HBLANK
 	O_VBLKn		<= sl_VBLANKn;
 	O_VIDBn		<= sl_VBLANKn and sl_HBLANKn;
 	O_VRESn		<= sl_VRESn;

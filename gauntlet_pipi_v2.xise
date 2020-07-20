@@ -15,428 +15,428 @@
   <version xil_pn:ise_version="14.7" xil_pn:schema_version="2"/>
 
   <files>
-    <file xil_pn:name="source/boards/pipistrello/pipistrello_v2.ucf" xil_pn:type="FILE_UCF">
+    <file xil_pn:name="rtl/boards/pipistrello/pipistrello_v2.ucf" xil_pn:type="FILE_UCF">
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/boards/pipistrello/testbed/tb_gauntlet.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/boards/pipistrello/testbed/tb_gauntlet.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="PostMapSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="PostRouteSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="PostTranslateSimulation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/boards/pipistrello/gauntlet_top.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/boards/pipistrello/gauntlet_top.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/spi_flash.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/lib/spi_flash.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/bootstrap.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/lib/bootstrap.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/CRAMS.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/CRAMS.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/GAUNTLET.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/GAUNTLET.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/GPC.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/GPC.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/LS299.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/LS299.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/MOHLB.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/MOHLB.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/PFHS.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/PFHS.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/SLAGS.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/SLAGS.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/SYNGEN.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/SYNGEN.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/VIDEO.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/VIDEO.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/VRAMS.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/VRAMS.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/boards/pipistrello/testbed/ROMS_EXT_V2.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/boards/pipistrello/testbed/ROMS_EXT_V2.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/scan_converter.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/lib/scan_converter.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/EEP_14A.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/EEP_14A.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/PROM_4R.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/PROM_4R.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/PROM_5E.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/PROM_5E.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/PROM_5L.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/PROM_5L.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_1A.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_1A.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_1B.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_1B.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_1L.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_1L.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_1MN.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_1MN.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_2A.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_2A.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_2B.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_2B.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_2L.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_2L.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_2MN.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_2MN.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_6P.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_6P.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_1C.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_1C.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_1P.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_1P.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_2C.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_2C.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_2P.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_2P.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_6A.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_6A.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_6B.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_6B.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_7A.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_7A.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_7B.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_7B.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_9A.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_9A.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_9B.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_9B.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_10A.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_10A.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_10B.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_10B.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_16R.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_16R.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_16S.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_16S.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_1D.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_1D.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_1EF.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_1EF.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_1J.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_1J.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_1R.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_1R.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_1ST.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_1ST.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_1U.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_1U.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_2D.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_2D.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_2EF.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_2EF.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_2J.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_2J.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_2R.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_2R.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_2ST.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_2ST.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_2U.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_2U.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_3A.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_3A.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_3B.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_3B.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_5A.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_5A.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/ROMS.V2/ROM_5B.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/ROMS.V2/ROM_5B.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/TG68K/TG68K_ALU.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/lib/TG68K/TG68K_ALU.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/TG68K/TG68K_Pack.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/lib/TG68K/TG68K_Pack.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/TG68K/TG68KdotC_Kernel.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/lib/TG68K/TG68KdotC_Kernel.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/TG68K.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/TG68K.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/SLAPSTIC.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/SLAPSTIC.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/AUDIO.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/AUDIO.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/T65/T65.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/lib/T65/T65.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/T65/T65_ALU.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/lib/T65/T65_ALU.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/T65/T65_MCode.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/lib/T65/T65_MCode.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/T65/T65_Pack.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/lib/T65/T65_Pack.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/POKEY.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/lib/POKEY.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/TMS5220.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/TMS5220.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_acc.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_acc.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_eg.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_eg.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_exp2lin.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_exp2lin.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_exprom.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_exprom.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_kon.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_kon.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_lfo.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_lfo.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_lfo_lfsr.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_lfo_lfsr.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_lin2exp.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_lin2exp.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_mmr.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_mmr.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_mod.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_mod.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_noise.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_noise.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_noise_lfsr.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_noise_lfsr.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_op.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_op.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_pg.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_pg.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_phinc_rom.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_phinc_rom.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_phrom.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_phrom.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_pm.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_pm.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_reg.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_reg.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_sh.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_sh.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_timers.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_timers.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_csr_ch.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_csr_ch.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/jt51/jt51_csr_op.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/jt51/jt51_csr_op.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/LINEBUF.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/LINEBUF.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/MAIN.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/MAIN.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/dac.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/lib/dac.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/TIMING.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/TIMING.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/dvid.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/lib/dvid.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/tmds_encoder.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/lib/tmds_encoder.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/RGBI.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/RGBI.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/debug/async_receiver.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/debug/async_receiver.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/debug/async_transmitter.v" xil_pn:type="FILE_VERILOG">
+    <file xil_pn:name="rtl/lib/debug/async_transmitter.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/ip/debug/debug.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/lib/debug/debug.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
-    <file xil_pn:name="source/gauntlet/RAM_2K8.vhd" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="rtl/gauntlet/RAM_2K8.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
@@ -448,7 +448,7 @@
     <property xil_pn:name="Enable Multi-Threading" xil_pn:value="2" xil_pn:valueState="non-default"/>
     <property xil_pn:name="Enable Multi-Threading par spartan6" xil_pn:value="4" xil_pn:valueState="non-default"/>
     <property xil_pn:name="Implementation Top" xil_pn:value="Architecture|GAUNTLET_TOP|RTL" xil_pn:valueState="non-default"/>
-    <property xil_pn:name="Implementation Top File" xil_pn:value="../../source/boards/pipistrello/gauntlet_top.vhd" xil_pn:valueState="non-default"/>
+    <property xil_pn:name="Implementation Top File" xil_pn:value="../../rtl/boards/pipistrello/gauntlet_top.vhd" xil_pn:valueState="non-default"/>
     <property xil_pn:name="Implementation Top Instance Path" xil_pn:value="/GAUNTLET_TOP" xil_pn:valueState="non-default"/>
     <property xil_pn:name="Package" xil_pn:value="csg324" xil_pn:valueState="non-default"/>
     <property xil_pn:name="Preferred Language" xil_pn:value="VHDL" xil_pn:valueState="non-default"/>

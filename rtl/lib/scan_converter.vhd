@@ -44,12 +44,6 @@ library ieee;
 	use std.textio.all;
 --pragma translate_on
 
-library UNISIM;
-	use UNISIM.Vcomponents.all;
-
-library UNIMACRO;
-	use UNIMACRO.vcomponents.all;
-
 entity VGA_SCANCONV is
 	generic (
 		vstart		: integer range 0 to 1023 := 127;	-- start  of active video
@@ -276,83 +270,37 @@ begin
 	end process;
 
 -- this section below between pragma translate_off - translate_on is not synthesizeable
---	used for debuging during simulation to write .ppm format video frames to output files
+--	used for debuging during simulation to write video frames to output bitmap files
 --	pragma translate_off
 
 	-- this process dumps the input of the scan converter to a .ppm file
-	p_debug_in : process
-		file		qfile			: TEXT open WRITE_MODE is "..\..\SIM\I3000000.ppm";
-		variable	qidx			: integer := 3000000;
-		variable	s				: line;
-		variable ending		: boolean := false;
-	begin
-		wait until rising_edge(CLK_x2);
-		-- if start of frame
-		if (ivsync_last = '0') and (ivsync = '1') then
-			ending := true;
-		end if;
+	p_bmp_in : entity work.bmp_out
+	generic map ( FILENAME => "BI" )
+	port map (
+		clk_i               => CLK,
+		dat_i(23 downto 20) => ivideo(11 downto 8),
+		dat_i(19 downto 16) => x"0",
+		dat_i(15 downto 12) => ivideo( 7 downto 4),
+		dat_i(11 downto  8) => x"0",
+		dat_i( 7 downto  4) => ivideo( 3 downto 0),
+		dat_i( 3 downto  0) => x"0",
+		hs_i            => ihsync,
+		vs_i            => ivsync
+	);
 
-		-- wait for a suitable spot on the horizontal line to start new video frame
-		if ending and (hcnti = vstart) then
-			ending := false;
-			qidx := qidx + 1;				-- frame number
-			file_close(qfile);
-			write(s,"..\..\SIM\I"); write(s,qidx); write(s,".ppm");
-			file_open(qfile, s.all, WRITE_MODE);
-			writeline(output, s);
-			write(s,"P3");						writeline(qfile,s);	--	P3 means ASCII format
-			write(s,"# "); write(s, now);	writeline(qfile,s);	-- sim time at start of frame
-			write(s,"369 263 15");			writeline(qfile,s);	--	width height colors
-		end if;
-
-		if CLK = '1' then
-			if (hpos_i /= 0) then
---				write(s, to_integer(unsigned(I_VIDEO(15 downto 12) * I_VIDEO(11 downto 8)))/15 ); write(s," ");			-- R
---				write(s, to_integer(unsigned(I_VIDEO(15 downto 12) * I_VIDEO( 7 downto 4)))/15 ); write(s," ");			-- G
---				write(s, to_integer(unsigned(I_VIDEO(15 downto 12) * I_VIDEO( 3 downto 0)))/15 ); writeline(qfile,s);	-- B
-				write(s, to_integer(unsigned(ivideo(11 downto 8)))); write(s," ");			-- R
-				write(s, to_integer(unsigned(ivideo( 7 downto 4)))); write(s," ");			-- G
-				write(s, to_integer(unsigned(ivideo( 3 downto 0)))); writeline(qfile,s);	-- B
-			end if;
-		end if;
-	end process;
-
---	-- this process dumps the output of the scan converter to a .ppm file
---	p_debug_out : process
---		file		ofile			: TEXT open WRITE_MODE is "..\..\SIM\O3000000.ppm";
---		variable	oidx			: integer := 3000000;
---		variable	s				: line;
---		variable ending		: boolean := false;
---	begin
---		wait until rising_edge(CLK_x2);
---		-- if start of frame
---		if (ovsync_last = '0') and (ovsync = '1') then
---			ending := true;
---		end if;
---
---		-- wait for a suitable spot on the horizontal line to start new video frame
---		if ending and (hcnto = (hF + hS + hB + hpad + 1)) then
---			ending := false;
---			oidx := oidx + 1;				-- frame number
---			file_close(ofile);
---			write(s,"..\..\SIM\O"); write(s,oidx); write(s,".ppm");
---			file_open(ofile, s.all, WRITE_MODE);
---			writeline(output, s);
---			write(s,"P3");						writeline(ofile,s);	--	P3 means ASCII format
---			write(s,"# "); write(s, now);	writeline(ofile,s);	-- sim time at start of frame
---			write(s,"672 526 15");			writeline(ofile,s);	--	width height colors
---		end if;
---
---		if (hpos_o /= 0) then
---			write(s, to_integer(unsigned(ovideo(11 downto 8)))); write(s," ");			-- R
---			write(s, to_integer(unsigned(ovideo( 7 downto 4)))); write(s," ");			-- G
---			write(s, to_integer(unsigned(ovideo( 3 downto 0)))); writeline(ofile,s);	-- B
---			-- to preserve aspect ratio of image with doubled lines, write each pixel twice
---			write(s, to_integer(unsigned(ovideo(11 downto 8)))); write(s," ");			-- R
---			write(s, to_integer(unsigned(ovideo( 7 downto 4)))); write(s," ");			-- G
---			write(s, to_integer(unsigned(ovideo( 3 downto 0)))); writeline(ofile,s);	-- B
---		end if;
---	end process;
-
+	-- this process dumps the output of the scan converter to a .ppm file
+	-- p_bmp_out : entity work.bmp_out
+	-- generic map ( FILENAME => "BO" )
+	-- port map (
+		-- clk_i               => CLK_x2,
+		-- dat_i(23 downto 20) => ovideo(11 downto 8),
+		-- dat_i(19 downto 16) => x"0",
+		-- dat_i(15 downto 12) => ovideo( 7 downto 4),
+		-- dat_i(11 downto  8) => x"0",
+		-- dat_i( 7 downto  4) => ovideo( 3 downto 0),
+		-- dat_i( 3 downto  0) => x"0",
+		-- hs_i            => ohsync,
+		-- vs_i            => ovsync
+	-- );
 --	pragma translate_on
 end architecture RTL;

@@ -27,11 +27,6 @@
 library ieee;
 	use ieee.std_logic_1164.all;
 
---pragma translate_off
-	use ieee.std_logic_textio.all;
-	use std.textio.all;
---pragma translate_on
-
 entity FPGA_GAUNTLET is
 	generic (
 		slap_type			: integer range 100 to 118 := 104
@@ -122,8 +117,8 @@ architecture RTL of FPGA_GAUNTLET is
 		slv_data
 								: std_logic_vector(15 downto 0) := (others=>'0');
 begin
-	O_HBLANK <= not sl_HBLANKn;
-	O_VBLANK <= not sl_VBLANKn;
+	O_HBLANK <= sl_HBLANKn;
+	O_VBLANK <= sl_VBLANKn;
 
 	u_main : entity work.MAIN
 	generic map (slap_type=>slap_type)

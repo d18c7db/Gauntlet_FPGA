@@ -352,6 +352,14 @@
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
       <association xil_pn:name="Implementation" xil_pn:seqID=""/>
     </file>
+    <file xil_pn:name="rtl/lib/bitmap/bmp_out.vhd" xil_pn:type="FILE_VHDL">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
+      <association xil_pn:name="Implementation" xil_pn:seqID=""/>
+    </file>
+    <file xil_pn:name="rtl/lib/bitmap/bmp_pkg.vhd" xil_pn:type="FILE_VHDL">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID=""/>
+      <association xil_pn:name="Implementation" xil_pn:seqID=""/>
+    </file>
   </files>
 
   <properties>

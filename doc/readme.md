@@ -1,19 +1,7 @@
 # Atari Gauntlet FPGA Arcade
 
 ## Hardware
-Initially all screen shots here were generated from test bench output of what the video signal would look like if it was displayed on a monitor. The testbench dumps the output video values for each frame in a .ppm (portable pixmap) text file which can then be directly viewed by a suitable viewer (eg FastStone Image Viewer). The .ppm file format consists of one line with the pixmap magic value P3, next line is the X and Y resolution and max number of colors, followed by hopefully at least X*Y lines of RGB color triplets like so:  
-
-<pre>
-P3
-336 240 15
-15 15 15
- 0  0  0
-15 15 15
-12 11 15
-10  9 15
-...  
-</pre>
-To start with, the Video section of the arcade game was implemented and debugged (sheets 8 though 16 in the schematic). Because there was no CPU to run the game, for simulation purposes the video RAMs are initialized with data dumped from MAME so as to produce the relevant game screens.
+Initially all screen shots here were generated from test bench output of what the video signal would look like if it was rendered on a monitor. To start with, the Video section of the arcade game was implemented and debugged (sheets 8 though 16 in the schematic). Because there was no CPU to run the game, for simulation purposes the video RAMs are initialized with data dumped from MAME so as to produce the relevant game screens.
 
 Progress has been made and the game has been successfully run on a Pipistrello FPGA board with a custom add-on board which has a 2Mx16 SRAM chip rated at 10ns access time. This is needed because there is no space inside the FPGA to store all the game ROMs.
 

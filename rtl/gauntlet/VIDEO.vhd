@@ -857,7 +857,6 @@ begin
 		O_DB		=>	slv_CRAM
 	);
 
-
 	-- 9N, 10N latch color palette output
 	p_9N_10N : process
 	begin

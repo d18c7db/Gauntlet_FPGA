@@ -32,7 +32,6 @@ entity SLAPSTIC is
 end SLAPSTIC;
 
 architecture RTL of SLAPSTIC is
-	signal slv_BS			: std_logic_vector( 1 downto 0) := (others=>'0');
 
 	type slap_sm is (DIS, ENA, ALT1, ALT2, ALT3, BIT1, BIT2, BIT3, ADD1, ADD2, ADD3);
 	signal state			: slap_sm;
@@ -569,8 +568,7 @@ begin
 		mask_add3	<= x"3FF8";		val_add3		<= x"30E0"; --	{ 0x3ff8,0x30e0 }               /* final mask/value in sequence */
 	end generate;                                         --};
 
-	slv_BS <= cur_bank;
-	O_BS <= slv_BS;
+	O_BS <= cur_bank;
 
 	-- expand address to 16 bits for easier representation in hex
 	addr <= "00" & I_A;
@@ -592,28 +590,28 @@ begin
 					case state is                                                        --		switch (state)
 																												--		{
 																												--			/* DISABLED state: everything is ignored except a reset */
-						when DIS  =>                                                      --			case DISABLED:
+						when DIS  => null;                                                     --			case DISABLED:
 																												--				break;
 																												--			/* ENABLED state: the chip has been activated and is ready for a bankswitch */
 						when ENA  =>                                                      --			case ENABLED:
 																												--				/* check for request to enter bitwise state */
-							if    bitwise = '1' and (addr and mask_bit1) = val_bit1 then	--				if (MATCHES_MASK_VALUE(offset, slapstic.bit1))
+							if ((addr and mask_bit1) = val_bit1) and (bitwise = '1') then	--				if (MATCHES_MASK_VALUE(offset, slapstic.bit1))
 																												--				{
 								state <= BIT1;                                              --					state = BITWISE1;
 																												--				}
 																												--				/* check for request to enter additive state */
-							elsif additive = '1' and (addr and mask_add1) = val_add1 then	--				else if (MATCHES_MASK_VALUE(offset, slapstic.add1))
+							elsif ((addr and mask_add1) = val_add1) and (additive = '1') then	--				else if (MATCHES_MASK_VALUE(offset, slapstic.add1))
 																												--				{
 								state <= ADD1;                                              --					state = ADDITIVE1;
 																												--				}
 																												--				/* check for request to enter alternate state */
-							elsif (addr and mask_alt1) = val_alt1 then                     --				else if (MATCHES_MASK_VALUE(offset, slapstic.alt1))
+							elsif ((addr and mask_alt1) = val_alt1) then                     --				else if (MATCHES_MASK_VALUE(offset, slapstic.alt1))
 																												--				{
 								state <= ALT1;                                              --					state = ALTERNATE1;
 																												--				}
 																												--				/* special kludge for catching the second alternate address if */
 																												--				/* the first one was missed (since it's usually an opcode fetch) */
-							elsif (addr and mask_alt2) = val_alt2 then                     --				else if (MATCHES_MASK_VALUE(offset, slapstic.alt2))
+							elsif ((addr and mask_alt2) = val_alt2) then                     --				else if (MATCHES_MASK_VALUE(offset, slapstic.alt2))
 																												--				{
 								state <= ALT2;                                              --					state = alt2_kludge(space, offset);
 																												--				}

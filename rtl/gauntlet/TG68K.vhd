@@ -90,7 +90,7 @@ begin
 
 	clkena_in <= '1' when clkena_ext='1' and (busstate="01" or clk_ena='1') else '0';
 
-	AS  <= '1' when busstate="01" else as_ena;
+	AS  <= '1' when busstate="01" else as_ena or skipFetch;
 	WR  <= '1' when busstate="01" else as_ena or nWR;
 	UDS <= '1' when busstate="01" else as_ena or nUDS;
 	LDS <= '1' when busstate="01" else as_ena or nLDS;
@@ -115,7 +115,7 @@ begin
 					phase <= "10";
 					as_ena <= '0';
 				when "10" =>
-					if DTACK='0' or VPA='0' then
+					if DTACK='0' or VPA='0' or skipFetch = '1' then
 						phase <= "11";
 						data_latch <= DI;
 					else

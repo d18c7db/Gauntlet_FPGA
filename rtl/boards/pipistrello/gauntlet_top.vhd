@@ -66,8 +66,8 @@ entity GAUNTLET_TOP is
 		O_AUDIO_R			: out	std_logic;
 
 		-- External controller
-		PMOD1_IO				: in	std_logic_vector(4 downto 1);
-		PMOD2_IO				: in	std_logic_vector(4 downto 1);
+		PMOD1_IO4			: inout std_logic; -- gamecube controller I/O line
+		PMOD1_IO1			: in	std_logic;   -- selftest
 		LEDS					: out	std_logic_vector(4 downto 1);
 
 		I_RESET				: in	std_logic;								-- active high reset
@@ -112,16 +112,15 @@ architecture RTL of GAUNTLET_TOP is
 	signal ram_state_ctr		: natural range 0 to 7 := 0;
 	signal
 	-- player buttons active low
-		p1_coin, p1_start, p1_fire, p1_down, p1_up, p1_left, p1_right,
-		p2_coin,
-		p3_coin,
+		p1_coin, p1_start, p1_fire, p1_down, p1_up, p1_left, p1_right, p_stest,
+		p2_coin, p2_start, p2_fire, p2_down, p2_up, p2_left, p2_right,
+		p3_coin, but_A, but_B, but_X, but_Y, but_Z, but_S,
 		p4_coin,
 		int_reset,
-		ready,
 		s_blank,
 		clk_7M,    gclk_7M,
 		clk_14M,   gclk_14M,
-		clk_28M,   gclk_28M,
+		clk_28M,   gclk_28M, clk_28M_inv,
 		clk_dvi_p, gclk_dvi_p,
 		clk_dvi_n, gclk_dvi_n,
 
@@ -167,9 +166,11 @@ architecture RTL of GAUNTLET_TOP is
 --		slv_ROM_5B,
 --		slv_ROM_3A,
 --		slv_ROM_3B,
+		joy_X,
+		joy_Y,
 		slv_ROM_16R,
 		slv_ROM_16S
-								: std_logic_vector( 7 downto 0) := (others => '0');
+								: std_logic_vector( 7 downto 0) := (others => '1');
 	signal
 		s_audio_l,
 		s_audio_r
@@ -207,7 +208,8 @@ begin
 
 	-- this isn't needed, just used in the testbench to simulate a 10ns access delay
 	ODDR2_inst : ODDR2 generic map(DDR_ALIGNMENT=>"NONE", INIT=>'0', SRTYPE=>"SYNC")
-		port map (Q=>MEM_CK, C0=>clk_28M, C1=>not clk_28M, CE=>'1', D0=>'1', D1=>'0', R=>'0', S=>'0');
+		port map (Q=>MEM_CK, C0=>clk_28M, C1=>clk_28M_inv, CE=>'1', D0=>'1', D1=>'0', R=>'0', S=>'0');
+	clk_28M_inv <= not clk_28M;
 
 	u_bs : entity work.bootstrap
 	generic map (
@@ -296,14 +298,14 @@ begin
 		I_RESET		=> int_reset,
 
 		-- player 1 controls, active low
-		I_P1(7)		=> PMOD1_IO(1),	-- p1_up,					-- P1 up
-		I_P1(6)		=> PMOD1_IO(2),	-- p1_down, 				-- P1 down
-		I_P1(5)		=> PMOD1_IO(3),	-- p1_left, 				-- P1 left
-		I_P1(4)		=> PMOD1_IO(4),	-- p1_right, 				-- P1 right
+		I_P1(7)		=> p1_up,			-- p1_up,					-- P1 up
+		I_P1(6)		=> p1_down,			-- p1_down, 				-- P1 down
+		I_P1(5)		=> p1_left,			-- p1_left, 				-- P1 left
+		I_P1(4)		=> p1_right,		-- p1_right, 				-- P1 right
 		I_P1(3)		=> '1',				-- unused
 		I_P1(2)		=> '1',				-- unused
-		I_P1(1)		=> PMOD2_IO(1),	-- p1_fire, 				-- P1 fire
-		I_P1(0)		=> PMOD2_IO(2),	-- p1_start, 				-- P1 start
+		I_P1(1)		=> p1_fire,			-- p1_fire, 				-- P1 fire
+		I_P1(0)		=> p1_start,		-- p1_start, 				-- P1 start
 
 		-- player 2 controls, active low
 		I_P2			=> x"FF",					-- P2
@@ -315,8 +317,8 @@ begin
 		I_P4			=> x"FF",					-- P4
 
 		-- system inputs, active low
-		I_SYS(4)		=> PMOD2_IO(4),		-- SELF TEST active low
-		I_SYS(3)		=> PMOD2_IO(3),		-- COIN1-L
+		I_SYS(4)		=> PMOD1_IO1,			-- SELF TEST active low
+		I_SYS(3)		=> p1_coin,				-- COIN1-L
 		I_SYS(2)		=> p2_coin,				-- COIN2
 		I_SYS(1)		=> p3_coin,				-- COIN3
 		I_SYS(0)		=> p4_coin,				-- COIN4-R
@@ -350,6 +352,40 @@ begin
 		O_AP_ADDR	=> s_AP_ADDR,
 		I_AP_DATA	=> s_AP_DATA
 	);
+	u_gc : entity work.gamecube
+	port map (
+		clk	=> gclk_28M,
+		reset	=> int_reset,
+		serio	=> PMOD1_IO4,
+
+		but_S	=> but_S,	-- button Start
+		but_X	=> but_X,	-- button X
+		but_Y	=> but_Y,	-- button Y
+		but_Z	=> but_Z,	-- button Z
+		but_A	=> but_A,	-- button A
+		but_B	=> but_B,	-- button B
+		but_L	=> open,		-- button Left
+		but_R	=> open,		-- button Right
+		but_DU=> open,		-- button Dpad up
+		but_DD=> open,		-- button Dpad down
+		but_DL=> open,		-- button Dpad left
+		but_DR=> open,		-- button Dpad right
+
+		joy_X	=> joy_X,	-- Joy X analog
+		joy_Y	=> joy_Y,	-- Joy Y analog
+		cst_X	=> open,		-- C-Stick X analog
+		cst_Y	=> open,		-- C-Stick Y analog
+		ana_L	=> open,		-- Left Button analog
+		ana_R	=> open		-- Right Button analog
+	);
+
+	p1_right	<= '0' when (joy_X > x"A0") else '1';
+	p1_left	<= '0' when (joy_X < x"60") else '1';
+	p1_up		<= '0' when (joy_Y > x"A0") else '1';
+	p1_down	<= '0' when (joy_Y < x"60") else '1';
+	p1_coin	<= '0' when (but_Z = '1')   else '1';
+	p1_start	<= '0' when (but_B = '1')   else '1';
+	p1_fire	<= '0' when (but_A = '1')   else '1';
 
 	-----------------------------------------------------------------
 	-- video scan converter required to display video on VGA hardware

@@ -122,22 +122,22 @@ NET "LEDS<1>"         LOC = "V16"  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE
 NET "LEDS<2>"         LOC = "U16"  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8 ; # active high red
 NET "LEDS<3>"         LOC = "A16"  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8 ; # active high green
 NET "LEDS<4>"         LOC = "A15"  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8 ; # active high red
-#NET "LEDS<5>"         LOC = "A12"  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8 ; # active high red
+#NET "LEDS<5>"        LOC = "A12"  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8 ; # active high red
 
 # Switch
 NET "I_RESET"        LOC = "N14"  | IOSTANDARD = LVCMOS33 | PULLDOWN ; # active high
 
 # PMOD top row pin 5 GND, pin 6 3V3
-NET "PMOD1_IO<1>"    LOC = "D9"   | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD1-IO1 pin 1
-NET "PMOD1_IO<2>"    LOC = "C8"   | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD1-IO2 pin 2
-NET "PMOD1_IO<3>"    LOC = "D6"   | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD1-IO3 pin 3
-NET "PMOD1_IO<4>"    LOC = "C4"   | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD1-IO4 pin 4
+NET "PMOD1_IO1"       LOC = "D9"   | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD1-IO1 pin 1
+#NET "PMOD1_IO<2>"    LOC = "C8"   | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD1-IO2 pin 2
+#NET "PMOD1_IO<3>"    LOC = "D6"   | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD1-IO3 pin 3
+NET "PMOD1_IO4"       LOC = "C4"   | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD1-IO4 pin 4
 
 # PMOD bottom row pin 11 GND, pin 12 3V3
-NET "PMOD2_IO<1>"    LOC = "B11"  | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD2-IO1 pin 7
-NET "PMOD2_IO<2>"    LOC = "C9"   | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD2-IO2 pin 8
-NET "PMOD2_IO<3>"    LOC = "D8"   | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD2-IO3 pin 9
-NET "PMOD2_IO<4>"    LOC = "C6"   | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD2-IO4 pin 10
+#NET "PMOD2_IO<1>"    LOC = "B11"  | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD2-IO1 pin 7
+#NET "PMOD2_IO<2>"    LOC = "C9"   | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD2-IO2 pin 8
+#NET "PMOD2_IO<3>"    LOC = "D8"   | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD2-IO3 pin 9
+#NET "PMOD2_IO<4>"    LOC = "C6"   | IOSTANDARD = LVCMOS33 | PULLUP ; # PMOD2-IO4 pin 10
 
 ############################################################################
 # DDR2 requires the MCB to operate in Extended performance mode with higher Vccint

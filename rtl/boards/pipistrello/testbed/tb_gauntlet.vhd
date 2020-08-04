@@ -43,6 +43,7 @@ architecture RTL of tb_gauntlet is
 	signal MEM_CK			: std_logic := '0';
 
 	--Outputs
+	signal serio			: std_logic := 'Z';
 	signal MEM_A			: std_logic_vector(20 downto 0);
 	signal MEM_D			: std_logic_vector(15 downto 0);
 
@@ -87,8 +88,8 @@ begin
 		O_AUDIO_R	=> open,
 
 		-- External controls
-		PMOD1_IO		=> "1111",
-		PMOD2_IO		=> "1111",
+		PMOD1_IO1	=> '1',
+		PMOD1_IO4	=> serio,
 
 		I_RESET		=> I_RESET,
 		CLK_IN		=> CLK
@@ -101,7 +102,7 @@ begin
 		CLK <= not CLK;
 	end process;
 
-	CLKS <= MEM_CK after 10ns; -- simulate 10ns access time SRAM
+	CLKS <= MEM_CK after 10 ns; -- simulate 10ns access time SRAM
 
 	-- Stimulus process
 	p_stim : process

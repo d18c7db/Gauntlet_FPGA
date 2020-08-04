@@ -60,7 +60,7 @@ entity TMS5220 is
 		O_T11    : out std_logic;                    -- pin  7 Sync
 		O_IO     : out std_logic;                    -- pin  9 Serial Data Out
 		O_PRMOUT : out std_logic;                    -- pin 10 Test use only
-		O_SPKR   : out signed(11 downto 0)           -- pin  8 Audio Output
+		O_SPKR   : out signed(13 downto 0)           -- pin  8 Audio Output
 	);
 end entity;
 
@@ -240,7 +240,7 @@ begin
 	O_DBUS   <= m_DBO;
 	O_RDYn   <= not (m_io_ready or (not m_DDIS));
 	O_INTn   <= not m_irq_pin;
-	O_SPKR   <= to_signed(this_sample, 12);
+	O_SPKR   <= to_signed(this_sample, 14);
 
 	-- VSM memory bus driver (not implemented)
 	O_M0     <= '1';
@@ -775,8 +775,9 @@ begin
 								m_UF <= '1'; -- FIFO underflow
 							end if;
 						end if;
-
-					when 2 to 5 =>  -- K1-K4  5 bits
+-- Quartus compiler, unlike Xilinx, is unable to deal with "when 2|3|4|5" type cases, so we expand everything
+					-- K1-K4  5 bits
+					when 2 =>
 						if ((m_new_frame_repeat = '0') and ((m_new_frame_voiced = '1') or (m_new_frame_unvoiced = '1'))) then
 							if (m_FIFO_ptr <= FIFO_bits - K_bits(m_PC-2)) then
 								m_FIFO_ptr <= m_FIFO_ptr + K_bits(m_PC-2);
@@ -786,8 +787,89 @@ begin
 								m_UF <= '1'; -- FIFO underflow
 							end if;
 						end if;
-
-					when 6 to 11 =>  -- K5-K10  4 bits
+					when 3 =>
+						if ((m_new_frame_repeat = '0') and ((m_new_frame_voiced = '1') or (m_new_frame_unvoiced = '1'))) then
+							if (m_FIFO_ptr <= FIFO_bits - K_bits(m_PC-2)) then
+								m_FIFO_ptr <= m_FIFO_ptr + K_bits(m_PC-2);
+								m_FIFO <= m_FIFO(FIFO_bits - 1 - K_bits(m_PC-2) downto 0) & ZERO(K_bits(m_PC-2) downto 1);
+								tmp_new_frame_k_idx(m_PC-2) <= to_integer(unsigned(m_FIFO(FIFO_bits - 1 downto FIFO_bits - K_bits(m_PC-2))));
+							else
+								m_UF <= '1'; -- FIFO underflow
+							end if;
+						end if;
+					when 4 =>
+						if ((m_new_frame_repeat = '0') and ((m_new_frame_voiced = '1') or (m_new_frame_unvoiced = '1'))) then
+							if (m_FIFO_ptr <= FIFO_bits - K_bits(m_PC-2)) then
+								m_FIFO_ptr <= m_FIFO_ptr + K_bits(m_PC-2);
+								m_FIFO <= m_FIFO(FIFO_bits - 1 - K_bits(m_PC-2) downto 0) & ZERO(K_bits(m_PC-2) downto 1);
+								tmp_new_frame_k_idx(m_PC-2) <= to_integer(unsigned(m_FIFO(FIFO_bits - 1 downto FIFO_bits - K_bits(m_PC-2))));
+							else
+								m_UF <= '1'; -- FIFO underflow
+							end if;
+						end if;
+					when 5 =>
+						if ((m_new_frame_repeat = '0') and ((m_new_frame_voiced = '1') or (m_new_frame_unvoiced = '1'))) then
+							if (m_FIFO_ptr <= FIFO_bits - K_bits(m_PC-2)) then
+								m_FIFO_ptr <= m_FIFO_ptr + K_bits(m_PC-2);
+								m_FIFO <= m_FIFO(FIFO_bits - 1 - K_bits(m_PC-2) downto 0) & ZERO(K_bits(m_PC-2) downto 1);
+								tmp_new_frame_k_idx(m_PC-2) <= to_integer(unsigned(m_FIFO(FIFO_bits - 1 downto FIFO_bits - K_bits(m_PC-2))));
+							else
+								m_UF <= '1'; -- FIFO underflow
+							end if;
+						end if;
+-- Quartus compiler, unlike Xilinx, is unable to deal with "when 6|7|8|9|10|11" type cases, so we expand everything, again!
+					-- K5-K10  4 bits
+					when 6 =>
+						if ((m_new_frame_repeat = '0') and (m_new_frame_voiced = '1')) then
+							if (m_FIFO_ptr <= FIFO_bits - K_bits(m_PC-2)) then
+								m_FIFO_ptr <= m_FIFO_ptr + K_bits(m_PC-2);
+								m_FIFO <= m_FIFO(FIFO_bits - 1 - K_bits(m_PC-2) downto 0) & ZERO(K_bits(m_PC-2) downto 1);
+								tmp_new_frame_k_idx(m_PC-2) <= to_integer(unsigned(m_FIFO(FIFO_bits - 1 downto FIFO_bits - K_bits(m_PC-2))));
+							else
+								m_UF <= '1'; -- FIFO underflow
+							end if;
+						end if;
+					when 7 =>
+						if ((m_new_frame_repeat = '0') and (m_new_frame_voiced = '1')) then
+							if (m_FIFO_ptr <= FIFO_bits - K_bits(m_PC-2)) then
+								m_FIFO_ptr <= m_FIFO_ptr + K_bits(m_PC-2);
+								m_FIFO <= m_FIFO(FIFO_bits - 1 - K_bits(m_PC-2) downto 0) & ZERO(K_bits(m_PC-2) downto 1);
+								tmp_new_frame_k_idx(m_PC-2) <= to_integer(unsigned(m_FIFO(FIFO_bits - 1 downto FIFO_bits - K_bits(m_PC-2))));
+							else
+								m_UF <= '1'; -- FIFO underflow
+							end if;
+						end if;
+					when 8 =>
+						if ((m_new_frame_repeat = '0') and (m_new_frame_voiced = '1')) then
+							if (m_FIFO_ptr <= FIFO_bits - K_bits(m_PC-2)) then
+								m_FIFO_ptr <= m_FIFO_ptr + K_bits(m_PC-2);
+								m_FIFO <= m_FIFO(FIFO_bits - 1 - K_bits(m_PC-2) downto 0) & ZERO(K_bits(m_PC-2) downto 1);
+								tmp_new_frame_k_idx(m_PC-2) <= to_integer(unsigned(m_FIFO(FIFO_bits - 1 downto FIFO_bits - K_bits(m_PC-2))));
+							else
+								m_UF <= '1'; -- FIFO underflow
+							end if;
+						end if;
+					when 9 =>
+						if ((m_new_frame_repeat = '0') and (m_new_frame_voiced = '1')) then
+							if (m_FIFO_ptr <= FIFO_bits - K_bits(m_PC-2)) then
+								m_FIFO_ptr <= m_FIFO_ptr + K_bits(m_PC-2);
+								m_FIFO <= m_FIFO(FIFO_bits - 1 - K_bits(m_PC-2) downto 0) & ZERO(K_bits(m_PC-2) downto 1);
+								tmp_new_frame_k_idx(m_PC-2) <= to_integer(unsigned(m_FIFO(FIFO_bits - 1 downto FIFO_bits - K_bits(m_PC-2))));
+							else
+								m_UF <= '1'; -- FIFO underflow
+							end if;
+						end if;
+					when 10 =>
+						if ((m_new_frame_repeat = '0') and (m_new_frame_voiced = '1')) then
+							if (m_FIFO_ptr <= FIFO_bits - K_bits(m_PC-2)) then
+								m_FIFO_ptr <= m_FIFO_ptr + K_bits(m_PC-2);
+								m_FIFO <= m_FIFO(FIFO_bits - 1 - K_bits(m_PC-2) downto 0) & ZERO(K_bits(m_PC-2) downto 1);
+								tmp_new_frame_k_idx(m_PC-2) <= to_integer(unsigned(m_FIFO(FIFO_bits - 1 downto FIFO_bits - K_bits(m_PC-2))));
+							else
+								m_UF <= '1'; -- FIFO underflow
+							end if;
+						end if;
+					when 11 =>
 						if ((m_new_frame_repeat = '0') and (m_new_frame_voiced = '1')) then
 							if (m_FIFO_ptr <= FIFO_bits - K_bits(m_PC-2)) then
 								m_FIFO_ptr <= m_FIFO_ptr + K_bits(m_PC-2);
@@ -826,5 +908,4 @@ begin
 			end if;
 		end if;
 	end process;
-
 end architecture;

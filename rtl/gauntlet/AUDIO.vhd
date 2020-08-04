@@ -54,22 +54,22 @@ architecture RTL of AUDIO is
 		rst		:	 in std_logic;
 		clk		:	 in std_logic;
 		cen		:	 in std_logic;
-		cen_p1		:	 in std_logic;
+		cen_p1	:	 in std_logic;
 		cs_n		:	 in std_logic;
 		wr_n		:	 in std_logic;
-		a0		:	 in std_logic;
+		a0			:	 in std_logic;
 		din		:	 in std_logic_vector(7 downto 0);
 		dout		:	 out std_logic_vector(7 downto 0);
 		ct1		:	 out std_logic;
 		ct2		:	 out std_logic;
 		irq_n		:	 out std_logic;
-		sample		:	 out std_logic;
+		sample	:	 out std_logic;
 		left		:	 out std_logic_vector(15 downto 0);
 		right		:	 out std_logic_vector(15 downto 0);
 		xleft		:	 out signed(15 downto 0);
-		xright		:	 out signed(15 downto 0);
-		dacleft		:	 out std_logic_vector(15 downto 0);
-		dacright		:	 out std_logic_vector(15 downto 0)
+		xright	:	 out signed(15 downto 0);
+		dacleft	:	 out std_logic_vector(15 downto 0);
+		dacright	:	 out std_logic_vector(15 downto 0)
 	);
 	end component;
 
@@ -153,7 +153,7 @@ architecture RTL of AUDIO is
 								: std_logic_vector( 7 downto 0) := (others => '0');
 	signal
 		s_TMS_out
-								: signed(11 downto 0) := (others => '0');
+								: signed(13 downto 0) := (others => '0');
 	signal
 		s_POK_out
 								: signed( 4 downto 0) := (others => '0');
@@ -180,10 +180,10 @@ begin
 		wait until rising_edge(I_MCKR);
 
 		-- apply volume control to outputs normalized to 10 bits, result extended to 16 bits for later addition
-		s_audio_TMS <= signed("000" & slv_SM_vol) * s_TMS_out(s_TMS_out'left downto s_TMS_out'left-9);
+		s_audio_TMS <= signed("000" & slv_SM_vol) * s_TMS_out(s_TMS_out'left-1 downto s_TMS_out'left-10);
 		s_audio_YML <= signed("000" & slv_YM_vol) * s_YML_out(s_YML_out'left downto s_YML_out'left-9);
 		s_audio_YMR <= signed("000" & slv_YM_vol) * s_YMR_out(s_YMR_out'left downto s_YMR_out'left-9);
-		s_audio_POK <= signed("000" & slv_PM_vol) * s_POK_out & "00000";
+		s_audio_POK <= signed("000" & slv_PM_vol) * ('0' & s_POK_out & "0000");
 
 		-- add signed outputs together, already have extra spare bits for overflow
 		s_chan_l <= ( (s_audio_TMS + s_audio_YML) + ( s_audio_POK ) );

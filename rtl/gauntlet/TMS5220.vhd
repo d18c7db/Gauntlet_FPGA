@@ -65,15 +65,15 @@ entity TMS5220 is
 end entity;
 
 architecture RTL of TMS5220 is
-	type BL_ARRAY is array (0 to  9) of integer range 0 to 7; -- 3 bits
-	type IX_ARRAY is array (0 to  9) of integer range 0 to 31; -- 5 bits
-	type MU_ARRAY is array (0 to 10) of integer range -1024 to 1023; -- 11 bits
-	type MX_ARRAY is array (0 to  9) of integer range -1024 to 1023; -- 11 bits
-	type KV_ARRAY is array (0 to  9) of integer range -512 to 511; -- 10 bits
-	type EN_ARRAY is array (0 to 15) of integer range 0 to 127; -- 7 bits
-	type PI_ARRAY is array (0 to 63) of integer range 0 to 255; -- 8 bits
-	type CH_ARRAY is array (0 to 51) of integer range 0 to 127; -- 7 bits
-	type IP_ARRAY is array (0 to  7) of integer range 0 to 3; -- 2 bits
+	type IP_ARRAY is array (0 to  7) of integer range     0 to    3; --  2 bits
+	type BL_ARRAY is array (0 to  9) of integer range     0 to    7; --  3 bits
+	type IX_ARRAY is array (0 to  9) of integer range     0 to   31; --  5 bits
+	type EN_ARRAY is array (0 to 15) of integer range     0 to  127; --  7 bits
+	type CH_ARRAY is array (0 to 51) of integer range     0 to  127; --  7 bits
+	type PI_ARRAY is array (0 to 63) of integer range     0 to  255; --  8 bits
+	type KV_ARRAY is array (0 to  9) of integer range  -512 to  511; -- 10 bits
+	type MU_ARRAY is array (0 to 10) of integer range -8192 to 8191; -- 14 bits
+	type MX_ARRAY is array (0 to  9) of integer range -8192 to 8191; -- 14 bits
 	type KT_ARRAY is array (0 to  9, 0 to 31) of integer range -512 to 511; -- 10 bits
 
 	constant FIFO_bits   : integer := 128; -- FIFO size in bits

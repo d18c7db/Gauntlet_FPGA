@@ -19,16 +19,16 @@ library ieee;
 
 entity LINEBUF is
 	port(
-		I_MCKR				: in	std_logic;
-		I_BUFCLRn			: in	std_logic;
-		I_LDn					: in	std_logic;
-		I_FLBn				: in	std_logic;
-		I_CSn					: in	std_logic;
+		I_MCKR    : in  std_logic;
+		I_BUFCLRn : in	std_logic;
+		I_LDn     : in	std_logic;
+		I_FLBn    : in  std_logic;
+		I_CSn     : in  std_logic;
 
-		I_HPOS				: in	std_logic_vector(8 downto 0);
-		I_MOSR				: in	std_logic_vector(7 downto 0);
+		I_HPOS    : in  std_logic_vector(8 downto 0);
+		I_MOSR    : in  std_logic_vector(7 downto 0);
 
-		O_MPX					: out	std_logic_vector(7 downto 0)
+		O_MPX     : out std_logic_vector(7 downto 0)
 	);
 end LINEBUF;
 

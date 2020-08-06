@@ -26,9 +26,6 @@ library ieee;
 library unisim;
 	use unisim.vcomponents.all;
 
-library std;
-	use std.textio.all;
-
 entity GAUNTLET_TOP is
 	port(
 		-- FLASH
@@ -112,10 +109,10 @@ architecture RTL of GAUNTLET_TOP is
 	signal ram_state_ctr		: natural range 0 to 7 := 0;
 	signal
 	-- player buttons active low
-		p1_coin, p1_start, p1_fire, p1_down, p1_up, p1_left, p1_right, p_stest,
+		p1_coin, p1_start, p1_fire, p1_down, p1_up, p1_left, p1_right,
 		p2_coin, p2_start, p2_fire, p2_down, p2_up, p2_left, p2_right,
 		p3_coin, but_A, but_B, but_X, but_Y, but_Z, but_S,
-		p4_coin,
+		p4_coin, p_stest,
 		int_reset,
 		s_blank,
 		clk_7M,    gclk_7M,

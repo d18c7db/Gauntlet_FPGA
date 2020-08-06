@@ -156,7 +156,7 @@ architecture RTL of AUDIO is
 								: signed(13 downto 0) := (others => '0');
 	signal
 		s_POK_out
-								: signed( 4 downto 0) := (others => '0');
+								: signed( 5 downto 0) := (others => '0');
 	signal
 		s_audio_TMS,
 		s_audio_POK,
@@ -183,20 +183,15 @@ begin
 		s_audio_TMS <= signed("000" & slv_SM_vol) * s_TMS_out(s_TMS_out'left-1 downto s_TMS_out'left-10);
 		s_audio_YML <= signed("000" & slv_YM_vol) * s_YML_out(s_YML_out'left downto s_YML_out'left-9);
 		s_audio_YMR <= signed("000" & slv_YM_vol) * s_YMR_out(s_YMR_out'left downto s_YMR_out'left-9);
-		s_audio_POK <= signed("000" & slv_PM_vol) * ('0' & s_POK_out & "0000");
+		s_audio_POK <= signed("000" & slv_PM_vol) * (s_POK_out(s_POK_out'left) & s_POK_out & "000");
 
 		-- add signed outputs together, already have extra spare bits for overflow
 		s_chan_l <= ( (s_audio_TMS + s_audio_YML) + ( s_audio_POK ) );
 		s_chan_r <= ( (s_audio_TMS + s_audio_YMR) + ( s_audio_POK ) );
 
---		at this point, when simulating in ISIM the sound test that plays sounds through YM2151, Pokey and TMS5220 sequentially
---		and dumping the data on s_chan_l and s_chan_r into a file then importing into audacity as raw 16 bit signed values,
---		it sounds perfect and data values across both channels range from -1708 to 3360, but after the next step and playing
---		through the DACs, the sound for the speech only sounds "clipped" even though the volume is low, this is very puzzling
-
 		-- convert to unsigned slv for DAC usage
-		out_l <= std_logic_vector(s_chan_l + 2047);
-		out_r <= std_logic_vector(s_chan_r + 2047);
+		out_l <= std_logic_vector((not s_chan_l(s_chan_l'left)) & s_chan_l(s_chan_l'left-1 downto 0));
+		out_r <= std_logic_vector((not s_chan_r(s_chan_r'left)) & s_chan_r(s_chan_r'left-1 downto 0));
 
 		O_AUDIO_L <= out_l;
 		O_AUDIO_R <= out_r;

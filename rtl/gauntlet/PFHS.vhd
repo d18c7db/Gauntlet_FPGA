@@ -20,28 +20,32 @@ library ieee;
 
 entity PFHS is
 	port(
-		I_CK					: in	std_logic;	-- MCKR
-		I_ST					: in	std_logic;	-- PFHST
-		I_4H					: in	std_logic;	-- 4H
-		I_H03					: in	std_logic;	-- H03
-		I_HS					: in	std_logic;	-- HSCRLD
-		I_SPC					: in	std_logic;	-- PFSPC
-		I_D					: in	std_logic_vector(8 downto 0);	-- VBD
-		I_PS					: in	std_logic_vector(7 downto 0);	-- PFSR
+		I_CK     : in  std_logic;                    -- MCKR
+		I_ST     : in  std_logic;                    -- PFHST
+		I_4H     : in  std_logic;                    -- 4H
+		I_HS     : in  std_logic;                    -- HSCRLD
+		I_SPC    : in  std_logic;                    -- PFSPC
+		I_D      : in  std_logic_vector(8 downto 0); -- VBD
+		I_PS     : in  std_logic_vector(7 downto 0); -- PFSR
 
-		O_PFM					: out	std_logic;							-- PFSC/MO
-		O_PFH					: out	std_logic_vector(5 downto 0);	-- PF8H..PH256H
-		O_XP					: out	std_logic_vector(7 downto 0)	-- PFX
+		O_PFM    : out std_logic;                    -- PFSC/MO
+		O_PFH    : out std_logic_vector(5 downto 0); -- PF8H..PH256H
+		O_XP     : out std_logic_vector(7 downto 0)  -- PFX
 	);
 end PFHS;
 
 architecture RTL of PFHS is
 	type RAM_ARRAY is array (0 to 7) of std_logic_vector(7 downto 0);
 	signal
+		sl_H03,
+		sl_4HD,
 		sl_4H_last,
 		sl_HS_last,
 		sl_SPC_last
 								: std_logic := '1';
+	signal
+		slv_hcnt
+								: std_logic_vector(1 downto 0) := (others=>'1');
 	signal
 		RAM_4M_5M_addr
 								: std_logic_vector(2 downto 0) := (others=>'1');
@@ -91,7 +95,7 @@ begin
 	attribute ram_style of RAM : variable is "distributed";
 	begin
 		wait until falling_edge(I_CK);
-		slv_4D <= RAM(to_integer(unsigned(RAM_4M_5M_addr))); 	-- 4D latch
+		slv_4D <= RAM(to_integer(unsigned(RAM_4M_5M_addr))); -- 4D latch
 		RAM(to_integer(unsigned(RAM_4M_5M_addr))) := not I_PS;
 	end process;
 
@@ -111,7 +115,7 @@ begin
 	begin
 		-- until rising edge I_4H in schema, we use H03 to detect rising edge
 		wait until rising_edge(I_CK);
-		if I_H03 = '1' and I_4H = '0' then
+		if sl_H03 = '1' and I_4H = '0' then
 			if I_ST = '0' then
 				slv_8E_9B <= slv_10F(8 downto 3);
 			else
@@ -120,4 +124,16 @@ begin
 		end if;
 	end process;
 
+	-- recreate part of the horizontal counter to generate the H03 signal
+	p_hcnt : process
+	begin
+		wait until rising_edge(I_CK);
+		sl_4HD <= I_4H;
+		if (sl_4HD='0' and I_4H='1') then
+			slv_hcnt<="01";
+		else
+			slv_hcnt <= slv_hcnt + 1;
+		end if;
+	end process;
+	sl_H03 <= slv_hcnt(1) and slv_hcnt(0);
 end RTL;

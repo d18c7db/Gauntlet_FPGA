@@ -77,10 +77,13 @@ counter = counter + 1
 #	args.ofile.write("x"'"00"'"")
 
 args.ofile.write("\n\t);\n")
-args.ofile.write("\n")
 args.ofile.write("\tattribute ram_style : string;\n")
 #distributed, block, auto
-args.ofile.write("\tattribute ram_style of ROM : signal is \"auto\";\n")
+args.ofile.write("\tattribute ram_style of ROM : signal is ")
+if bsize > 1000:
+	args.ofile.write("\"block\";\n")
+else:
+	args.ofile.write("\"auto\";\n")
 args.ofile.write("begin\n")
 args.ofile.write("\tmem_proc : process\n")
 args.ofile.write("\tbegin\n")

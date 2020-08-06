@@ -36,8 +36,8 @@ module jt51_acc(
     input   signed  [10:0]  noise,
     output  signed  [15:0]  left,
     output  signed  [15:0]  right,
-    output  reg signed  [15:0]  xleft,  // exact outputs
-    output  reg signed  [15:0]  xright    
+    output  reg signed  [15:0]  xleft=0,  // exact outputs
+    output  reg signed  [15:0]  xright=0
 );
 
 reg signed [13:0] op_val;

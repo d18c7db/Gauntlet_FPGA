@@ -39,6 +39,12 @@ begin
 		if bmp_created = false then
 			sink_bmp := new bmp;
 			bmp_created := true;
+			-- initialize buffer
+			line : for y in 0 to BMP_MAX_HEIGHT-1 loop
+				pix : for x in 0 to BMP_MAX_WIDTH-1 loop
+					sink_bmp.data(y)(x) := ((others=>'0'), (others=>'0'), (others=>'0'));
+				end loop;
+			end loop;
 		end if;
 
 		if rising_edge( clk_i ) then

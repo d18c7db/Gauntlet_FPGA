@@ -56,7 +56,7 @@ port (
 	CS        : in  std_logic; -- used as enable
 	CS_L      : in  std_logic;
 	--
-	AUDIO_OUT : out signed(4 downto 0);
+	AUDIO_OUT : out signed(5 downto 0);
 	--
 	PIN       : in  std_logic_vector(7 downto 0);
 	ENA       : in  std_logic;
@@ -72,57 +72,57 @@ architecture RTL of POKEY is
 	type  array_2x17  is array (1 to 2) of std_logic_vector(16 downto 0);
 	type  bool_4      is array (1 to 4) of boolean;
 
-	signal we                   : std_logic :='0';
-	signal oe                   : std_logic :='0';
+	signal we                   : std_logic;
+	signal oe                   : std_logic;
 	--
-	signal ena_64k_15k          : std_logic :='0';
+	signal ena_64k_15k          : std_logic;
 	signal cnt_64k              : std_logic_vector(4 downto 0) := (others => '0');
-	signal ena_64k              : std_logic :='0';
+	signal ena_64k              : std_logic;
 	signal cnt_15k              : std_logic_vector(6 downto 0) := (others => '0');
-	signal ena_15k              : std_logic :='0';
+	signal ena_15k              : std_logic;
 	--
 	signal poly4                : std_logic_vector(3 downto 0) := (others => '0');
 	signal poly5                : std_logic_vector(4 downto 0) := (others => '0');
 	signal poly9                : std_logic_vector(8 downto 0) := (others => '0');
 	signal poly17               : std_logic_vector(16 downto 0) := (others => '0');
-	signal poly_17_9            : std_logic :='0';
+	signal poly_17_9            : std_logic;
 
 	-- registers
 	signal audf                 : array_4x8 := (others => (others => '0'));
 	signal audc                 : array_4x8 := (others => (others => '0'));
 	signal audctl               : std_logic_vector(7 downto 0) := (others => '0');
-	signal stimer               : std_logic_vector(7 downto 0) := (others => '0');
-	signal skres                : std_logic_vector(7 downto 0) := (others => '0');
-	signal potgo                : std_logic :='0';
-	signal serout               : std_logic_vector(7 downto 0) := (others => '0');
-	signal irqen                : std_logic_vector(7 downto 0) := (others => '0');
-	signal skctls               : std_logic_vector(7 downto 0) := (others => '0');
-	signal reset                : std_logic :='0';
+	signal stimer               : std_logic_vector(7 downto 0);
+	signal skres                : std_logic_vector(7 downto 0);
+	signal potgo                : std_logic;
+	signal serout               : std_logic_vector(7 downto 0);
+	signal irqen                : std_logic_vector(7 downto 0);
+	signal skctls               : std_logic_vector(7 downto 0);
+	signal reset                : std_logic;
 	--
-	signal kbcode               : std_logic_vector(7 downto 0) := (others => '0');
-	signal random               : std_logic_vector(7 downto 0) := (others => '0');
-	signal serin                : std_logic_vector(7 downto 0) := (others => '0');
-	signal irqst                : std_logic_vector(7 downto 0) := (others => '0');
-	signal skstat               : std_logic_vector(7 downto 0) := (others => '0');
+	signal kbcode               : std_logic_vector(7 downto 0);
+	signal random               : std_logic_vector(7 downto 0);
+	signal serin                : std_logic_vector(7 downto 0);
+	signal irqst                : std_logic_vector(7 downto 0);
+	signal skstat               : std_logic_vector(7 downto 0);
 	--
-	signal pot_fin              : std_logic :='0';
-	signal pot_cnt              : std_logic_vector(7 downto 0) := (others => '0');
-	signal pot_val              : array_8x8 := (others => (others => '0'));
-	signal pin_reg              : std_logic_vector(7 downto 0) := (others => '0');
-	signal pin_reg_gated        : std_logic_vector(7 downto 0) := (others => '0');
+	signal pot_fin              : std_logic;
+	signal pot_cnt              : std_logic_vector(7 downto 0);
+	signal pot_val              : array_8x8;
+	signal pin_reg              : std_logic_vector(7 downto 0);
+	signal pin_reg_gated        : std_logic_vector(7 downto 0);
 	--
-	signal chan_ena             : std_logic_vector(4 downto 1) := (others => '0');
-	signal tone_gen_div         : std_logic_vector(4 downto 1) := (others => '0');
+	signal chan_ena             : std_logic_vector(4 downto 1);
+	signal tone_gen_div         : std_logic_vector(4 downto 1);
 	signal tone_gen_cnt         : array_4x8 := (others => (others => '0'));
-	signal tone_gen_div_mux     : std_logic_vector(4 downto 1) := (others => '0');
-	signal tone_gen_zero        : std_logic_vector(4 downto 1) := (others => '0');
+	signal tone_gen_div_mux     : std_logic_vector(4 downto 1);
+	signal tone_gen_zero        : std_logic_vector(4 downto 1);
 	signal tone_gen_zero_t      : array_4x8 := (others => (others => '0'));
 	signal chan_done_load       : std_logic_vector(4 downto 1) := (others => '0');
 	--
-	signal poly_sel             : std_logic_vector(4 downto 1) := (others => '0');
-	signal poly_sel_hp          : std_logic_vector(4 downto 1) := (others => '0');
-	signal poly_sel_hp_t1       : std_logic_vector(4 downto 1) := (others => '0');
-	signal poly_sel_hp_reg      : std_logic_vector(4 downto 1) := (others => '0');
+	signal poly_sel             : std_logic_vector(4 downto 1);
+	signal poly_sel_hp          : std_logic_vector(4 downto 1);
+	signal poly_sel_hp_t1       : std_logic_vector(4 downto 1);
+	signal poly_sel_hp_reg      : std_logic_vector(4 downto 1);
 	signal tone_gen_final       : std_logic_vector(4 downto 1) := (others => '0');
 begin
 
@@ -522,7 +522,7 @@ begin
 		variable vol : array_4x4;
 		variable sum12 : std_logic_vector(4 downto 0);
 		variable sum34 : std_logic_vector(4 downto 0);
-		variable sum : std_logic_vector(5 downto 0);
+		variable sum   : std_logic_vector(5 downto 0);
 	begin
 		wait until rising_edge(CLK);
 		if (ENA = '1') then
@@ -545,13 +545,7 @@ begin
 			if (reset = '1') then
 				AUDIO_OUT <= (others=>'0');
 			else
-				if (sum(5) = '1') then
-					-- clip to max
-					AUDIO_OUT <= "01111";
-				else
-					-- signed output
-					AUDIO_OUT <= signed(sum(4 downto 0));
-				end if;
+				AUDIO_OUT <= signed((not sum(sum'left)) & sum(sum'left-1 downto 0) );
 			end if;
 		end if;
 	end process;

@@ -17,13 +17,13 @@ library ieee;
 -- simplified 74LS299 shifter as used in SLAGS
 entity LS299 is
 	port(
-		I_CK		: in	std_logic;	-- Clock
-		I_DATA	: in	std_logic_vector(7 downto 0); -- parallel input
-		I_SEL		: in	std_logic_vector(1 downto 0); -- S1 S0
-		I_SL		: in	std_logic; -- SL shift left input
-		I_SR		: in	std_logic; -- SR shift right input
-		O_SL		: out	std_logic; -- QA shift left output
-		O_SR		: out	std_logic  -- QH shift right output
+		I_CK   : in  std_logic;                    -- Clock
+		I_DATA : in  std_logic_vector(7 downto 0); -- parallel input
+		I_SEL  : in  std_logic_vector(1 downto 0); -- S1 S0
+		I_SL   : in  std_logic;                    -- SL shift left input
+		I_SR   : in  std_logic;                    -- SR shift right input
+		O_SL   : out std_logic;                    -- QA shift left output
+		O_SR   : out std_logic                     -- QH shift right output
 	);
 end LS299;
 
@@ -33,17 +33,15 @@ begin
 	O_SR <= slv_shifter(7);
 	O_SL <= slv_shifter(0);
 
-	-- LS299 shifter
-	-- datasheet labels shifter inputs ABCDEFGH corresponding to D7..D0 as connected to circuit
-	-- so because the bit order is reversed, then shift left/right directions are also reversed
+	-- LS299 shifter, datasheet "right" means shift lsb towards msb, "left" is the reverse
 	p_shift : process
 	begin
 		wait until rising_edge(I_CK);
 		case I_SEL is
-			when "11" => slv_shifter <= I_DATA;												-- load
-			when "10" => slv_shifter <= I_SL & slv_shifter(7 downto 1);				-- left  >HGFEDCB
-			when "01" => slv_shifter <=        slv_shifter(6 downto 0) & I_SR ;	-- right GFEDCBA<
-			when "00" =>																			-- hold
+			when "11" => slv_shifter <= I_DATA;                                 -- load
+			when "10" => slv_shifter <= I_SL & slv_shifter(7 downto 1);         -- left
+			when "01" => slv_shifter <=        slv_shifter(6 downto 0) & I_SR ; -- right
+			when "00" =>                                                        -- hold
 			when others => null;
 		end case;
 	end process;

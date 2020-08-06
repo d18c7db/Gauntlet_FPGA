@@ -20,31 +20,31 @@ library ieee;
 
 entity SYNGEN is
 	port(
-		I_CK					: in	std_logic;	-- 7.159MHz clock
+		I_CK      : in  std_logic; -- 7.159MHz clock
 
-		O_C0					: out	std_logic := '0';
-		O_C1					: out	std_logic := '0';
-		O_C2					: out	std_logic := '0';
-		O_LMPDn				: out	std_logic := '0';
-		O_VIDBn				: out	std_logic;	-- VIDBLANK
-		O_VRESn				: out	std_logic;
+		O_C0      : out std_logic := '0';
+		O_C1      : out std_logic := '0';
+		O_C2      : out std_logic := '0';
+		O_LMPDn   : out std_logic := '0';
+		O_VIDBn   : out std_logic; -- VIDBLANK
+		O_VRESn   : out std_logic;
 
-		O_HSYNCn				: out	std_logic;
-		O_VSYNCn				: out	std_logic;
-		O_PFHSTn				: out	std_logic;
-		O_BUFCLRn			: out	std_logic;
+		O_HSYNCn  : out std_logic;
+		O_VSYNCn  : out std_logic;
+		O_PFHSTn  : out std_logic;
+		O_BUFCLRn : out std_logic;
 
 		O_HBLKn				: out	std_logic;	-- HBLANK
-		O_VBLKn				: out	std_logic;	-- VBLANK
-		O_VSCK				: out	std_logic;
-		O_CK0n				: out	std_logic;	-- pin  4 RCLOCK
-		O_CK0					: out	std_logic;	-- pin 29 FCLOCK
-		O_2HDLn				: out	std_logic;
-		O_4HDLn				: out	std_logic;
-		O_4HDDn				: out	std_logic;
-		O_NXLn				: out	std_logic;
-		O_V					: out	std_logic_vector(7 downto 0);
-		O_H					: out	std_logic_vector(8 downto 0)
+		O_VBLKn   : out std_logic; -- VBLANK
+		O_VSCK    : out std_logic;
+		O_CK0n    : out std_logic; -- pin  4 RCLOCK
+		O_CK0     : out std_logic; -- pin 29 FCLOCK
+		O_2HDLn   : out std_logic;
+		O_4HDLn   : out std_logic;
+		O_4HDDn   : out std_logic;
+		O_NXLn    : out std_logic;
+		O_V       : out std_logic_vector(7 downto 0);
+		O_H       : out std_logic_vector(8 downto 0)
 	);
 end SYNGEN;
 
@@ -88,45 +88,45 @@ architecture RTL of SYNGEN is
 		slv_hcnt
 								: std_logic_vector( 8 downto 0) := (others => '0');
 begin
-	O_2HDLn		<= sl_2HDLn;
-	O_4HDDn		<= sl_4HDDn;
-	O_4HDLn		<= sl_4HDLn;
-	O_BUFCLRn	<= not sl_o11;
-	O_C0			<= sl_C0;
-	O_C1			<= sl_C1;
-	O_C2			<= sl_C2;
-	O_CK0			<=     I_CK;
-	O_CK0n		<= not I_CK;
-	O_H			<= slv_hcnt;
-	O_HSYNCn		<= sl_HSYNCn;
-	O_LMPDn		<= sl_LMPDn;
-	O_NXLn		<= not sl_o19;
-	O_PFHSTn		<= not sl_o12;
-	O_V			<= slv_vcnt;
+	O_2HDLn   <= sl_2HDLn;
+	O_4HDDn   <= sl_4HDDn;
+	O_4HDLn   <= sl_4HDLn;
+	O_BUFCLRn <= not sl_o11;
+	O_C0      <= sl_C0;
+	O_C1      <= sl_C1;
+	O_C2      <= sl_C2;
+	O_CK0     <=     I_CK;
+	O_CK0n    <= not I_CK;
+	O_H       <= slv_hcnt;
+	O_HSYNCn  <= sl_HSYNCn;
+	O_LMPDn   <= sl_LMPDn;
+	O_NXLn    <= not sl_o19;
+	O_PFHSTn  <= not sl_o12;
+	O_V       <= slv_vcnt;
 	O_HBLKn		<= sl_HBLANKn;				-- From SP-313 this is /HBLANK
-	O_VBLKn		<= sl_VBLANKn;
-	O_VIDBn		<= sl_VBLANKn and sl_HBLANKn;
-	O_VRESn		<= sl_VRESn;
-	O_VSCK		<= sl_VBLANKn and sl_o13;
-	O_VSYNCn 	<= slv_5E_data(1);
+	O_VBLKn   <= sl_VBLANKn;
+	O_VIDBn   <= sl_VBLANKn and sl_HBLANKn;
+	O_VRESn   <= sl_VRESn;
+	O_VSCK    <= sl_VBLANKn and sl_o13;
+	O_VSYNCn  <= slv_5E_data(1);
 
 	p_7A_7D_7E : process
 	begin
 		wait until rising_edge(I_CK);
 
 		-- 7D
-		sl_2HDLn		<= not slv_hcnt(1);	-- 2H delayed x1 inverted
-		sl_4HDLn		<= not slv_hcnt(2);	-- 4H delayed x1 inverted
-		sl_4HDDn		<=     sl_4HDLn;	-- 4H delayed x2
+		sl_2HDLn   <= not slv_hcnt(1); -- 2H delayed x1 inverted
+		sl_4HDLn   <= not slv_hcnt(2); -- 4H delayed x1 inverted
+		sl_4HDDn   <=     sl_4HDLn;    -- 4H delayed x2
 
 		-- 7E
-		sl_NXLn		<= not sl_o19;
-		sl_C2			<=     sl_o18;
-		sl_C1			<=     sl_o17;
-		sl_C0			<=     sl_o16;
-		sl_LMPDn		<= not sl_o15;
-		sl_HBLANKn	<= not sl_o14;
-		sl_HSYNCn	<= not sl_o13;
+		sl_NXLn    <= not sl_o19;
+		sl_C2      <=     sl_o18;
+		sl_C1      <=     sl_o17;
+		sl_C0      <=     sl_o16;
+		sl_LMPDn   <= not sl_o15;
+		sl_HBLANKn <= not sl_o14;
+		sl_HSYNCn  <= not sl_o13;
 	end process;
 
 	slv_5E_addr <= sl_3A5 & (slv_vcnt(7) and slv_vcnt(6)) & slv_vcnt(5 downto 0);
@@ -134,9 +134,9 @@ begin
 -- 82S129 256x4 TTL BIPOLAR PROM (Atari chip 136032.102)
 	u_PROM_5E : entity work.PROM_5E
 	port map (
-		CLK		=> I_CK,
-		ADDR		=> slv_5E_addr,
-		DATA		=> slv_5E_data
+		CLK  => I_CK,
+		ADDR => slv_5E_addr,
+		DATA => slv_5E_data
 	);
 
 	-- counters 4E, 5D, 6E, 6F
@@ -150,62 +150,62 @@ begin
 			else
 				slv_vcnt <= slv_vcnt + 1;
 			end if;
-			sl_VRESn		<=     slv_5E_data(0); -- F/F 3A output 9
-			sl_3A5		<=     slv_5E_data(2); -- F/F 3A output 5
-			sl_VBLANKn	<= not slv_5E_data(3); -- F/F 5B output 5
+			sl_VRESn   <=     slv_5E_data(0); -- F/F 3A output 9
+			sl_3A5     <=     slv_5E_data(2); -- F/F 3A output 5
+			sl_VBLANKn <= not slv_5E_data(3); -- F/F 5B output 5
 		else
 			slv_hcnt <= slv_hcnt + 1;
 		end if;
 	end process;
 
---	Equations for PLA chip 7F Signetics 82S153 aka PLS153A (Atari custom chip 136032.103)
---	/o19 =	/i1 &  i2 & i3 & i7 & i8 & i9
---	 o18 =	 i1 & /i2
---	 o17 =	 i1 & /i2 & /i3 +
---				/i1 &  i2 & /i3 +
---				 i1 & /i2 &  i3
---	 o16 =	/i2 +
---				 i1 &  i2 & /i3 +
---				/i1 &  i2 &  i3
---	/o15 =	 i3 & /i4 & /i5 & /i6 & /i7 & /i8 & /i9 +
---				 i2 & /i3 & /i4 & /i5 & /i6 & /i7 & /i8 & /i9 +
---				/i2 & /i3 &  i4 & /i5 & /i6 & /i7 & /i8 & /i9
---	/o14 =	/i4 & /i5 & /i6 & /i7 & /i8 & /i9 +
---				 i4 &  i5 & /i6 &  i7 & /i8 &  i9 +
---				 i6 &  i7 & /i8 &  i9 +
---				 i8 &  i9
---	 o13 =	/i4 &  i5 & /i6 & /i7 &  i8 &  i9 +
---				/i5 & /i6 & /i7 &  i8 &  i9 +
---				 i4 &  i5 &  i6 &  i7 & /i8 &  i9
---	/o12 =	 i4 &  i5 &  i6 & /i7 &  i8 &  i9
---	/o11 =	/i1 &  i2 &  i3 & /i4 & /i5 & /i6 & /i7 & /i8 & /i9
+-- Equations for PLA chip 7F Signetics 82S153 aka PLS153A (Atari custom chip 136032.103)
+-- /o19 = /i1 &  i2 & i3 & i7 & i8 & i9
+--  o18 =  i1 & /i2
+--  o17 =  i1 & /i2 & /i3 +
+--        /i1 &  i2 & /i3 +
+--         i1 & /i2 &  i3
+--  o16 = /i2 +
+--         i1 &  i2 & /i3 +
+--        /i1 &  i2 &  i3
+-- /o15 =  i3 & /i4 & /i5 & /i6 & /i7 & /i8 & /i9 +
+--         i2 & /i3 & /i4 & /i5 & /i6 & /i7 & /i8 & /i9 +
+--        /i2 & /i3 &  i4 & /i5 & /i6 & /i7 & /i8 & /i9
+-- /o14 = /i4 & /i5 & /i6 & /i7 & /i8 & /i9 +
+--         i4 &  i5 & /i6 &  i7 & /i8 &  i9 +
+--         i6 &  i7 & /i8 &  i9 +
+--         i8 &  i9
+--  o13 = /i4 &  i5 & /i6 & /i7 &  i8 &  i9 +
+--        /i5 & /i6 & /i7 &  i8 &  i9 +
+--         i4 &  i5 &  i6 &  i7 & /i8 &  i9
+-- /o12 =  i4 &  i5 &  i6 & /i7 &  i8 &  i9
+-- /o11 = /i1 &  i2 &  i3 & /i4 & /i5 & /i6 & /i7 & /i8 & /i9
 
-   sl_o19 <= ((not slv_hcnt(0)) and      slv_hcnt(1)  and      slv_hcnt(2)                                                                    and      slv_hcnt(6)  and      slv_hcnt(7)  and      slv_hcnt(8));
+	sl_o19 <=  ( (not slv_hcnt(0)) and      slv_hcnt(1)  and      slv_hcnt(2)                                                                    and      slv_hcnt(6)  and      slv_hcnt(7)  and      slv_hcnt(8));
 
-   sl_o18 <=       slv_hcnt(0)  and (not slv_hcnt(1)) ;
+	sl_o18 <=         slv_hcnt(0)  and (not slv_hcnt(1)) ;
 
-   sl_o17 <= (     slv_hcnt(0)  and (not slv_hcnt(1)) and (not slv_hcnt(2))) or
-             ((not slv_hcnt(0)) and      slv_hcnt(1)  and (not slv_hcnt(2))) or
-             (     slv_hcnt(0)  and (not slv_hcnt(1)) and      slv_hcnt(2));
+	sl_o17 <=  (      slv_hcnt(0)  and (not slv_hcnt(1)) and (not slv_hcnt(2))) or
+              ( (not slv_hcnt(0)) and      slv_hcnt(1)  and (not slv_hcnt(2))) or
+              (      slv_hcnt(0)  and (not slv_hcnt(1)) and      slv_hcnt(2));
 
-   sl_o16 <=                        (not slv_hcnt(1)) or
-            (      slv_hcnt(0)   and     slv_hcnt(1)  and (not slv_hcnt(2))) or
-            ( (not slv_hcnt(0))  and     slv_hcnt(1)  and      slv_hcnt(2));
+	sl_o16 <=                          (not slv_hcnt(1)) or
+              (      slv_hcnt(0)  and      slv_hcnt(1)  and (not slv_hcnt(2))) or
+              ( (not slv_hcnt(0)) and      slv_hcnt(1)  and      slv_hcnt(2));
 
-   sl_o15 <=                         ((                        slv_hcnt(2)  and (not slv_hcnt(3)) and (not slv_hcnt(4)) and (not slv_hcnt(5)) and (not slv_hcnt(6)) and (not slv_hcnt(7)) and (not slv_hcnt(8))) or
-                                  (      slv_hcnt(1)  and (not slv_hcnt(2)) and (not slv_hcnt(3)) and (not slv_hcnt(4)) and (not slv_hcnt(5)) and (not slv_hcnt(6)) and (not slv_hcnt(7)) and (not slv_hcnt(8))) or
-                                  (( not slv_hcnt(1)) and (not slv_hcnt(2)) and      slv_hcnt(3)  and (not slv_hcnt(4)) and (not slv_hcnt(5)) and (not slv_hcnt(6)) and (not slv_hcnt(7)) and (not slv_hcnt(8))));
+	sl_o15 <=                       ( (                           slv_hcnt(2)  and (not slv_hcnt(3)) and (not slv_hcnt(4)) and (not slv_hcnt(5)) and (not slv_hcnt(6)) and (not slv_hcnt(7)) and (not slv_hcnt(8))) or
+                                   (       slv_hcnt(1)  and (not slv_hcnt(2)) and (not slv_hcnt(3)) and (not slv_hcnt(4)) and (not slv_hcnt(5)) and (not slv_hcnt(6)) and (not slv_hcnt(7)) and (not slv_hcnt(8))) or
+                                   ( ( not slv_hcnt(1)) and (not slv_hcnt(2)) and      slv_hcnt(3)  and (not slv_hcnt(4)) and (not slv_hcnt(5)) and (not slv_hcnt(6)) and (not slv_hcnt(7)) and (not slv_hcnt(8))));
 
-   sl_o14 <=                                                                  (((not slv_hcnt(3)) and (not slv_hcnt(4)) and (not slv_hcnt(5)) and (not slv_hcnt(6)) and (not slv_hcnt(7)) and (not slv_hcnt(8))) or
-                                                                              (      slv_hcnt(3)  and      slv_hcnt(4)  and (not slv_hcnt(5)) and      slv_hcnt(6)  and (not slv_hcnt(7)) and      slv_hcnt(8))  or
-                                                                              (                                                  slv_hcnt(5)  and      slv_hcnt(6)  and (not slv_hcnt(7)) and      slv_hcnt(8))  or
-                                                                              (                                                                                              slv_hcnt(7)  and      slv_hcnt(8)));
+	sl_o14 <=                                                                    (((not slv_hcnt(3)) and (not slv_hcnt(4)) and (not slv_hcnt(5)) and (not slv_hcnt(6)) and (not slv_hcnt(7)) and (not slv_hcnt(8))) or
+                                                                                (      slv_hcnt(3)  and      slv_hcnt(4)  and (not slv_hcnt(5)) and      slv_hcnt(6)  and (not slv_hcnt(7)) and      slv_hcnt(8))  or
+                                                                                (                                                  slv_hcnt(5)  and      slv_hcnt(6)  and (not slv_hcnt(7)) and      slv_hcnt(8))  or
+                                                                                (                                                                                              slv_hcnt(7)  and      slv_hcnt(8)));
 
-   sl_o13 <=                                                                  ( (not slv_hcnt(3)) and      slv_hcnt(4)  and (not slv_hcnt(5)) and (not slv_hcnt(6)) and      slv_hcnt(7)  and      slv_hcnt(8))  or
-                                                                              (                       (not slv_hcnt(4)) and (not slv_hcnt(5)) and (not slv_hcnt(6)) and      slv_hcnt(7)  and      slv_hcnt(8))  or
-                                                                              (      slv_hcnt(3)  and      slv_hcnt(4)  and      slv_hcnt(5)  and      slv_hcnt(6)  and (not slv_hcnt(7)) and      slv_hcnt(8));
+	sl_o13 <=                                                                    ( (not slv_hcnt(3)) and      slv_hcnt(4)  and (not slv_hcnt(5)) and (not slv_hcnt(6)) and      slv_hcnt(7)  and      slv_hcnt(8))  or
+                                                                                (                       (not slv_hcnt(4)) and (not slv_hcnt(5)) and (not slv_hcnt(6)) and      slv_hcnt(7)  and      slv_hcnt(8))  or
+                                                                                (      slv_hcnt(3)  and      slv_hcnt(4)  and      slv_hcnt(5)  and      slv_hcnt(6)  and (not slv_hcnt(7)) and      slv_hcnt(8));
 
-   sl_o12 <=                                                                  (      slv_hcnt(3)  and      slv_hcnt(4)  and      slv_hcnt(5)  and (not slv_hcnt(6)) and      slv_hcnt(7)  and      slv_hcnt(8));
+	sl_o12 <=                                                                    (      slv_hcnt(3)  and      slv_hcnt(4)  and      slv_hcnt(5)  and (not slv_hcnt(6)) and      slv_hcnt(7)  and      slv_hcnt(8));
 
-   sl_o11 <= ((not slv_hcnt(0)) and      slv_hcnt(1) and       slv_hcnt(2)  and (not slv_hcnt(3)) and (not slv_hcnt(4)) and (not slv_hcnt(5)) and (not slv_hcnt(6)) and (not slv_hcnt(7)) and (not slv_hcnt(8)));
+	sl_o11 <=  ( (not slv_hcnt(0)) and      slv_hcnt(1) and       slv_hcnt(2)  and (not slv_hcnt(3)) and (not slv_hcnt(4)) and (not slv_hcnt(5)) and (not slv_hcnt(6)) and (not slv_hcnt(7)) and (not slv_hcnt(8)));
 end RTL;

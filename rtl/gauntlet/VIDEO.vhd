@@ -527,7 +527,6 @@ begin
 		I_CK					=> I_MCKR,
 		I_ST					=> sl_PFHSTn,
 		I_4H					=> sl_4H,
-		I_H03					=> sl_H03,
 		I_HS					=> sl_HSCRLDn,
 		I_SPC					=> '1',
 		I_D					=> slv_VBD(8 downto 0),

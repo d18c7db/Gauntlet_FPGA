@@ -20,17 +20,17 @@ library ieee;
 
 entity GPC is
 	port(
-		I_CK					: in	std_logic;							-- MCKR
-		I_PFM					: in	std_logic;							-- PFSC/MO
-		I_4H					: in	std_logic;							-- 4H
-		I_SEL					: in	std_logic;							-- /CRAM
-		I_AL					: in	std_logic_vector(1 downto 0);	-- APIX
-		I_MA					: in	std_logic_vector(1 downto 0);	-- MA9, MA10
-		I_D					: in	std_logic_vector(3 downto 0);	-- VRD
-		I_P					: in	std_logic_vector(7 downto 0);	-- PFX
-		I_M					: in	std_logic_vector(7 downto 0);	-- MPX
+		I_CK   : in  std_logic;                    -- MCKR
+		I_PFM  : in  std_logic;                    -- PFSC/MO
+		I_4H   : in  std_logic;                    -- 4H
+		I_SEL  : in  std_logic;                    -- /CRAM
+		I_AL   : in  std_logic_vector(1 downto 0); -- APIX
+		I_MA   : in  std_logic_vector(1 downto 0); -- MA9, MA10
+		I_D    : in  std_logic_vector(3 downto 0); -- VRD
+		I_P    : in  std_logic_vector(7 downto 0); -- PFX
+		I_M    : in  std_logic_vector(7 downto 0); -- MPX
 
-		O_CA					: out	std_logic_vector(9 downto 0)	-- CRA
+		O_CA   : out std_logic_vector(9 downto 0)  -- CRA
 	);
 end GPC;
 
@@ -62,10 +62,10 @@ begin
 	O_CA <= I_MA & "ZZZZZZZZ" when I_SEL = '0' else slv_CRAS & slv_9D;
 
 	-- gate 3C output  6 (PFX7..3)
-	sl_3C6		<= (not (I_P(7) or I_P(6) or I_P(5) or I_P(4) or I_P(3)));
+	sl_3C6  <= (not (I_P(7) or I_P(6) or I_P(5) or I_P(4) or I_P(3)));
 
 	-- gate 1C output 12 (MPX3..1)
-	sl_1C12	<= (not (I_M(3) and I_M(2) and I_M(1)));
+	sl_1C12 <= (not (I_M(3) and I_M(2) and I_M(1)));
 
 	-- when any of these are high, PROM output is all low
 	sl_gate <= not (sl_3F2 or I_AL(1) or I_AL(0));

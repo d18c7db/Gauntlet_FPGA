@@ -18,18 +18,18 @@ library ieee;
 
 entity SLAGS is
 	port(
-		I_PHIN				: in	std_logic;	-- RCLOCK
-		I_A					: in	std_logic_vector(7 downto 0);
-		I_B					: in	std_logic_vector(7 downto 0);
-		I_HLDAn				: in	std_logic;	-- /HOLDA
-		I_HLDBn				: in	std_logic;	-- /HOLDB
-		I_FLP					: in	std_logic;	-- MGHF
-		I_MO_PFn				: in	std_logic;	-- MO/ /PF
-		I_LDn					: in	std_logic;	-- /GLD
-		O_PFDA				: out	std_logic;	-- PFSR Play Field Shift Register
-		O_PFDB				: out	std_logic;	-- PFSR Play Field Shift Register
-		O_MODA				: out	std_logic;	-- MOSR Motion Object Shift Register
-		O_MODB				: out	std_logic	-- MOSR Motion Object Shift Register
+		I_PHIN    : in  std_logic; -- RCLOCK
+		I_A       : in  std_logic_vector(7 downto 0);
+		I_B       : in  std_logic_vector(7 downto 0);
+		I_HLDAn   : in  std_logic; -- /HOLDA
+		I_HLDBn   : in  std_logic; -- /HOLDB
+		I_FLP     : in  std_logic; -- MGHF
+		I_MO_PFn  : in  std_logic; -- MO/ /PF
+		I_LDn     : in  std_logic; -- /GLD
+		O_PFDA    : out std_logic; -- PFSR Play Field Shift Register
+		O_PFDB    : out std_logic; -- PFSR Play Field Shift Register
+		O_MODA    : out std_logic; -- MOSR Motion Object Shift Register
+		O_MODB    : out std_logic  -- MOSR Motion Object Shift Register
 	);
 end SLAGS;
 

@@ -23,30 +23,30 @@ library unisim;
 
 entity TIMING is
 	generic (
-		clk_type			: string -- "CTR", "SIM", "DCM", "PLL"
+		clk_type : string -- "CTR", "SIM", "DCM", "PLL"
 	);
 	port(
-		I_CLK				: in	std_logic := '0';
-		I_RST				: in	std_logic := '0';
-		O_RST				: out	std_logic := '0';
-		O_CK0				: out	std_logic := '0';
-		O_CK1				: out	std_logic := '0';
-		O_CK2				: out	std_logic := '0';
-		O_CK3				: out	std_logic := '0';
-		O_CK4				: out	std_logic := '0';
-		O_CK5				: out	std_logic := '0'
+		I_CLK    : in  std_logic := '0';
+		I_RST    : in  std_logic := '0';
+		O_RST    : out std_logic := '0';
+		O_CK0    : out std_logic := '0';
+		O_CK1    : out std_logic := '0';
+		O_CK2    : out std_logic := '0';
+		O_CK3    : out std_logic := '0';
+		O_CK4    : out std_logic := '0';
+		O_CK5    : out std_logic := '0'
 	);
 end TIMING;
 
 architecture RTL of TIMING is
-	signal	clkfb, pll_locked, clk0, clk1, clk2, clk3, clk4, clk5 : std_logic := '0';
-	signal	ctr1 : std_logic_vector(2 downto 0) := (others => '0');
-	signal	ctr2 : std_logic_vector(2 downto 0) := "011";
+	signal clkfb, pll_locked, clk0, clk1, clk2, clk3, clk4, clk5 : std_logic := '0';
+	signal ctr1 : std_logic_vector(2 downto 0) := (others => '0');
+	signal ctr2 : std_logic_vector(2 downto 0) := "011";
 begin
 -- Simulation times vastly different
 -- with 28M counter 5ms takes  9 sec
---	with DCM_SP      5ms takes 16 sec
---	with PLL_BASE    5ms takes 50 sec
+-- with DCM_SP      5ms takes 16 sec
+-- with PLL_BASE    5ms takes 50 sec
 
 	O_RST <= I_RST or (not pll_locked);
 
@@ -109,20 +109,20 @@ begin
 	gen_dcp : if  clk_type = "DCM" generate
 		dcm_sp_inst: DCM_SP
 		generic map(
-			CLKFX_DIVIDE		=> 7,
-			CLKFX_MULTIPLY		=> 20,
-			CLKIN_PERIOD		=> 20.0
+			CLKFX_DIVIDE   => 7,
+			CLKFX_MULTIPLY => 20,
+			CLKIN_PERIOD   => 20.0
 		)
 		port map (
-			CLKIN			=> I_CLK,
-			RST			=> I_RST,
-			CLKFB			=> clkfb,
-			CLK0			=> clkfb,
-			CLKFX			=> clk3, -- 142857143 MHz
-			LOCKED		=> pll_locked
+			CLKIN  => I_CLK,
+			RST    => I_RST,
+			CLKFB  => clkfb,
+			CLK0   => clkfb,
+			CLKFX  => clk3, -- 142857143 MHz
+			LOCKED => pll_locked
 		);
 
-		--	derive 28.5MHz from 142.8MHz
+		-- derive 28.5MHz from 142.8MHz
 		p_clk1 : process
 		begin
 			wait until rising_edge(clk3);
@@ -135,7 +135,7 @@ begin
 		clk2 <= ctr1(1) or ctr1(2);
 		clk4 <= not clk3;
 
-		--	derive 7.1MHz and 14.2MHz from 28.5MHz
+		-- derive 7.1MHz and 14.2MHz from 28.5MHz
 		p_clk2 : process
 		begin
 			wait until rising_edge(clk2);
@@ -158,51 +158,51 @@ begin
 		PLL_BASE_inst : PLL_BASE
 		generic map (
 			-- CLKOUT0_DIVIDE - CLKOUT5_DIVIDE: Divide amount for CLKOUT# clock output (1-128)
-			CLKOUT0_DIVIDE			=> 100,
-			CLKOUT1_DIVIDE			=> 50,
-			CLKOUT2_DIVIDE			=> 25,
-			CLKOUT3_DIVIDE			=> 5,
-			CLKOUT4_DIVIDE			=> 5,
-			CLKOUT5_DIVIDE			=> 100,
+			CLKOUT0_DIVIDE       => 100,
+			CLKOUT1_DIVIDE       => 50,
+			CLKOUT2_DIVIDE       => 25,
+			CLKOUT3_DIVIDE       => 5,
+			CLKOUT4_DIVIDE       => 5,
+			CLKOUT5_DIVIDE       => 100,
 
 			-- CLKOUT0_DUTY_CYCLE - CLKOUT5_DUTY_CYCLE: Duty cycle for CLKOUT# clock output (0.01-0.99).
-			CLKOUT0_DUTY_CYCLE	=> 0.5,
-			CLKOUT1_DUTY_CYCLE	=> 0.5,
-			CLKOUT2_DUTY_CYCLE	=> 0.5,
-			CLKOUT3_DUTY_CYCLE	=> 0.5,
-			CLKOUT4_DUTY_CYCLE	=> 0.5,
-			CLKOUT5_DUTY_CYCLE	=> 0.5,
+			CLKOUT0_DUTY_CYCLE   => 0.5,
+			CLKOUT1_DUTY_CYCLE   => 0.5,
+			CLKOUT2_DUTY_CYCLE   => 0.5,
+			CLKOUT3_DUTY_CYCLE   => 0.5,
+			CLKOUT4_DUTY_CYCLE   => 0.5,
+			CLKOUT5_DUTY_CYCLE   => 0.5,
 
 			-- CLKOUT0_PHASE - CLKOUT5_PHASE: Output phase relationship for CLKOUT# clock output (-360.0-360.0).
-			CLKOUT0_PHASE			=> 0.0,
-			CLKOUT1_PHASE			=> 180.0,
-			CLKOUT2_PHASE			=> 180.0,
-			CLKOUT3_PHASE			=> 180.0,
-			CLKOUT4_PHASE			=> 0.0,
-			CLKOUT5_PHASE			=> 0.0,
+			CLKOUT0_PHASE        => 0.0,
+			CLKOUT1_PHASE        => 180.0,
+			CLKOUT2_PHASE        => 180.0,
+			CLKOUT3_PHASE        => 180.0,
+			CLKOUT4_PHASE        => 0.0,
+			CLKOUT5_PHASE        => 0.0,
 
-			CLKFBOUT_MULT			=> 14,						-- Multiply value for all CLKOUT clock outputs (1-64)
-			DIVCLK_DIVIDE			=> 1,							-- Division value for all output clocks (1-52)
-			CLKFBOUT_PHASE			=> 0.0,						-- Phase offset in degrees of the clock feedback output (0.0-360.0).
-			CLKIN_PERIOD			=> 20.0,						-- Input clock period in ns to ps resolution (i.e. 33.333 is 30 MHz).
-			BANDWIDTH				=> "OPTIMIZED",			-- "HIGH", "LOW" or "OPTIMIZED"
-			CLK_FEEDBACK			=> "CLKFBOUT",				-- Clock source to drive CLKFBIN ("CLKFBOUT" or "CLKOUT0")
-			COMPENSATION			=> "SYSTEM_SYNCHRONOUS",-- "SYSTEM_SYNCHRONOUS", "SOURCE_SYNCHRONOUS", "EXTERNAL"
-			REF_JITTER				=> 0.1,						-- Reference Clock Jitter in UI (0.000-0.999).
-			RESET_ON_LOSS_OF_LOCK=> FALSE						-- Must be set to FALSE
+			CLKFBOUT_MULT        => 14,                   -- Multiply value for all CLKOUT clock outputs (1-64)
+			DIVCLK_DIVIDE        => 1,                    -- Division value for all output clocks (1-52)
+			CLKFBOUT_PHASE       => 0.0,                  -- Phase offset in degrees of the clock feedback output (0.0-360.0).
+			CLKIN_PERIOD         => 20.0,                 -- Input clock period in ns to ps resolution (i.e. 33.333 is 30 MHz).
+			BANDWIDTH            => "OPTIMIZED",          -- "HIGH", "LOW" or "OPTIMIZED"
+			CLK_FEEDBACK         => "CLKFBOUT",           -- Clock source to drive CLKFBIN ("CLKFBOUT" or "CLKOUT0")
+			COMPENSATION         => "SYSTEM_SYNCHRONOUS", -- "SYSTEM_SYNCHRONOUS", "SOURCE_SYNCHRONOUS", "EXTERNAL"
+			REF_JITTER           => 0.1,                  -- Reference Clock Jitter in UI (0.000-0.999).
+			RESET_ON_LOSS_OF_LOCK=> FALSE                 -- Must be set to FALSE
 		)
 		port map (
-			CLKOUT0	=> O_CK0,		--  7MHz
-			CLKOUT1	=> O_CK1,		-- 14MHz
-			CLKOUT2	=> O_CK2,		-- 28MHz
-			CLKOUT3	=> O_CK3,		-- 140MHz pos
-			CLKOUT4	=> O_CK4,		-- 140MHz neg
-			CLKOUT5	=> O_CK5,		-- UNUSED
-			LOCKED	=> pll_locked,	-- 1-bit output: PLL_BASE lock status output
-			CLKIN		=> I_CLK,		-- 1-bit input: Clock input
-			RST		=> I_RST,		-- 1-bit input: Reset input
-			CLKFBIN	=> clkfb,		-- 1-bit input: Feedback clock input
-			CLKFBOUT	=> clkfb			-- 1-bit output: PLL_BASE feedback output
+			CLKOUT0  => O_CK0,      --  7MHz
+			CLKOUT1  => O_CK1,      -- 14MHz
+			CLKOUT2  => O_CK2,      -- 28MHz
+			CLKOUT3  => O_CK3,      -- 140MHz pos
+			CLKOUT4  => O_CK4,      -- 140MHz neg
+			CLKOUT5  => O_CK5,      -- UNUSED
+			LOCKED   => pll_locked, -- 1-bit output: PLL_BASE lock status output
+			CLKIN    => I_CLK,      -- 1-bit input: Clock input
+			RST      => I_RST,      -- 1-bit input: Reset input
+			CLKFBIN  => clkfb,      -- 1-bit input: Feedback clock input
+			CLKFBOUT => clkfb       -- 1-bit output: PLL_BASE feedback output
 		);
 	end generate;
 end RTL;

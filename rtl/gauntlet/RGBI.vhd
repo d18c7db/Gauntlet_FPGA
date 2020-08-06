@@ -19,8 +19,8 @@ library ieee;
 -- Implements function (Intensity * Color) / 16 rounded to nearest integer
 entity RGBI is
 	port(
-		ADDR	: in	std_logic_vector(7 downto 0);
-		DATA	: out	std_logic_vector(3 downto 0)
+		ADDR : in  std_logic_vector(7 downto 0);
+		DATA : out std_logic_vector(3 downto 0)
 	);
 end RGBI;
 

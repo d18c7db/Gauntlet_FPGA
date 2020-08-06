@@ -51,37 +51,37 @@ begin
 		sl_FLBBn <= (not sl_FLBBn) xor I_BUFCLRn;
 	end process;
 
-	sl_FLBAn	<= not sl_FLBBn;
+	sl_FLBAn <= not sl_FLBBn;
 
 	-- gates 2/3X
-	sl_2_3X8	<= ( not I_LMPDn ) or ( I_MOSR(3) and I_MOSR(2) and I_MOSR(1) and I_MOSR(0) );
+	sl_2_3X8 <= ( not I_LMPDn ) or ( I_MOSR(3) and I_MOSR(2) and I_MOSR(1) and I_MOSR(0) );
 
 	-- Line Buffer A
 	u_LBA : entity work.LINEBUF
 	port map (
-		I_MCKR		=>	I_MCKR,
-		I_BUFCLRn	=> I_BUFCLRn,
-		I_LDn			=>	I_LDABn,
-		I_FLBn		=>	sl_FLBAn,
-		I_CSn			=>	sl_2_3X8,
-		I_HPOS		=>	I_HPOS,
-		I_MOSR		=>	I_MOSR,
-		O_MPX			=>	slv_MPXA
+		I_MCKR    =>	I_MCKR,
+		I_BUFCLRn => I_BUFCLRn,
+		I_LDn     =>	I_LDABn,
+		I_FLBn    =>	sl_FLBAn,
+		I_CSn     =>	sl_2_3X8,
+		I_HPOS    =>	I_HPOS,
+		I_MOSR    =>	I_MOSR,
+		O_MPX     =>	slv_MPXA
 	);
 
 	-- Line Buffer B
 	u_LBB : entity work.LINEBUF
 	port map (
-		I_MCKR		=>	I_MCKR,
-		I_BUFCLRn	=> I_BUFCLRn,
-		I_LDn			=>	I_LDABn,
-		I_FLBn		=>	sl_FLBBn,
-		I_CSn			=>	sl_2_3X8,
-		I_HPOS		=>	I_HPOS,
-		I_MOSR		=>	I_MOSR,
-		O_MPX			=>	slv_MPXB
+		I_MCKR    =>	I_MCKR,
+		I_BUFCLRn => I_BUFCLRn,
+		I_LDn     =>	I_LDABn,
+		I_FLBn    =>	sl_FLBBn,
+		I_CSn     =>	sl_2_3X8,
+		I_HPOS    =>	I_HPOS,
+		I_MOSR    =>	I_MOSR,
+		O_MPX     =>	slv_MPXB
 	);
 
 	-- MPX bus mux
-	O_MPX	<= slv_MPXA when sl_FLBBn = '0' else slv_MPXB;
+	O_MPX <= slv_MPXA when sl_FLBBn = '0' else slv_MPXB;
 end RTL;

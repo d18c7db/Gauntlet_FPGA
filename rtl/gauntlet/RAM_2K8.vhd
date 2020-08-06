@@ -18,12 +18,12 @@ library ieee;
 
 entity RAM_2K8 is
 	port(
-		I_MCKR	: in	std_logic;
-		I_EN		: in	std_logic;
-		I_WR		: in	std_logic;
-		I_ADDR	: in	std_logic_vector(10 downto 0);
-		I_DATA	: in	std_logic_vector( 7 downto 0);
-		O_DATA	: out	std_logic_vector( 7 downto 0)
+		I_MCKR : in  std_logic;
+		I_EN   : in  std_logic;
+		I_WR   : in  std_logic;
+		I_ADDR : in  std_logic_vector(10 downto 0);
+		I_DATA : in  std_logic_vector( 7 downto 0);
+		O_DATA : out std_logic_vector( 7 downto 0)
 	);
 end RAM_2K8;
 

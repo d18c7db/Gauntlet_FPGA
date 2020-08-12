@@ -29,6 +29,6 @@ NOTE: Pipistrello needs an additional custom SRAM board for this project since t
 
 ### MiSTer
 The project files are under `rtl/boards/miSTer` and are setup for Quartus 17  
-*WARNING:* some MiSTer files in sys have been customized to allow the project to fully synthesize without errors due to the fitter being unable to fully place all memories.
+*WARNING:* some MiSTer files in `sys` have been customized to allow the project to fully synthesize without errors due to the fitter being unable to fully place all memories.
 
 To play on MiSTer, place the gauntlet.zip ROM files in the folder `rtl/boards/miSTer/_Arcade/mame`, then copy the folder `_Arcade` as is to the MiSTer SD card root.  

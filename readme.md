@@ -24,11 +24,11 @@ The implementation is functional right now, can coin up and start game, known pr
 ## Building
 
 ### Pipistrello
-The project files are under rtl/boards/pipistrello setup for Xilinx ISE 14.7  
+The project files are under `rtl/boards/pipistrello` and are setup for Xilinx ISE 14.7  
 NOTE: Pipistrello needs an additional custom SRAM board for this project since the FPGA doesn't have enough internal memory. See https://oshpark.com/profiles/d18c7db  
 
 ### MiSTer
-The project files are under rtl/boards/miSTer setup for Quartus 17  
-WARNING: some MiSTer files in sys have been customized to allow the project to fully synthesize without errors due to the fitter being unable to fully place all memories.
+The project files are under `rtl/boards/miSTer` and are setup for Quartus 17  
+*WARNING:* some MiSTer files in sys have been customized to allow the project to fully synthesize without errors due to the fitter being unable to fully place all memories.
 
-To play, place the gauntlet.zip ROM files in the folder rtl/boards/miSTer/_Arcade/mame, then copy the folder ´_Arcade´ as is to the MiSTer SD card root.  
+To play on MiSTer, place the gauntlet.zip ROM files in the folder `rtl/boards/miSTer/_Arcade/mame`, then copy the folder `_Arcade` as is to the MiSTer SD card root.  

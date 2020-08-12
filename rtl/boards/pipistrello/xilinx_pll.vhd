@@ -21,7 +21,7 @@ library ieee;
 library unisim;
 	use unisim.vcomponents.all;
 
-entity TIMING is
+entity CLOCKS is
 	generic (
 		clk_type : string -- "CTR", "SIM", "DCM", "PLL"
 	);
@@ -36,9 +36,9 @@ entity TIMING is
 		O_CK4    : out std_logic := '0';
 		O_CK5    : out std_logic := '0'
 	);
-end TIMING;
+end CLOCKS;
 
-architecture RTL of TIMING is
+architecture RTL of CLOCKS is
 	signal clkfb, pll_locked, clk0, clk1, clk2, clk3, clk4, clk5 : std_logic := '0';
 	signal ctr1 : std_logic_vector(2 downto 0) := (others => '0');
 	signal ctr2 : std_logic_vector(2 downto 0) := "011";

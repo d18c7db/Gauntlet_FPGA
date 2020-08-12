@@ -17,7 +17,7 @@ entity TMDS_encoder is
 		data    : in  std_logic_vector (7 downto 0);
 		c       : in  std_logic_vector (1 downto 0);
 		blank   : in  std_logic;
-		encoded : out std_logic_vector (9 downto 0)
+		encoded : out std_logic_vector (9 downto 0) := (others => '0')
 	);
 end TMDS_encoder;
 

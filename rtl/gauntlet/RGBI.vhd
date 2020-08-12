@@ -44,8 +44,10 @@ architecture RTL of RGBI is
 		x"0", x"1", x"2", x"3", x"4", x"5", x"6", x"7", x"7", x"8", x"9", x"A", x"B", x"C", x"D", x"E",
 		x"0", x"1", x"2", x"3", x"4", x"5", x"6", x"7", x"8", x"9", x"A", x"B", x"C", x"D", x"E", x"F"
 	);
-	attribute ram_style : string;
+	attribute ram_style : string; -- for Xilinx ISE
 	attribute ram_style of ROM : signal is "distributed";
+	attribute ramstyle : string; -- for Intel Quartus
+	attribute ramstyle of ROM : signal is "logic";
 begin
 --	rgbi_proc : process(ADDR)
 --	begin

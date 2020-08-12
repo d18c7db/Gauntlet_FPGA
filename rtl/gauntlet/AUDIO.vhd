@@ -190,8 +190,10 @@ begin
 		s_chan_r <= ( (s_audio_TMS + s_audio_YMR) + ( s_audio_POK ) );
 
 		-- convert to unsigned slv for DAC usage
-		out_l <= std_logic_vector((not s_chan_l(s_chan_l'left)) & s_chan_l(s_chan_l'left-1 downto 0));
-		out_r <= std_logic_vector((not s_chan_r(s_chan_r'left)) & s_chan_r(s_chan_r'left-1 downto 0));
+		out_l <= std_logic_vector(s_chan_l + 4095);
+		out_r <= std_logic_vector(s_chan_r + 4095);
+--		out_l <= std_logic_vector((not s_chan_l(s_chan_l'left)) & s_chan_l(s_chan_l'left-1 downto 0));
+--		out_r <= std_logic_vector((not s_chan_r(s_chan_r'left)) & s_chan_r(s_chan_r'left-1 downto 0));
 
 		O_AUDIO_L <= out_l;
 		O_AUDIO_R <= out_r;

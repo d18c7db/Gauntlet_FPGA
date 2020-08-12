@@ -69,6 +69,9 @@ entity FPGA_GAUNTLET is
 		O_GP_EN				: out	std_logic := '0';
 		O_GP_ADDR			: out	std_logic_vector(17 downto 0) := (others=>'0');
 		I_GP_DATA			: in 	std_logic_vector(31 downto 0) := (others=>'0');
+		-- CHAR ROM
+		O_CP_ADDR			: out	std_logic_vector(13 downto 0) := (others=>'0');
+		I_CP_DATA			: in 	std_logic_vector( 7 downto 0) := (others=>'0');
 		-- Main Program ROMs
 		O_MP_EN				: out	std_logic := '0';
 		O_MP_ADDR			: out	std_logic_vector(18 downto 0) := (others=>'0');
@@ -198,7 +201,9 @@ begin
 		-- external GFX ROMs
 		O_GP_EN				=> O_GP_EN,
 		O_GP_ADDR			=> O_GP_ADDR,
-		I_GP_DATA			=> I_GP_DATA
+		I_GP_DATA			=> I_GP_DATA,
+		O_CP_ADDR			=> O_CP_ADDR,
+		I_CP_DATA			=> I_CP_DATA
 	);
 
 	u_audio : entity work.AUDIO

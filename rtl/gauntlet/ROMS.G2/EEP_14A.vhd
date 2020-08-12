@@ -54,8 +54,10 @@ architecture RTL of EEP_14A is
 		x"1A",x"72",x"05",x"F8",x"00",x"68",x"00",x"70",x"00",x"00",x"E0",x"90",x"FF",x"FF",x"FF",x"FF"  -- 0x01F0
 	);
 
-	attribute ram_style : string;
+	attribute ram_style : string; -- for Xilinx ISE
 	attribute ram_style of RAM : signal is "block";
+	attribute ramstyle : string; -- for Intel Quartus
+	attribute ramstyle of RAM : signal is "MLAB";
 begin
 	mem_proc : process
 	begin

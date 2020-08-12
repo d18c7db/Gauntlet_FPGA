@@ -177,6 +177,12 @@ architecture logic of TG68KdotC_Kernel is
 	signal regin				: std_logic_vector(31 downto 0);
 	type   regfile_t is array(0 to 15) of std_logic_vector(31 downto 0);
 	signal regfile				: regfile_t := (OTHERS => (OTHERS => '0')); -- mikej stops sim X issues;
+
+	attribute ram_style : string; -- for Xilinx ISE
+	attribute ram_style of regfile : signal is "distributed";
+	attribute ramstyle : string; -- for Intel Quartus
+	attribute ramstyle of regfile : signal is "logic";
+
 	signal RDindex_A			: integer range 0 to 15;
 	signal RDindex_B			: integer range 0 to 15;
 	signal WR_AReg				: std_logic;

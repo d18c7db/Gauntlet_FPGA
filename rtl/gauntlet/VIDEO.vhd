@@ -51,7 +51,9 @@ entity VIDEO is
 		-- external GFX ROMs
 		O_GP_EN				: out	std_logic;
 		O_GP_ADDR			: out	std_logic_vector(17 downto 0);
-		I_GP_DATA			: in 	std_logic_vector(31 downto  0)
+		I_GP_DATA			: in 	std_logic_vector(31 downto 0);
+		O_CP_ADDR			: out	std_logic_vector(13 downto 0);
+		I_CP_DATA			: in 	std_logic_vector( 7 downto 0)
 	);
 end VIDEO;
 
@@ -174,8 +176,8 @@ architecture RTL of VIDEO is
 		slv_MPX,
 		slv_PFX,
 		slv_MOSR,
-		slv_ROM_6P,
-		slv_PROM_5L
+		slv_ROM_6P_data,
+		slv_PROM_5L_data
 								: std_logic_vector( 7 downto 0) := (others=>'0');
 	signal
 		slv_PFH
@@ -240,6 +242,10 @@ begin
 	-- Vindicators II uses ROM 2J which is the only ROM with a scrambled address -- FIXME
 	O_GP_ADDR <= slv_GP_ADDR(17 downto 15) & sl_GP_ADDR14 & slv_GP_ADDR(13 downto 0);
 	O_GP_EN   <= sl_GP_EN;
+
+	-- CHAR ROM
+	O_CP_ADDR <= slv_ROM_6P_addr;
+	slv_ROM_6P_data <= I_CP_DATA;
 
 	sl_MCKF   <= not I_MCKR;
 
@@ -414,7 +420,7 @@ begin
 		ADDR(2)	=> slv_sum_6L(2),
 		ADDR(1)	=> slv_sum_6L(1),
 		ADDR(0)	=> slv_sum_6L(0),
-		DATA		=> slv_PROM_5L
+		DATA		=> slv_PROM_5L_data
 	);
 
 	-- 4L, 4M counters
@@ -423,7 +429,7 @@ begin
 		wait until rising_edge(I_MCKR);
 		if sl_H03 = '1' and sl_4H = '0' then
 			if sl_NEWMOn = '0' then
-				slv_ctr_4L_4M	<= slv_PROM_5L;
+				slv_ctr_4L_4M	<= slv_PROM_5L_data;
 			elsif sl_MREFL  = '0' then
 				slv_ctr_4L_4M	<= slv_ctr_4L_4M + 1;
 			else
@@ -937,21 +943,13 @@ begin
 	-- unlatched low address bus
 	slv_ROM_6P_addr(3 downto 0) <= slv_V(2 downto 0) & sl_4Hn;
 
-	-- 6P ROM
-	u_6P : entity work.ROM_6P
-	port map (
-		CLK	=> I_MCKR,
-		ADDR	=> slv_ROM_6P_addr,
-		DATA	=> slv_ROM_6P
-	);
-
 	-- 7P, 7N shifters S1 S0 11=load 10=shift left 01=shift right 00=inhibit
 	p_7P_7N : process
 	begin
 		wait until falling_edge(I_MCKR);
 		if sl_H03 = '1'then		-- load
-			slv_shift_7P <= slv_ROM_6P(7 downto 4);
-			slv_shift_7N <= slv_ROM_6P(3 downto 0);
+			slv_shift_7P <= slv_ROM_6P_data(7 downto 4);
+			slv_shift_7N <= slv_ROM_6P_data(3 downto 0);
 		elsif sl_H03 = '0' then	-- shift msb
 			slv_shift_7P <= slv_shift_7P(2 downto 0) & '0';	--msb is APIX1
 			slv_shift_7N <= slv_shift_7N(2 downto 0) & '0';	--msb is APIX0

@@ -1,0 +1,1576 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_gauntlet_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="numeric_std" />
+            <top_module name="std_logic_1164" />
+            <top_module name="std_logic_arith" />
+            <top_module name="std_logic_signed" />
+            <top_module name="std_logic_textio" />
+            <top_module name="std_logic_unsigned" />
+            <top_module name="t65_pack" />
+            <top_module name="tb_gauntlet" />
+            <top_module name="textio" />
+            <top_module name="vcomponents" />
+            <top_module name="vital_primitives" />
+            <top_module name="vital_timing" />
+            <top_module name="vl_types" />
+            <top_module name="vpkg" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="110" />
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/i_reset" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">i_reset</obj_property>
+      <obj_property name="ObjectShortName">i_reset</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/i_clk_7m" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">i_clk_7m</obj_property>
+      <obj_property name="ObjectShortName">i_clk_7m</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider55" type="divider">
+      <obj_property name="label">6502</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15_16L/res_n" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">res_n</obj_property>
+      <obj_property name="ObjectShortName">res_n</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15_16L/clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15_16L/enable" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">enable</obj_property>
+      <obj_property name="ObjectShortName">enable</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15_16L/a" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">a[23:0]</obj_property>
+      <obj_property name="ObjectShortName">a[23:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15_16L/di" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">di[7:0]</obj_property>
+      <obj_property name="ObjectShortName">di[7:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15_16L/do" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">do[7:0]</obj_property>
+      <obj_property name="ObjectShortName">do[7:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15_16L/rdy" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">rdy</obj_property>
+      <obj_property name="ObjectShortName">rdy</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15_16L/abort_n" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">abort_n</obj_property>
+      <obj_property name="ObjectShortName">abort_n</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15_16L/irq_n" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">irq_n</obj_property>
+      <obj_property name="ObjectShortName">irq_n</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15_16L/nmi_n" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">nmi_n</obj_property>
+      <obj_property name="ObjectShortName">nmi_n</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15_16L/so_n" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">so_n</obj_property>
+      <obj_property name="ObjectShortName">so_n</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15_16L/r_w_n" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">r_w_n</obj_property>
+      <obj_property name="ObjectShortName">r_w_n</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15_16L/sync" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">sync</obj_property>
+      <obj_property name="ObjectShortName">sync</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15_16L/debug" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">debug</obj_property>
+      <obj_property name="ObjectShortName">debug</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15_16L/debug.i" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">.i</obj_property>
+         <obj_property name="ObjectShortName">debug.i</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15_16L/debug.a" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">.a</obj_property>
+         <obj_property name="ObjectShortName">debug.a</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15_16L/debug.x" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">.x</obj_property>
+         <obj_property name="ObjectShortName">debug.x</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15_16L/debug.y" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">.y</obj_property>
+         <obj_property name="ObjectShortName">debug.y</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15_16L/debug.s" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">.s</obj_property>
+         <obj_property name="ObjectShortName">debug.s</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15_16L/debug.p" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">.p</obj_property>
+         <obj_property name="ObjectShortName">debug.p</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="divider338" type="divider">
+      <obj_property name="label">YM</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15R/xleft" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">xleft[15:0]</obj_property>
+      <obj_property name="ObjectShortName">xleft[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ff00ff</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15R/xright" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">xright[15:0]</obj_property>
+      <obj_property name="ObjectShortName">xright[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ff00ff</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider338" type="divider">
+      <obj_property name="label">POKEY</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ff00ff</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_15L/audio_out" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">audio_out[4:0]</obj_property>
+      <obj_property name="ObjectShortName">audio_out[4:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ff00ff</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider536" type="divider">
+      <obj_property name="label">TMS</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ff00ff</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/o_spkr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">o_spkr[11:0]</obj_property>
+      <obj_property name="ObjectShortName">o_spkr[11:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/i_osc" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">i_osc</obj_property>
+      <obj_property name="ObjectShortName">i_osc</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/i_ena" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">i_ena</obj_property>
+      <obj_property name="ObjectShortName">i_ena</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/i_wsn" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">i_wsn</obj_property>
+      <obj_property name="ObjectShortName">i_wsn</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/i_rsn" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">i_rsn</obj_property>
+      <obj_property name="ObjectShortName">i_rsn</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/o_rdyn" type="logic" db_ref_id="1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">o_rdyn</obj_property>
+      <obj_property name="ObjectShortName">o_rdyn</obj_property>
+      <obj_property name="label">o_rdyn</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/i_dbus" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">i_dbus[7:0]</obj_property>
+      <obj_property name="ObjectShortName">i_dbus[7:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/o_dbus" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">o_dbus[7:0]</obj_property>
+      <obj_property name="ObjectShortName">o_dbus[7:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#00ff00</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/o_intn" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">o_intn</obj_property>
+      <obj_property name="ObjectShortName">o_intn</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_cyca" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_cyca</obj_property>
+      <obj_property name="ObjectShortName">m_cyca</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_cycb" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_cycb</obj_property>
+      <obj_property name="ObjectShortName">m_cycb</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_ic" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">m_ic</obj_property>
+      <obj_property name="ObjectShortName">m_ic</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ff00ff</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_pc" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">m_pc</obj_property>
+      <obj_property name="ObjectShortName">m_pc</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ff00ff</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_t" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">m_t</obj_property>
+      <obj_property name="ObjectShortName">m_t</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ff00ff</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_phi" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">m_phi[4:1]</obj_property>
+      <obj_property name="ObjectShortName">m_phi[4:1]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_ddis" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_ddis</obj_property>
+      <obj_property name="ObjectShortName">m_ddis</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_talkd" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_talkd</obj_property>
+      <obj_property name="ObjectShortName">m_talkd</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_rng" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">m_rng[12:0]</obj_property>
+      <obj_property name="ObjectShortName">m_rng[12:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_fifo" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">m_fifo[127:0]</obj_property>
+      <obj_property name="ObjectShortName">m_fifo[127:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_fifo_ptr" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">m_fifo_ptr</obj_property>
+      <obj_property name="ObjectShortName">m_fifo_ptr</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_pitch_count" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">m_pitch_count</obj_property>
+      <obj_property name="ObjectShortName">m_pitch_count</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_new_frame_energy_idx" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">m_new_frame_energy_idx</obj_property>
+      <obj_property name="ObjectShortName">m_new_frame_energy_idx</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_new_frame_repeat" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_new_frame_repeat</obj_property>
+      <obj_property name="ObjectShortName">m_new_frame_repeat</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_new_frame_pitch_idx" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">m_new_frame_pitch_idx</obj_property>
+      <obj_property name="ObjectShortName">m_new_frame_pitch_idx</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_new_frame_k_idx" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">m_new_frame_k_idx[0:9]</obj_property>
+      <obj_property name="ObjectShortName">m_new_frame_k_idx[0:9]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_new_frame_k_idx[0]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">m_new_frame_k_idx[0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_new_frame_k_idx[1]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">m_new_frame_k_idx[1]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_new_frame_k_idx[2]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">m_new_frame_k_idx[2]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_new_frame_k_idx[3]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">m_new_frame_k_idx[3]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_new_frame_k_idx[4]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">m_new_frame_k_idx[4]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_new_frame_k_idx[5]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">m_new_frame_k_idx[5]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_new_frame_k_idx[6]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">m_new_frame_k_idx[6]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_new_frame_k_idx[7]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">m_new_frame_k_idx[7]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_new_frame_k_idx[8]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[8]</obj_property>
+         <obj_property name="ObjectShortName">m_new_frame_k_idx[8]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_new_frame_k_idx[9]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[9]</obj_property>
+         <obj_property name="ObjectShortName">m_new_frame_k_idx[9]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_current_k" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">m_current_k[0:9]</obj_property>
+      <obj_property name="ObjectShortName">m_current_k[0:9]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_current_k[0]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">m_current_k[0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_current_k[1]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">m_current_k[1]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_current_k[2]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">m_current_k[2]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_current_k[3]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">m_current_k[3]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_current_k[4]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">m_current_k[4]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_current_k[5]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">m_current_k[5]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_current_k[6]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">m_current_k[6]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_current_k[7]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">m_current_k[7]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_current_k[8]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[8]</obj_property>
+         <obj_property name="ObjectShortName">m_current_k[8]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_current_k[9]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[9]</obj_property>
+         <obj_property name="ObjectShortName">m_current_k[9]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/tmp_new_frame_energy_idx" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">tmp_new_frame_energy_idx</obj_property>
+      <obj_property name="ObjectShortName">tmp_new_frame_energy_idx</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/tmp_new_frame_pitch_idx" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">tmp_new_frame_pitch_idx</obj_property>
+      <obj_property name="ObjectShortName">tmp_new_frame_pitch_idx</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/tmp_new_frame_k_idx" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">tmp_new_frame_k_idx[0:9]</obj_property>
+      <obj_property name="ObjectShortName">tmp_new_frame_k_idx[0:9]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/tmp_new_frame_k_idx[0]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">tmp_new_frame_k_idx[0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/tmp_new_frame_k_idx[1]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">tmp_new_frame_k_idx[1]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/tmp_new_frame_k_idx[2]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">tmp_new_frame_k_idx[2]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/tmp_new_frame_k_idx[3]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">tmp_new_frame_k_idx[3]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/tmp_new_frame_k_idx[4]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">tmp_new_frame_k_idx[4]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/tmp_new_frame_k_idx[5]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">tmp_new_frame_k_idx[5]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/tmp_new_frame_k_idx[6]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">tmp_new_frame_k_idx[6]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/tmp_new_frame_k_idx[7]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">tmp_new_frame_k_idx[7]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/tmp_new_frame_k_idx[8]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[8]</obj_property>
+         <obj_property name="ObjectShortName">tmp_new_frame_k_idx[8]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/tmp_new_frame_k_idx[9]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[9]</obj_property>
+         <obj_property name="ObjectShortName">tmp_new_frame_k_idx[9]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_u" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">m_u[0:10]</obj_property>
+      <obj_property name="ObjectShortName">m_u[0:10]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_u[0]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">m_u[0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_u[1]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">m_u[1]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_u[2]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">m_u[2]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_u[3]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">m_u[3]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_u[4]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">m_u[4]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_u[5]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">m_u[5]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_u[6]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">m_u[6]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_u[7]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">m_u[7]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_u[8]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[8]</obj_property>
+         <obj_property name="ObjectShortName">m_u[8]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_u[9]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[9]</obj_property>
+         <obj_property name="ObjectShortName">m_u[9]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_u[10]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[10]</obj_property>
+         <obj_property name="ObjectShortName">m_u[10]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_x" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">m_x[0:9]</obj_property>
+      <obj_property name="ObjectShortName">m_x[0:9]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_x[0]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">m_x[0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_x[1]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">m_x[1]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_x[2]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">m_x[2]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_x[3]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">m_x[3]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_x[4]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">m_x[4]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_x[5]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">m_x[5]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_x[6]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">m_x[6]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_x[7]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">m_x[7]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_x[8]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[8]</obj_property>
+         <obj_property name="ObjectShortName">m_x[8]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_x[9]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[9]</obj_property>
+         <obj_property name="ObjectShortName">m_x[9]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_rst" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_rst</obj_property>
+      <obj_property name="ObjectShortName">m_rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_ena" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_ena</obj_property>
+      <obj_property name="ObjectShortName">m_ena</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_olde" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_olde</obj_property>
+      <obj_property name="ObjectShortName">m_olde</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_oldp" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_oldp</obj_property>
+      <obj_property name="ObjectShortName">m_oldp</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_rdb_clr" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_rdb_clr</obj_property>
+      <obj_property name="ObjectShortName">m_rdb_clr</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_rdb_cmd" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_rdb_cmd</obj_property>
+      <obj_property name="ObjectShortName">m_rdb_cmd</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_rdb_flag" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_rdb_flag</obj_property>
+      <obj_property name="ObjectShortName">m_rdb_flag</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_rst_cmd" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_rst_cmd</obj_property>
+      <obj_property name="ObjectShortName">m_rst_cmd</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_sxt_cmd" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_sxt_cmd</obj_property>
+      <obj_property name="ObjectShortName">m_sxt_cmd</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_rsn" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_rsn</obj_property>
+      <obj_property name="ObjectShortName">m_rsn</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_rsn_last" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_rsn_last</obj_property>
+      <obj_property name="ObjectShortName">m_rsn_last</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_spen" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_spen</obj_property>
+      <obj_property name="ObjectShortName">m_spen</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_t11" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_t11</obj_property>
+      <obj_property name="ObjectShortName">m_t11</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_talk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_talk</obj_property>
+      <obj_property name="ObjectShortName">m_talk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_talk_last" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_talk_last</obj_property>
+      <obj_property name="ObjectShortName">m_talk_last</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_talkd_last" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_talkd_last</obj_property>
+      <obj_property name="ObjectShortName">m_talkd_last</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_uf" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_uf</obj_property>
+      <obj_property name="ObjectShortName">m_uf</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_wsn" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_wsn</obj_property>
+      <obj_property name="ObjectShortName">m_wsn</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_wsn_last" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_wsn_last</obj_property>
+      <obj_property name="ObjectShortName">m_wsn_last</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_buffer_empty" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_buffer_empty</obj_property>
+      <obj_property name="ObjectShortName">m_buffer_empty</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_buffer_empty_last" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_buffer_empty_last</obj_property>
+      <obj_property name="ObjectShortName">m_buffer_empty_last</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_buffer_low" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_buffer_low</obj_property>
+      <obj_property name="ObjectShortName">m_buffer_low</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_buffer_low_last" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_buffer_low_last</obj_property>
+      <obj_property name="ObjectShortName">m_buffer_low_last</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_inhibit" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_inhibit</obj_property>
+      <obj_property name="ObjectShortName">m_inhibit</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_io_ready" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_io_ready</obj_property>
+      <obj_property name="ObjectShortName">m_io_ready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_irq_pin" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_irq_pin</obj_property>
+      <obj_property name="ObjectShortName">m_irq_pin</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_irq_pin_clr" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_irq_pin_clr</obj_property>
+      <obj_property name="ObjectShortName">m_irq_pin_clr</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_new_frame_voiced" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_new_frame_voiced</obj_property>
+      <obj_property name="ObjectShortName">m_new_frame_voiced</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_new_frame_unvoiced" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_new_frame_unvoiced</obj_property>
+      <obj_property name="ObjectShortName">m_new_frame_unvoiced</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_new_frame_repeat_last" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_new_frame_repeat_last</obj_property>
+      <obj_property name="ObjectShortName">m_new_frame_repeat_last</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_new_frame_zero" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_new_frame_zero</obj_property>
+      <obj_property name="ObjectShortName">m_new_frame_zero</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_new_frame_stop" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_new_frame_stop</obj_property>
+      <obj_property name="ObjectShortName">m_new_frame_stop</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_pitch_zero" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_pitch_zero</obj_property>
+      <obj_property name="ObjectShortName">m_pitch_zero</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_zpar" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_zpar</obj_property>
+      <obj_property name="ObjectShortName">m_zpar</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_uv_zpar" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_uv_zpar</obj_property>
+      <obj_property name="ObjectShortName">m_uv_zpar</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/phictr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">phictr[1:0]</obj_property>
+      <obj_property name="ObjectShortName">phictr[1:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_dbo" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">m_dbo[7:0]</obj_property>
+      <obj_property name="ObjectShortName">m_dbo[7:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_dbi" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">m_dbi[7:0]</obj_property>
+      <obj_property name="ObjectShortName">m_dbi[7:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_speech" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">m_speech[11:0]</obj_property>
+      <obj_property name="ObjectShortName">m_speech[11:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_shift" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">m_shift[11:0]</obj_property>
+      <obj_property name="ObjectShortName">m_shift[11:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_excitation_data" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">m_excitation_data</obj_property>
+      <obj_property name="ObjectShortName">m_excitation_data</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_previous_energy" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">m_previous_energy</obj_property>
+      <obj_property name="ObjectShortName">m_previous_energy</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_current_energy" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">m_current_energy</obj_property>
+      <obj_property name="ObjectShortName">m_current_energy</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/m_current_pitch" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">m_current_pitch</obj_property>
+      <obj_property name="ObjectShortName">m_current_pitch</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/this_sample" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">this_sample</obj_property>
+      <obj_property name="ObjectShortName">this_sample</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/fifo_bits" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">fifo_bits</obj_property>
+      <obj_property name="ObjectShortName">fifo_bits</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/e_bits" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">e_bits</obj_property>
+      <obj_property name="ObjectShortName">e_bits</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/r_bits" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">r_bits</obj_property>
+      <obj_property name="ObjectShortName">r_bits</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/p_bits" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">p_bits</obj_property>
+      <obj_property name="ObjectShortName">p_bits</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/k_bits" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">k_bits[0:9]</obj_property>
+      <obj_property name="ObjectShortName">k_bits[0:9]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/k_bits[0]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">k_bits[0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/k_bits[1]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">k_bits[1]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/k_bits[2]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">k_bits[2]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/k_bits[3]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">k_bits[3]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/k_bits[4]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">k_bits[4]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/k_bits[5]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">k_bits[5]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/k_bits[6]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">k_bits[6]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/k_bits[7]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">k_bits[7]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/k_bits[8]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[8]</obj_property>
+         <obj_property name="ObjectShortName">k_bits[8]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/k_bits[9]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[9]</obj_property>
+         <obj_property name="ObjectShortName">k_bits[9]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/zero" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">zero[7:0]</obj_property>
+      <obj_property name="ObjectShortName">zero[7:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/interp_coeff" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">interp_coeff[0:7]</obj_property>
+      <obj_property name="ObjectShortName">interp_coeff[0:7]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/interp_coeff[0]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">interp_coeff[0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/interp_coeff[1]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">interp_coeff[1]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/interp_coeff[2]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">interp_coeff[2]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/interp_coeff[3]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">interp_coeff[3]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/interp_coeff[4]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">interp_coeff[4]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/interp_coeff[5]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">interp_coeff[5]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/interp_coeff[6]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">interp_coeff[6]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/interp_coeff[7]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">interp_coeff[7]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/energytable" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">energytable[0:15]</obj_property>
+      <obj_property name="ObjectShortName">energytable[0:15]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/energytable[0]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">energytable[0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/energytable[1]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">energytable[1]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/energytable[2]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">energytable[2]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/energytable[3]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">energytable[3]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/energytable[4]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">energytable[4]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/energytable[5]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">energytable[5]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/energytable[6]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">energytable[6]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/energytable[7]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">energytable[7]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/energytable[8]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[8]</obj_property>
+         <obj_property name="ObjectShortName">energytable[8]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/energytable[9]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[9]</obj_property>
+         <obj_property name="ObjectShortName">energytable[9]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/energytable[10]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[10]</obj_property>
+         <obj_property name="ObjectShortName">energytable[10]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/energytable[11]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[11]</obj_property>
+         <obj_property name="ObjectShortName">energytable[11]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/energytable[12]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[12]</obj_property>
+         <obj_property name="ObjectShortName">energytable[12]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/energytable[13]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[13]</obj_property>
+         <obj_property name="ObjectShortName">energytable[13]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/energytable[14]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[14]</obj_property>
+         <obj_property name="ObjectShortName">energytable[14]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/energytable[15]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[15]</obj_property>
+         <obj_property name="ObjectShortName">energytable[15]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">pitchtable[0:63]</obj_property>
+      <obj_property name="ObjectShortName">pitchtable[0:63]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[0]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[1]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[1]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[2]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[2]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[3]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[3]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[4]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[4]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[5]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[5]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[6]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[6]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[7]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[7]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[8]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[8]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[8]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[9]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[9]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[9]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[10]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[10]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[10]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[11]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[11]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[11]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[12]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[12]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[12]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[13]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[13]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[13]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[14]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[14]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[14]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[15]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[15]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[15]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[16]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[16]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[16]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[17]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[17]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[17]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[18]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[18]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[18]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[19]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[19]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[19]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[20]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[20]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[20]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[21]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[21]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[21]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[22]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[22]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[22]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[23]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[23]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[23]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[24]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[24]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[24]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[25]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[25]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[25]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[26]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[26]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[26]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[27]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[27]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[27]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[28]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[28]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[28]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[29]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[29]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[29]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[30]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[30]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[30]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[31]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[31]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[31]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[32]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[32]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[32]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[33]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[33]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[33]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[34]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[34]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[34]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[35]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[35]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[35]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[36]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[36]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[36]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[37]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[37]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[37]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[38]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[38]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[38]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[39]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[39]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[39]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[40]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[40]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[40]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[41]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[41]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[41]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[42]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[42]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[42]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[43]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[43]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[43]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[44]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[44]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[44]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[45]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[45]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[45]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[46]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[46]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[46]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[47]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[47]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[47]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[48]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[48]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[48]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[49]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[49]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[49]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[50]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[50]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[50]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[51]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[51]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[51]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[52]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[52]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[52]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[53]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[53]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[53]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[54]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[54]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[54]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[55]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[55]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[55]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[56]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[56]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[56]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[57]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[57]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[57]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[58]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[58]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[58]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[59]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[59]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[59]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[60]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[60]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[60]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[61]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[61]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[61]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[62]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[62]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[62]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/pitchtable[63]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[63]</obj_property>
+         <obj_property name="ObjectShortName">pitchtable[63]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">chirptable[0:51]</obj_property>
+      <obj_property name="ObjectShortName">chirptable[0:51]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[0]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[1]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[1]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[2]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[2]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[3]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[3]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[4]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[4]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[5]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[5]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[6]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[6]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[7]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[7]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[8]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[8]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[8]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[9]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[9]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[9]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[10]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[10]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[10]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[11]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[11]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[11]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[12]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[12]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[12]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[13]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[13]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[13]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[14]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[14]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[14]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[15]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[15]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[15]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[16]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[16]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[16]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[17]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[17]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[17]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[18]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[18]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[18]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[19]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[19]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[19]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[20]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[20]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[20]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[21]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[21]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[21]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[22]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[22]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[22]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[23]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[23]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[23]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[24]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[24]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[24]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[25]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[25]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[25]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[26]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[26]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[26]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[27]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[27]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[27]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[28]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[28]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[28]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[29]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[29]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[29]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[30]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[30]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[30]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[31]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[31]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[31]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[32]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[32]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[32]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[33]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[33]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[33]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[34]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[34]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[34]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[35]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[35]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[35]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[36]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[36]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[36]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[37]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[37]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[37]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[38]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[38]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[38]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[39]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[39]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[39]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[40]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[40]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[40]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[41]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[41]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[41]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[42]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[42]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[42]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[43]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[43]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[43]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[44]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[44]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[44]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[45]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[45]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[45]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[46]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[46]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[46]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[47]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[47]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[47]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[48]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[48]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[48]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[49]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[49]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[49]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[50]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[50]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[50]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_gauntlet/u_GAUNTLET_TOP/u_gauntlet/u_audio/u_13R/chirptable[51]" type="other" db_ref_id="1">
+         <obj_property name="ElementShortName">[51]</obj_property>
+         <obj_property name="ObjectShortName">chirptable[51]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>

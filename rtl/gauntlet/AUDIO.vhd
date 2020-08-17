@@ -113,6 +113,7 @@ architecture RTL of AUDIO is
 		sl_14P5,
 		sl_14P6,
 		sl_14P7,
+		sl_2H,
 		sl_1H_last,
 		sl_32V_last,
 		sl_B02,
@@ -396,6 +397,7 @@ begin
 	end process;
 
 	sl_YAMRES <= not sl_YAMRESn;
+	sl_2H <= I_1H and I_2H;
 
 	-- YM2151 sound
 	u_15R : JT51
@@ -404,7 +406,7 @@ begin
 		rst		=> sl_YAMRES,	-- active high reset
 		clk		=> I_MCKR,
 		cen		=> I_1H,
-		cen_p1	=> I_2H,
+		cen_p1	=> sl_2H,
 		a0			=> slv_SBA(0),
 		wr_n		=> sl_SWRn,
 		cs_n		=> sl_MUSICn,

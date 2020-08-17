@@ -121,8 +121,12 @@ wire        ioctl_wr;
 wire [ 7:0] ioctl_index;
 wire [24:0] ioctl_addr;
 wire [ 7:0] ioctl_dout;
-wire [15:0] joy1a;
-wire [15:0] joy2a;
+
+wire [15:0] joystick_0;
+wire [15:0] joystick_1;
+wire [15:0] joystick_2;
+wire [15:0] joystick_3;
+// joy1a
 wire [10:0] ps2_key;
 
 wire [21:0] gamma_bus;
@@ -135,6 +139,13 @@ reg         m_left1   = 1'b0;
 reg         m_right1  = 1'b0;
 reg         m_fire1   = 1'b0;
 reg         m_magic1  = 1'b0;
+
+reg         m_up2     = 1'b0;
+reg         m_down2   = 1'b0;
+reg         m_left2   = 1'b0;
+reg         m_right2  = 1'b0;
+reg         m_fire2   = 1'b0;
+reg         m_magic2  = 1'b0;
 
 reg         m_coin1   = 1'b0;
 reg         m_coin2   = 1'b0;
@@ -167,7 +178,7 @@ localparam CONF_STR = {
 	"-;",
 	"O7,Service,Off,On;",
 	"R0,Reset;",
-	"J1,Fire,Start 1P,Start 2P,Coin,Cheat;",
+	"J1,Fire,Magic/Start,Coin;",
 	"jn,A,Start,Select,R,L;",
 	"V,v",`BUILD_DATE
 };
@@ -194,8 +205,10 @@ hps_io #(.STRLEN($size(CONF_STR)>>3)) hps_io
 	.ioctl_dout(ioctl_dout),
 	.ioctl_index(ioctl_index),
 
-	.joystick_0(joy1a),
-	.joystick_1(joy2a),
+	.joystick_0(joystick_0),
+	.joystick_1(joystick_1),
+	.joystick_2(joystick_2),
+	.joystick_3(joystick_3),
 	.ps2_key(ps2_key)
 );
 
@@ -219,18 +232,28 @@ always @(posedge clk_sys) begin
 	
 	if(old_state != ps2_key[10]) begin
 		casex(ps2_key[8:0])
-			'h043: m_up1       <= pressed; // I
-			'h042: m_down1     <= pressed; // K
-			'h03B: m_left1     <= pressed; // J
-			'h04B: m_right1    <= pressed; // L
+		
+			'h75: m_up1         <= pressed; // up
+			'h72: m_down1       <= pressed; // down
+			'h6B: m_left1       <= pressed; // left
+			'h74: m_right1      <= pressed; // right
+			
+			'h02d: m_up2         <= pressed; // up		R
+			'h02b: m_down2       <= pressed; // down	F
+			'h023: m_left2       <= pressed; // left	D
+			'h034: m_right2      <= pressed; // right	G			
+			
+			'h14: m_fire1 			<= pressed; // ctrl
+			'h11: m_magic1 		<= pressed; // alt
+			
+			'h01c: m_fire2 			<= pressed; //		A
+			'h01b: m_magic2 			<= pressed; // 	S
 
-			'h01A: m_fire1     <= pressed; // Z
-			'h022: m_magic1    <= pressed; // X
+			'h02e: m_coin1		 	<= pressed; // 5	
+			'h036: m_coin2		 	<= pressed; // 6
+			'h03d: m_coin3		 	<= pressed; // 7
+			'h03e: m_coin4		 	<= pressed; // 8			
 
-			'h016: m_coin1     <= pressed; // 1 coin P1
-			'h01E: m_coin2     <= pressed; // 2 coin P2
-			'h026: m_coin3     <= pressed; // 3 coin P3
-			'h025: m_coin4     <= pressed; // 4 coin P4
 
 			// 'h01B: m_service   <= pressed; // S service
 		endcase
@@ -383,11 +406,11 @@ FPGA_GAUNTLET gauntlet
 	.I_RESET(RESET | status[0] | buttons[1] | local_reset),
 
 	// FIXME all these need assignment
-	.I_P1({~(m_up1 | joy1a[3]), ~(m_down1 | joy1a[2]), ~(m_left1 | joy1a[1]), ~(m_right1 | joy1a[0]), 1'b1, 1'b1, ~(m_fire1 | joy1a[4]), ~(m_magic1)}),
-	.I_P2(8'hFF),
-	.I_P3(8'hFF),
-	.I_P4(8'hFF),
-	.I_SYS({m_service, ~(m_coin1 | joy1a[5]), ~(m_coin2 | joy1a[6]), ~(m_coin3 | joy1a[7]), ~(m_coin4 | joy1a[8])}),
+	.I_P1({~(m_up1 | joystick_0[3]), ~(m_down1 | joystick_0[2]), ~(m_left1 | joystick_0[1]), ~(m_right1 | joystick_0[0]), 1'b1, 1'b1, ~(m_fire1 | joystick_0[4]), ~(m_magic1 | joystick_0[5])}),
+	.I_P2({~(m_up2 | joystick_1[3]), ~(m_down2 | joystick_1[2]), ~(m_left2 | joystick_1[1]), ~(m_right2 | joystick_1[0]), 1'b1, 1'b1, ~(m_fire2 | joystick_1[4]), ~(m_magic2 | joystick_1[5])}),
+	.I_P3({~(joystick_2[3]), ~(joystick_2[2]), ~(joystick_2[1]), ~(joystick_2[0]), 1'b1, 1'b1, ~(joystick_2[4]), ~(joystick_2[5])}),
+	.I_P4({~(joystick_3[3]), ~(joystick_3[2]), ~(joystick_3[1]), ~(joystick_3[0]), 1'b1, 1'b1, ~(joystick_3[4]), ~(joystick_3[5])}),
+	.I_SYS({m_service, ~(m_coin1 | joystick_0[6]), ~(m_coin2 | joystick_1[6]), ~(m_coin3 | joystick_2[6]), ~(m_coin4 | joystick_3[6])}),
 
 	.O_LEDS(),
 

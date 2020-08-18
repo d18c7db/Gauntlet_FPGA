@@ -32,5 +32,7 @@ The project files are under `rtl/boards/miSTer` and are setup for Quartus 17
 
 To play on MiSTer, place the gauntlet.zip ROM files in the folder `rtl/boards/miSTer/_Arcade/mame`, then copy the folder `_Arcade` as is to the MiSTer SD card root.  
 At this stage only Gauntlet can be played on MiSTer due to the ROM sizes only just barely fitting in FPGA bram, perhaps with more effort the ROMs can be placed in external memory.  
+Supports up to 4 joysticks for 4 players. (up, down, left, right, fire, start/magic, coin)
+mame keys layout is available for player 1 (up, down left, right, ctrl, alt, 5) and player 2 (R, F, D, G, A, S, 6)
+for player 3 and 4, only remains coins keys (7, and 8)
 
-The core needs a USB keyboard connected, keys are Z=fire, X=magic, I J K L=directional, 1 2 3 4=coins

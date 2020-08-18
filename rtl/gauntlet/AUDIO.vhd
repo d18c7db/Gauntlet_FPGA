@@ -180,19 +180,19 @@ begin
 	begin
 		wait until rising_edge(I_MCKR);
 
-		-- apply volume control to outputs normalized to 10 bits, result extended to 16 bits for later addition
-		s_audio_TMS <= signed("000" & slv_SM_vol) * s_TMS_out(s_TMS_out'left-1 downto s_TMS_out'left-10);
-		s_audio_YML <= signed("000" & slv_YM_vol) * s_YML_out(s_YML_out'left downto s_YML_out'left-9);
-		s_audio_YMR <= signed("000" & slv_YM_vol) * s_YMR_out(s_YMR_out'left downto s_YMR_out'left-9);
-		s_audio_POK <= signed("000" & slv_PM_vol) * (s_POK_out(s_POK_out'left) & s_POK_out & "000");
+		-- apply volume control to outputs normalized to 12 bits, result extended to 16 bits for later addition
+		s_audio_TMS <= signed('0' & slv_SM_vol) * s_TMS_out(s_TMS_out'left downto s_TMS_out'left-11);
+		s_audio_YML <= signed('0' & slv_YM_vol) * s_YML_out(s_YML_out'left downto s_YML_out'left-11);
+		s_audio_YMR <= signed('0' & slv_YM_vol) * s_YMR_out(s_YMR_out'left downto s_YMR_out'left-11);
+		s_audio_POK <= signed('0' & slv_PM_vol) * (s_POK_out(s_POK_out'left) & s_POK_out & "00000");
 
 		-- add signed outputs together, already have extra spare bits for overflow
 		s_chan_l <= ( (s_audio_TMS + s_audio_YML) + ( s_audio_POK ) );
 		s_chan_r <= ( (s_audio_TMS + s_audio_YMR) + ( s_audio_POK ) );
 
 		-- convert to unsigned slv for DAC usage
-		out_l <= std_logic_vector(s_chan_l + 4095);
-		out_r <= std_logic_vector(s_chan_r + 4095);
+		out_l <= std_logic_vector(s_chan_l + 16383);
+		out_r <= std_logic_vector(s_chan_r + 16383);
 --		out_l <= std_logic_vector((not s_chan_l(s_chan_l'left)) & s_chan_l(s_chan_l'left-1 downto 0));
 --		out_r <= std_logic_vector((not s_chan_r(s_chan_r'left)) & s_chan_r(s_chan_r'left-1 downto 0));
 

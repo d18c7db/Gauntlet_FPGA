@@ -126,7 +126,7 @@ wire [15:0] joystick_0;
 wire [15:0] joystick_1;
 wire [15:0] joystick_2;
 wire [15:0] joystick_3;
-// joy1a
+
 wire [10:0] ps2_key;
 
 wire [21:0] gamma_bus;
@@ -241,7 +241,7 @@ always @(posedge clk_sys) begin
 			'h02d: m_up2         <= pressed; // up		R
 			'h02b: m_down2       <= pressed; // down	F
 			'h023: m_left2       <= pressed; // left	D
-			'h034: m_right2      <= pressed; // right	G			
+			'h034: m_right2      <= pressed; // right	G
 			
 			'h14: m_fire1 			<= pressed; // ctrl
 			'h11: m_magic1 		<= pressed; // alt
@@ -249,13 +249,11 @@ always @(posedge clk_sys) begin
 			'h01c: m_fire2 			<= pressed; //		A
 			'h01b: m_magic2 			<= pressed; // 	S
 
-			'h02e: m_coin1		 	<= pressed; // 5	
+			'h02e: m_coin1		 	<= pressed; // 5
 			'h036: m_coin2		 	<= pressed; // 6
 			'h03d: m_coin3		 	<= pressed; // 7
-			'h03e: m_coin4		 	<= pressed; // 8			
+			'h03e: m_coin4		 	<= pressed; // 8
 
-
-			// 'h01B: m_service   <= pressed; // S service
 		endcase
 	end
 end

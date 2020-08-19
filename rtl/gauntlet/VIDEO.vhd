@@ -17,9 +17,6 @@ library ieee;
 	use ieee.numeric_std.all;
 
 entity VIDEO is
-	generic (
-		slap_type			: integer range 100 to 118 := 104
-	);
 	port(
 		I_MCKR				: in	std_logic;	-- MCKR  7.159 MHz
 		I_ADDR				: in	std_logic_vector(14 downto 1);
@@ -33,6 +30,7 @@ entity VIDEO is
 		I_R_Wn				: in	std_logic;
 		I_LDSn				: in	std_logic;
 		I_UDSn				: in	std_logic;
+		I_SLAP_TYPE			: in  integer range 101 to 118; -- slapstic type can be changed dynamically
 		O_VCPU				: out	std_logic;
 		O_VBKINTn			: out	std_logic;
 		O_VBLANKn			: out	std_logic;
@@ -795,29 +793,17 @@ begin
 	----------------------------
 	-- sheet 15
 	----------------------------
-	opt_gen_g1 : if slap_type = 104 generate
 		-- Original Gauntlet gates 6T, 9R
 		sl_6T8 <= not ((not slv_MPX(0)) and slv_MPX(1) and slv_MPX(2) and slv_MPX(3));
-		sl_GPC_P7 <= sl_6T8;
 		sl_GPC_M7 <= sl_6T8;
-	end generate;
 
-	opt_gen_g2 : if slap_type = 106 generate
-		-- Original Gauntlet gates 6T, 9R
-		sl_6T8 <= not ((not slv_MPX(0)) and slv_MPX(1) and slv_MPX(2) and slv_MPX(3));
-		sl_GPC_P7 <= sl_6T8;
-		sl_GPC_M7 <= sl_6T8;
-	end generate;
-
-	opt_gen_v2 : if slap_type = 118 generate
 		-- Vindicators II conversion daughter board
 		sl_GPC_P7 <= (
 			(not slv_MPX(0) ) and
 			(not (slv_MPX(4) and slv_MPX(5) and slv_MPX(6)) ) and
 			(slv_MPX(1) and slv_MPX(2) and slv_MPX(3))
-		);
-		sl_GPC_M7 <= not ((not slv_MPX(0) ) and (slv_MPX(1) and slv_MPX(2) and slv_MPX(3)));
-	end generate;
+		)
+		when I_SLAP_TYPE = 118 else sl_6T8;
 
 	-- Graphic Priority Control
 	u_12M : entity work.GPC

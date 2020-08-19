@@ -19,15 +19,16 @@ library ieee;
 	use ieee.std_logic_unsigned.all;
 
 entity SLAPSTIC is
-	generic (
-		chip_type : integer range 100 to 118 := 104 -- see generate statements below to select correct type
-	);
+--	generic (
+--		chip_type : integer range 100 to 118 := 104 -- see generate statements below to select correct type
+--	);
 	port(
-		I_CK      : in  std_logic;
-		I_ASn     : in  std_logic;
-		I_CSn     : in  std_logic;
-		I_A       : in  std_logic_vector(13 downto 0);
-		O_BS      : out std_logic_vector( 1 downto 0)
+		I_CK        : in  std_logic;
+		I_ASn       : in  std_logic;
+		I_CSn       : in  std_logic;
+		I_A         : in  std_logic_vector(13 downto 0);
+		O_BS        : out std_logic_vector( 1 downto 0);
+		I_SLAP_TYPE : in  integer range 101 to 118 -- slapstic type can be changed dynamically
 	);
 end SLAPSTIC;
 
@@ -38,6 +39,8 @@ architecture RTL of SLAPSTIC is
 	signal sl_ASn_last : std_logic:='0';
 	signal additive    : std_logic:='0';
 	signal bitwise     : std_logic:='0';
+	signal init_done   : std_logic:='0';
+	signal chip_type_last : integer range 101 to 118 := 102;
 
 	signal addr        : std_logic_vector(15 downto 0) := (others=>'0');
 	signal ini_bank    : std_logic_vector( 1 downto 0) := (others=>'0');
@@ -88,10 +91,17 @@ architecture RTL of SLAPSTIC is
 	signal val_addp2   : std_logic_vector(15 downto 0) := (others=>'0');
 
 begin
+	process
+	begin
+		wait until rising_edge(I_CK);
+		if I_SLAP_TYPE /= chip_type_last then
+			chip_type_last <= I_SLAP_TYPE;
+			case I_SLAP_TYPE is
                                                           --/* slapstic 137412-101: Empire Strikes Back/Tetris (NOT confirmed) */
                                                           --static const struct slapstic_data slapstic101 =
                                                           --{
-	gen_101 : if chip_type = 101 generate                  --	/* basic banking */
+				when 101 =>
+--	gen_101 : if chip_type = 101 generate                  --	/* basic banking */
 		ini_bank     <= "11";                               --	3,                              /* starting bank */
 		val_bank0    <= x"0080";                            --	{ 0x0080,0x0090,0x00a0,0x00b0 },/* bank select values */
 		val_bank1    <= x"0090";
@@ -113,12 +123,13 @@ begin
 		mask_bit3    <= x"1FF8";    val_bit3    <= x"1550"; --	{ 0x1ff8,0x1550 },              /* final mask/value in sequence */
                                                           --	/* additive banking */
 		additive     <= '0';                                --	NO_ADDITIVE
-	end generate;                                          --};
+--	end generate;                                          --};
 
                                                           --/* slapstic 137412-103: Marble Madness (confirmed) */
                                                           --static const struct slapstic_data slapstic103 =
                                                           --{
-	gen_103 : if chip_type = 103 generate                  --	/* basic banking */
+				when 103 =>
+--	gen_103 : if chip_type = 103 generate                  --	/* basic banking */
 		ini_bank     <= "11";                               --	3,                              /* starting bank */
 		val_bank0    <= x"0040";                            --	{ 0x0040,0x0050,0x0060,0x0070 },/* bank select values */
 		val_bank1    <= x"0050";
@@ -140,12 +151,13 @@ begin
 		mask_bit3    <= x"3FF8";    val_bit3    <= x"34D0"; --	{ 0x3ff8,0x34d0 },              /* final mask/value in sequence */
 																			 --	/* additive banking */
 		additive     <= '0';                                --	NO_ADDITIVE
-	end generate;                                          --};
+--	end generate;                                          --};
 
                                                           --/* slapstic 137412-104: Gauntlet (confirmed) */
                                                           --static const struct slapstic_data slapstic104 =
                                                           --{
-	gen_104 : if chip_type = 104 generate                  --	/* basic banking */
+				when 104 =>
+--	gen_104 : if chip_type = 104 generate                  --	/* basic banking */
 		ini_bank    <= "11";                                --	3,                              /* starting bank */
 		val_bank0   <= x"0020";                             --	{ 0x0020,0x0028,0x0030,0x0038 },/* bank select values */
 		val_bank1   <= x"0028";
@@ -167,12 +179,13 @@ begin
 		mask_bit3   <= x"3FF8";     val_bit3    <= x"3DA0"; --	{ 0x3ff8,0x3da0 },              /* final mask/value in sequence */
 																			 --	/* additive banking */
 		additive    <= '0';                                 --	NO_ADDITIVE
-	end generate;                                          --};
+--	end generate;                                          --};
 
                                                           --/* slapstic 137412-105: Indiana Jones/Paperboy (confirmed) */
                                                           --static const struct slapstic_data slapstic105 =
                                                           --{
-	gen_105 : if chip_type = 105 generate                  --	/* basic banking */
+				when 105 =>
+--	gen_105 : if chip_type = 105 generate                  --	/* basic banking */
 		ini_bank    <= "11";                                --	3,                              /* starting bank */
 		val_bank0   <= x"0010";                             --	{ 0x0010,0x0014,0x0018,0x001c },/* bank select values */
 		val_bank1   <= x"0014";
@@ -194,12 +207,13 @@ begin
 		mask_bit3   <= x"3FF8";     val_bit3    <= x"35C0"; --	{ 0x3ff8,0x35c0 },              /* final mask/value in sequence */
 																			 --	/* additive banking */
 		additive    <= '0';                                 --	NO_ADDITIVE
-	end generate;                                          --};
+--	end generate;                                          --};
 
                                                           --/* slapstic 137412-106: Gauntlet II (confirmed) */
                                                           --static const struct slapstic_data slapstic106 =
                                                           --{
-	gen_106 : if chip_type = 106 generate                  --	/* basic banking */
+				when 106 =>
+--	gen_106 : if chip_type = 106 generate                  --	/* basic banking */
 		ini_bank    <= "11";                                --	3,                              /* starting bank */
 		val_bank0   <= x"0008";                             --	{ 0x0008,0x000a,0x000c,0x000e },/* bank select values */
 		val_bank1   <= x"000A";
@@ -221,12 +235,13 @@ begin
 		mask_bit3   <= x"3FF8";     val_bit3    <= x"3DB0"; --	{ 0x3ff8,0x3db0 },              /* final mask/value in sequence */
                                                           --	/* additive banking */
 		additive    <= '0';                                 --	NO_ADDITIVE
-	end generate;                                          --};
+--	end generate;                                          --};
 
                                                           --/* slapstic 137412-107: Peter Packrat/Xybots/2p Gauntlet/720 (confirmed) */
                                                           --static const struct slapstic_data slapstic107 =
                                                           --{
-	gen_107 : if chip_type = 107 generate                  --	/* basic banking */
+				when 107 =>
+--	gen_107 : if chip_type = 107 generate                  --	/* basic banking */
 		ini_bank    <= "11";                                --	3,                              /* starting bank */
 		val_bank0   <= x"0018";                             --	{ 0x0018,0x001a,0x001c,0x001e },/* bank select values */
 		val_bank1   <= x"001A";
@@ -248,12 +263,13 @@ begin
 		mask_bit3   <= x"3FF8";     val_bit3    <= x"00B0"; --	{ 0x3ff8,0x00b0 },              /* final mask/value in sequence */
 																			 --	/* additive banking */
 		additive    <= '0';                                 --	NO_ADDITIVE
-	end generate;                                          --};
+--	end generate;                                          --};
 
                                                           --/* slapstic 137412-108: Road Runner/Super Sprint (confirmed) */
                                                           --static const struct slapstic_data slapstic108 =
                                                           --{
-	gen_108 : if chip_type = 108 generate                  --	/* basic banking */
+				when 108 =>
+--	gen_108 : if chip_type = 108 generate                  --	/* basic banking */
 		ini_bank    <= "11";                                --	3,                              /* starting bank */
 		val_bank0   <= x"0028";                             --	{ 0x0028,0x002a,0x002c,0x002e },/* bank select values */
 		val_bank1   <= x"002A";
@@ -275,12 +291,13 @@ begin
 		mask_bit3   <= x"3FF8";     val_bit3    <= x"0070"; --	{ 0x3ff8,0x0070 },              /* final mask/value in sequence */
                                                           --	/* additive banking */
 		additive    <= '0';                                 --	NO_ADDITIVE
-	end generate;                                          --};
+--	end generate;                                          --};
 
                                                           --/* slapstic 137412-109: Championship Sprint/Road Blasters (confirmed) */
                                                           --static const struct slapstic_data slapstic109 =
                                                           --{
-	gen_109 : if chip_type = 109 generate                  --	/* basic banking */
+				when 109 =>
+--	gen_109 : if chip_type = 109 generate                  --	/* basic banking */
 		ini_bank    <= "11";                                --	3,                              /* starting bank */
 		val_bank0   <= x"0008";                             --	{ 0x0008,0x000a,0x000c,0x000e },/* bank select values */
 		val_bank1   <= x"000A";
@@ -302,12 +319,13 @@ begin
 		mask_bit3   <= x"3FF8";     val_bit3    <= x"3DB0"; --	{ 0x3ff8,0x3db0 },              /* final mask/value in sequence */
                                                           --	/* additive banking */
 		additive    <= '0';                                 --	NO_ADDITIVE
-	end generate;                                          --};
+--	end generate;                                          --};
 
                                                           --/* slapstic 137412-110: Road Blasters/APB (confirmed) */
                                                           --static const struct slapstic_data slapstic110 =
                                                           --{
-	gen_110 : if chip_type = 110 generate                  --	/* basic banking */
+				when 110 =>
+--	gen_110 : if chip_type = 110 generate                  --	/* basic banking */
 		ini_bank    <= "11";                                --	3,                              /* starting bank */
 		val_bank0   <= x"0040";                             --	{ 0x0040,0x0050,0x0060,0x0070 },/* bank select values */
 		val_bank1   <= x"0050";
@@ -329,8 +347,7 @@ begin
 		mask_bit3   <= x"3FF8";     val_bit3    <= x"34D0"; --	{ 0x3ff8,0x34d0 },              /* final mask/value in sequence */
                                                           --	/* additive banking */
 		additive    <= '0';                                 --	NO_ADDITIVE
-	end generate;                                          --};
-
+--	end generate;                                          --};
 
 --/*************************************
 -- *
@@ -341,7 +358,8 @@ begin
                                                           --/* slapstic 137412-111: Pit Fighter (confirmed) */
                                                           --static const struct slapstic_data slapstic111 =
                                                           --{
-	gen_111 : if chip_type = 111 generate                  --	/* basic banking */
+				when 111 =>
+--	gen_111 : if chip_type = 111 generate                  --	/* basic banking */
 		ini_bank    <= "00";                                --	0,                              /* starting bank */
 		val_bank0   <= x"0042";                             --	{ 0x0042,0x0052,0x0062,0x0072 },/* bank select values */
 		val_bank1   <= x"0052";
@@ -362,12 +380,13 @@ begin
 		mask_addp1  <= x"3C4F";     val_addp1   <= x"284D"; --	{ 0x3c4f,0x284d },              /* +1 mask/value */
 		mask_addp2  <= x"3A5F";     val_addp2   <= x"285D"; --	{ 0x3a5f,0x285d },              /* +2 mask/value */
 		mask_add3   <= x"3FF8";     val_add3    <= x"2800"; --	{ 0x3ff8,0x2800 }               /* final mask/value in sequence */
-	end generate;                                          --};
+--	end generate;                                          --};
 
                                                           --/* slapstic 137412-112: Pit Fighter (Japan) (confirmed) */
                                                           --static const struct slapstic_data slapstic112 =
                                                           --{
-	gen_112 : if chip_type = 112 generate                  --	/* basic banking */
+				when 112 =>
+--	gen_112 : if chip_type = 112 generate                  --	/* basic banking */
 		ini_bank    <= "11";                                --	0,                              /* starting bank */
 		val_bank0   <= x"002C";                             --	{ 0x002c,0x003c,0x006c,0x007c },/* bank select values */
 		val_bank1   <= x"003C";
@@ -388,12 +407,13 @@ begin
 		mask_addp1  <= x"3DEF";     val_addp1   <= x"15E2"; --	{ 0x3def,0x15e2 },              /* +1 mask/value */
 		mask_addp2  <= x"3FBF";     val_addp2   <= x"15A2"; --	{ 0x3fbf,0x15a2 },              /* +2 mask/value */
 		mask_add3   <= x"3FFC";     val_add3    <= x"1450"; --	{ 0x3ffc,0x1450 }               /* final mask/value in sequence */
-	end generate;                                          --};
+--	end generate;                                          --};
 
                                                           --/* slapstic 137412-113: Unknown (Europe) (confirmed) */
                                                           --static const struct slapstic_data slapstic113 =
                                                           --{
-	gen_113 : if chip_type = 113 generate                  --	/* basic banking */
+				when 113 =>
+--	gen_113 : if chip_type = 113 generate                  --	/* basic banking */
 		ini_bank    <= "00";                                --	0,                              /* starting bank */
 		val_bank0   <= x"0008";                             --	{ 0x0008,0x0018,0x0028,0x0038 },/* bank select values */
 		val_bank1   <= x"0018";
@@ -414,12 +434,13 @@ begin
 		mask_addp1  <= x"3FCF";     val_addp1   <= x"3EC7"; --	{ 0x3fcf,0x3ec7 },              /* +1 mask/value */
 		mask_addp2  <= x"3EDF";     val_addp2   <= x"3ED7"; --	{ 0x3edf,0x3ed7 },              /* +2 mask/value */
 		mask_add3   <= x"3FFF";     val_add3    <= x"3FB2"; --	{ 0x3fff,0x3fb2 }               /* final mask/value in sequence */
-	end generate;                                          --};
+--	end generate;                                          --};
 
                                                           --/* slapstic 137412-114: Pit Fighter (rev 9) (confirmed) */
                                                           --static const struct slapstic_data slapstic114 =
                                                           --{
-	gen_114 : if chip_type = 114 generate                  --	/* basic banking */
+				when 114 =>
+--	gen_114 : if chip_type = 114 generate                  --	/* basic banking */
 		ini_bank    <= "00";                                --	0,                              /* starting bank */
 		val_bank0   <= x"0040";                             --	{ 0x0040,0x0048,0x0050,0x0058 },/* bank select values */
 		val_bank1   <= x"0048";
@@ -440,12 +461,13 @@ begin
 		mask_addp1  <= x"3F63";     val_addp1   <= x"0D40"; --	{ 0x3f63,0x0d40 },              /* +1 mask/value */
 		mask_addp2  <= x"3FD9";     val_addp2   <= x"0DC8"; --	{ 0x3fd9,0x0dc8 },              /* +2 mask/value */
 		mask_add3   <= x"3FFF";     val_add3    <= x"0AB0"; --	{ 0x3fff,0x0ab0 }               /* final mask/value in sequence */
-	end generate;                                          --};
+--	end generate;                                          --};
 
                                                           --/* slapstic 137412-115: Race Drivin' DSK board (confirmed) */
                                                           --static const struct slapstic_data slapstic115 =
                                                           --{
-	gen_115 : if chip_type = 115 generate                  --	/* basic banking */
+				when 115 =>
+--	gen_115 : if chip_type = 115 generate                  --	/* basic banking */
 		ini_bank    <= "00";                                --	0,                              /* starting bank */
 		val_bank0   <= x"0020";                             --	{ 0x0020,0x0022,0x0024,0x0026 },/* bank select values */
 		val_bank1   <= x"0022";
@@ -466,12 +488,13 @@ begin
 		mask_addp1  <= x"3FE6";     val_addp1   <= x"3402"; --	{ 0x3fe6,0x3402 },              /* +1 mask/value */
 		mask_addp2  <= x"3FB4";     val_addp2   <= x"3410"; --	{ 0x3fb4,0x3410 },              /* +2 mask/value */
 		mask_add3   <= x"3FFF";     val_add3    <= x"34A2"; --	{ 0x3fff,0x34a2 }               /* final mask/value in sequence */
-	end generate;                                          --};
+--	end generate;                                          --};
 
                                                           --/* slapstic 137412-116: Hydra (confirmed) */
                                                           --static const struct slapstic_data slapstic116 =
                                                           --{
-	gen_116 : if chip_type = 116 generate                  --	/* basic banking */
+				when 116 =>
+--	gen_116 : if chip_type = 116 generate                  --	/* basic banking */
 		ini_bank    <= "00";                                --	0,                              /* starting bank */
 		val_bank0   <= x"0044";                             --	{ 0x0044,0x004c,0x0054,0x005c },/* bank select values */
 		val_bank1   <= x"004C";
@@ -492,12 +515,13 @@ begin
 		mask_addp1  <= x"3DB2";     val_addp1   <= x"3C12"; --	{ 0x3db2,0x3c12 },              /* +1 mask/value */
 		mask_addp2  <= x"3FE3";     val_addp2   <= x"3E43"; --	{ 0x3fe3,0x3e43 },              /* +2 mask/value */
 		mask_add3   <= x"3FFF";     val_add3    <= x"2BA8"; --	{ 0x3fff,0x2ba8 }               /* final mask/value in sequence */
-	end generate;                                          --};
+--	end generate;                                          --};
 
                                                           --/* slapstic 137412-117: Race Drivin' main board (confirmed) */
                                                           --static const struct slapstic_data slapstic117 =
                                                           --{
-	gen_117 : if chip_type = 117 generate                  --	/* basic banking */
+				when 117 =>
+--	gen_117 : if chip_type = 117 generate                  --	/* basic banking */
 		ini_bank    <= "00";                                --	0,                              /* starting bank */
 		val_bank0   <= x"0008";                             --	{ 0x0008,0x001a,0x002c,0x003e },/* bank select values */
 		val_bank1   <= x"001A";
@@ -518,12 +542,13 @@ begin
 		mask_addp1  <= x"3E62";     val_addp1   <= x"1A42"; --	{ 0x3e62,0x1a42 },              /* +1 mask/value */
 		mask_addp2  <= x"3E35";     val_addp2   <= x"1A11"; --	{ 0x3e35,0x1a11 },              /* +2 mask/value */
 		mask_add3   <= x"3FFF";     val_add3    <= x"1A42"; --	{ 0x3fff,0x1a42 }               /* final mask/value in sequence */
-	end generate;                                          --};
+--	end generate;                                          --};
 
                                                           --/* slapstic 137412-118: Rampart/Vindicators II (confirmed) */
                                                           --static const struct slapstic_data slapstic118 =
                                                           --{
-	gen_118 : if chip_type = 118 generate                  --	/* basic banking */
+				when 118 =>
+--	gen_118 : if chip_type = 118 generate                  --	/* basic banking */
 		ini_bank    <= "00";                                --	0,                              /* starting bank */
 		val_bank0   <= x"0014";                             --	{ 0x0014,0x0034,0x0054,0x0074 },/* bank select values */
 		val_bank1   <= x"0034";
@@ -544,7 +569,12 @@ begin
 		mask_addp1  <= x"3F73";     val_addp1   <= x"3052"; --	{ 0x3f73,0x3052 },              /* +1 mask/value */
 		mask_addp2  <= x"3F67";     val_addp2   <= x"3042"; --	{ 0x3f67,0x3042 },              /* +2 mask/value */
 		mask_add3   <= x"3FF8";     val_add3    <= x"30E0"; --	{ 0x3ff8,0x30e0 }               /* final mask/value in sequence */
-	end generate;                                          --};
+--	end generate;                                          --};
+
+				when others => null;
+			end case;
+		end if;
+	end process;
 
 	O_BS <= cur_bank;
 
@@ -555,6 +585,13 @@ begin
 	begin
 		wait until rising_edge(I_CK);
 		sl_ASn_last <= I_ASn; -- detect /AS transition
+		if I_SLAP_TYPE /= chip_type_last then
+			init_done <= '0';
+		elsif init_done = '0' then
+			init_done <= '1';
+			cur_bank <= ini_bank;
+		end if;
+
 		if I_CSn = '0' then
 			if sl_ASn_last = '0' and I_ASn = '1' then
                                                                                     --	/* reset is universal */
@@ -568,7 +605,7 @@ begin
 					case state is                                                        --		switch (state)
                                                                                     --		{
                                                                                     --			/* DISABLED state: everything is ignored except a reset */
-						when DIS  => null;                                                     --			case DISABLED:
+						when DIS  => null;                                                --			case DISABLED:
                                                                                     --				break;
                                                                                     --			/* ENABLED state: the chip has been activated and is ready for a bankswitch */
 						when ENA  =>                                                      --			case ENABLED:
@@ -583,13 +620,13 @@ begin
 								state <= ADD1;                                              --					state = ADDITIVE1;
                                                                                     --				}
                                                                                     --				/* check for request to enter alternate state */
-							elsif ((addr and mask_alt1) = val_alt1) then                     --				else if (MATCHES_MASK_VALUE(offset, slapstic.alt1))
+							elsif ((addr and mask_alt1) = val_alt1) then                   --				else if (MATCHES_MASK_VALUE(offset, slapstic.alt1))
                                                                                     --				{
 								state <= ALT1;                                              --					state = ALTERNATE1;
                                                                                     --				}
                                                                                     --				/* special kludge for catching the second alternate address if */
                                                                                     --				/* the first one was missed (since it's usually an opcode fetch) */
-							elsif ((addr and mask_alt2) = val_alt2) then                     --				else if (MATCHES_MASK_VALUE(offset, slapstic.alt2))
+							elsif ((addr and mask_alt2) = val_alt2) then                   --				else if (MATCHES_MASK_VALUE(offset, slapstic.alt2))
                                                                                     --				{
 								state <= ALT2;                                              --					state = alt2_kludge(space, offset);
                                                                                     --				}
@@ -689,7 +726,7 @@ begin
 								bit_xor <= bit_xor xor "11";                                --					bit_xor ^= 3;
                                                                                     --				}
                                                                                     --				/* check for escape case */
-							elsif (addr and mask_bit3) = val_bit3 then                        --				else if (MATCHES_MASK_VALUE(offset, slapstic.bit3))
+							elsif (addr and mask_bit3) = val_bit3 then                     --				else if (MATCHES_MASK_VALUE(offset, slapstic.bit3))
                                                                                     --				{
 								state <= BIT3;                                              --					state = BITWISE3;
 							end if;                                                        --				}

@@ -104,9 +104,10 @@ module emu
 	output  [6:0] USER_OUT
 );
 
-wire        clk_14m3, clk_7m1;
+wire        clk_57m2, clk_28m6, clk_14m3, clk_7m1;
 wire        clk_sys = clk_14m3;
-wire        ce_vid  = clk_7m1;
+wire        clk_vid = clk_57m2;
+reg         ce_vid;
 wire        hblank, vblank;
 wire        hs, vs;
 reg  [ 7:0] sw[8];
@@ -220,6 +221,8 @@ pll pll
 	.rst(0),
 	.outclk_0(clk_7m1),
 	.outclk_1(clk_14m3),
+	.outclk_2(clk_28m6),
+	.outclk_3(clk_57m2),
 	.locked()
 );
 
@@ -233,37 +236,44 @@ always @(posedge clk_sys) begin
 	if(old_state != ps2_key[10]) begin
 		casex(ps2_key[8:0])
 		
-			'h75: m_up1         <= pressed; // up
-			'h72: m_down1       <= pressed; // down
-			'h6B: m_left1       <= pressed; // left
-			'h74: m_right1      <= pressed; // right
-			
-			'h02d: m_up2         <= pressed; // up		R
-			'h02b: m_down2       <= pressed; // down	F
-			'h023: m_left2       <= pressed; // left	D
-			'h034: m_right2      <= pressed; // right	G
-			
-			'h14: m_fire1 			<= pressed; // ctrl
-			'h11: m_magic1 		<= pressed; // alt
-			
-			'h01c: m_fire2 			<= pressed; //		A
-			'h01b: m_magic2 			<= pressed; // 	S
+			'hX75: m_up1        <= pressed; // up
+			'hX72: m_down1      <= pressed; // down
+			'hX6B: m_left1      <= pressed; // left
+			'hX74: m_right1     <= pressed; // right
 
-			'h02e: m_coin1		 	<= pressed; // 5
-			'h036: m_coin2		 	<= pressed; // 6
-			'h03d: m_coin3		 	<= pressed; // 7
-			'h03e: m_coin4		 	<= pressed; // 8
+			'h02D: m_up2        <= pressed; // R
+			'h02B: m_down2      <= pressed; // F
+			'h023: m_left2      <= pressed; // D
+			'h034: m_right2     <= pressed; // G
+
+			'h014: m_fire1      <= pressed; // ctrl
+			'h011: m_magic1     <= pressed; // alt
+
+			'h01C: m_fire2      <= pressed; // A
+			'h01B: m_magic2     <= pressed; // S
+
+			'h02E: m_coin1      <= pressed; // 5
+			'h036: m_coin2      <= pressed; // 6
+			'h03D: m_coin3      <= pressed; // 7
+			'h03E: m_coin4      <= pressed; // 8
 
 		endcase
 	end
 end
 
 ///////////////////////////////////////////////////
+always @(posedge clk_vid) begin
+	reg [2:0] div;
+
+	div <= div + 1'd1;
+	ce_vid <= !div;
+end
+
 arcade_video #(240,12) arcade_video
 (
 	.*,
 
-	.clk_video(clk_sys),
+	.clk_video(clk_vid),
 	.ce_pix(ce_vid),
 
 	.RGB_in({r,g,b}),
@@ -304,9 +314,12 @@ arcade_video #(240,12) arcade_video
 	// hold arcade core in reset while ROMs are being downloaded
 	assign local_reset = (!ioctl_index && ioctl_addr < 24'h77FFF) ? 1'b1 : 1'b0;
 
-	// the order in which the files are listed in the .mra file is critical because it determines the order in which they appear here on the HPS bus
+	integer slap_type = 102;
+	always @(posedge clk_sys) if (ioctl_wr && (ioctl_index==1)) slap_type <= ioctl_dout;
+
+	// the order in which the files are listed in the .mra file determines the order in which they appear here on the HPS bus
 	// some files are interleaved as DWORD, some are interleaved as WORD and some are not interleaved and appear as BYTEs
-	// mux_bytes collects previous bytes so that when a WORD or DWORD is complete is it written to the dpram as appropriate
+	// mux_bytes collects previous bytes so that when a WORD or DWORD is complete it is written to the dpram as appropriate
 	reg [23:0] mux_bytes = 0;
 	always @(posedge clk_sys)
 		if (ioctl_wr && (!ioctl_index) && local_reset )
@@ -314,7 +327,6 @@ arcade_video #(240,12) arcade_video
 
 	// video ROMS 2L  2A  1L  1A  (4*32KB)
 	// video ROMS 2MN 2B  1MN 1B  (4*32KB)
-	//																								A24........A14
 	// generate DWORD write signal for GFX memory when ioctl_addr 000000...03FFFF (0 0000 00xx xxxx xxxx xxxx xxxx)
 	assign gp_wr  = (ioctl_wr && !ioctl_index && ioctl_addr[24:18]==7'h00 && ioctl_addr[1:0]==2'b11) ? 1'b1 : 1'b0;
 
@@ -329,11 +341,11 @@ arcade_video #(240,12) arcade_video
 	assign mp_wr_10A_10B = (ioctl_wr && !ioctl_index && ioctl_addr[24:15]==10'h0C && ioctl_addr[0]==1'b1) ? 1'b1 : 1'b0;
 
 	assign mp_data =
-		mp_addr[18:15] == 4'b0000 ? mp_data_9A_9B : 
-		mp_addr[18:15] == 4'b0011 ? mp_data_10A_10B : 
-		mp_addr[18:15] == 4'b0100 ? mp_data_7A_7B : 
-//		mp_addr[18:15] == 4'b0101 ? mp_data_6A_6B : 
-//		mp_addr[18:15] == 4'b0110 ? mp_data_5A_5B : 
+		mp_addr[18:15] == 4'b0000 ? mp_data_9A_9B :
+		mp_addr[18:15] == 4'b0011 ? mp_data_10A_10B :
+		mp_addr[18:15] == 4'b0100 ? mp_data_7A_7B :
+//		mp_addr[18:15] == 4'b0101 ? mp_data_6A_6B :
+//		mp_addr[18:15] == 4'b0110 ? mp_data_5A_5B :
 //		mp_addr[18:15] == 4'b0111 ? mp_data_3A_3B :
 		{ 16'hFFFF };
 
@@ -409,6 +421,7 @@ FPGA_GAUNTLET gauntlet
 	.I_P3({~(joystick_2[3]), ~(joystick_2[2]), ~(joystick_2[1]), ~(joystick_2[0]), 1'b1, 1'b1, ~(joystick_2[4]), ~(joystick_2[5])}),
 	.I_P4({~(joystick_3[3]), ~(joystick_3[2]), ~(joystick_3[1]), ~(joystick_3[0]), 1'b1, 1'b1, ~(joystick_3[4]), ~(joystick_3[5])}),
 	.I_SYS({m_service, ~(m_coin1 | joystick_0[6]), ~(m_coin2 | joystick_1[6]), ~(m_coin3 | joystick_2[6]), ~(m_coin4 | joystick_3[6])}),
+	.I_SLAP_TYPE(slap_type),
 
 	.O_LEDS(),
 

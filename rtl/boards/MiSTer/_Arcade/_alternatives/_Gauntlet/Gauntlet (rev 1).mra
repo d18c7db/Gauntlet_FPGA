@@ -10,6 +10,9 @@
 	<rbf>gauntlet</rbf>
 	<mameinfo parent="gauntlet" cpp="gauntlet" input="gauntlet"/>
 	<display type="raster" rotate="0"/>
+	<rom index="1">
+		<part>68</part>
+	</rom>
 	<rom index="0" zip="gauntlet.zip|gauntletr1.zip" md5="none">
 		<interleave output="32">
 			<part crc="29a5db41" name="136037-117.2l" map="0001"/>

@@ -28,9 +28,6 @@ library ieee;
 	use ieee.std_logic_1164.all;
 
 entity FPGA_GAUNTLET is
-	generic (
-		slap_type			: integer range 100 to 118 := 104
-	);
 	port(
 		-- System Clock
 		I_CLK_14M			: in	std_logic;
@@ -47,6 +44,7 @@ entity FPGA_GAUNTLET is
 
 		-- System inputs
 		I_SYS					: in	std_logic_vector(4 downto 0);
+		I_SLAP_TYPE			: in  integer range 101 to 118; -- slapstic type can be changed dynamically
 
 		O_LEDS				: out	std_logic_vector(4 downto 1);
 
@@ -124,7 +122,6 @@ begin
 	O_VBLANK <= sl_VBLANKn;
 
 	u_main : entity work.MAIN
-	generic map (slap_type=>slap_type)
 	port map (
 		I_MCKR				=> I_CLK_7M,
 		I_XCKR				=> I_CLK_14M,
@@ -136,7 +133,7 @@ begin
 		I_RD68K				=> sl_RD68Kn,
 		I_SBD					=> slv_SBDO,
 		I_DATA				=> slv_vdata,
-
+		I_SLAP_TYPE			=> I_SLAP_TYPE,
 		I_SELFTESTn			=> I_SYS(4),
 		I_P1					=> I_P1,
 		I_P2					=> I_P2,
@@ -168,7 +165,6 @@ begin
 	);
 
 	u_video : entity work.VIDEO
-	generic map (slap_type=>slap_type)
 	port map (
 		I_MCKR				=> I_CLK_7M,
 		I_ADDR				=> slv_addr,
@@ -182,6 +178,7 @@ begin
 		I_R_Wn				=> sl_R_Wn,
 		I_LDSn				=> sl_LDSn,
 		I_UDSn				=> sl_UDSn,
+		I_SLAP_TYPE			=> I_SLAP_TYPE,
 		O_VCPU				=> sl_VCPU,
 		O_1H					=> sl_1H,
 		O_2H					=> sl_2H,

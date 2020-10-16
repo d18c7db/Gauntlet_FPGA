@@ -30,7 +30,7 @@ entity VIDEO is
 		I_R_Wn				: in	std_logic;
 		I_LDSn				: in	std_logic;
 		I_UDSn				: in	std_logic;
-		I_SLAP_TYPE			: in  integer range 101 to 118; -- slapstic type can be changed dynamically
+		I_SLAP_TYPE			: in  integer range 0 to 118; -- slapstic type can be changed dynamically
 		O_VCPU				: out	std_logic;
 		O_VBKINTn			: out	std_logic;
 		O_VBLANKn			: out	std_logic;

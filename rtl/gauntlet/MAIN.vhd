@@ -17,9 +17,6 @@ library ieee;
 	use ieee.numeric_std.all;
 
 entity MAIN is
-	generic (
-		slap_type			: integer range 100 to 118 := 104
-	);
 	port(
 		I_MCKR				: in	std_logic;	-- 7MHz
 		I_XCKR				: in	std_logic;
@@ -31,6 +28,7 @@ entity MAIN is
 		I_RD68K				: in	std_logic;
 		I_SBD					: in	std_logic_vector( 7 downto 0);
 		I_DATA				: in	std_logic_vector(15 downto 0);
+		I_SLAP_TYPE			: in  integer range 0 to 118; -- slapstic type can be changed dynamically
 
 		-- active low player inputs
 		I_SELFTESTn			: in	std_logic;
@@ -412,14 +410,14 @@ begin
 	----------------------------
 
 	-- RAM at address 800000-801FFF only fitted on system board for Vindicators II
-	gen_ram : if slap_type = 118 generate
+--	gen_ram : if slap_type = 118 generate
 		sl_WRH <= not sl_WHn;
 		sl_WRL <= not sl_WLn;
-		p_RAM_11A : entity work.RAM_2K8 port map (I_MCKR => I_XCKR, I_EN => sl_RAM0, I_WR => sl_WRH, I_ADDR => slv_cpu_ad(11 downto 1), I_DATA => slv_cpu_do(15 downto 8), O_DATA => slv_11A_data );
-		p_RAM_11B : entity work.RAM_2K8 port map (I_MCKR => I_XCKR, I_EN => sl_RAM0, I_WR => sl_WRL, I_ADDR => slv_cpu_ad(11 downto 1), I_DATA => slv_cpu_do( 7 downto 0), O_DATA => slv_11B_data );
-		p_RAM_12A : entity work.RAM_2K8 port map (I_MCKR => I_XCKR, I_EN => sl_RAM1, I_WR => sl_WRH, I_ADDR => slv_cpu_ad(11 downto 1), I_DATA => slv_cpu_do(15 downto 8), O_DATA => slv_12A_data );
-		p_RAM_12B : entity work.RAM_2K8 port map (I_MCKR => I_XCKR, I_EN => sl_RAM1, I_WR => sl_WRL, I_ADDR => slv_cpu_ad(11 downto 1), I_DATA => slv_cpu_do( 7 downto 0), O_DATA => slv_12B_data );
-	end generate;
+--		p_RAM_11A : entity work.RAM_2K8 port map (I_MCKR => I_XCKR, I_EN => sl_RAM0, I_WR => sl_WRH, I_ADDR => slv_cpu_ad(11 downto 1), I_DATA => slv_cpu_do(15 downto 8), O_DATA => slv_11A_data );
+--		p_RAM_11B : entity work.RAM_2K8 port map (I_MCKR => I_XCKR, I_EN => sl_RAM0, I_WR => sl_WRL, I_ADDR => slv_cpu_ad(11 downto 1), I_DATA => slv_cpu_do( 7 downto 0), O_DATA => slv_11B_data );
+--		p_RAM_12A : entity work.RAM_2K8 port map (I_MCKR => I_XCKR, I_EN => sl_RAM1, I_WR => sl_WRH, I_ADDR => slv_cpu_ad(11 downto 1), I_DATA => slv_cpu_do(15 downto 8), O_DATA => slv_12A_data );
+--		p_RAM_12B : entity work.RAM_2K8 port map (I_MCKR => I_XCKR, I_EN => sl_RAM1, I_WR => sl_WRL, I_ADDR => slv_cpu_ad(11 downto 1), I_DATA => slv_cpu_do( 7 downto 0), O_DATA => slv_12B_data );
+--	end generate;
 
 	-- gate 14L, buffer 13C
 	sl_ROM_H_Ln	<=	not slv_cpu_ad(15);
@@ -511,13 +509,13 @@ begin
 	----------------------------
 
 	p_10C		: entity work.SLAPSTIC
-	generic map (chip_type=>slap_type)
 	port map (
 		I_CK	=> I_MCKR,
 		I_ASn => sl_ASn,
 		I_CSn	=> sl_SLAPSTK,
 		I_A	=> slv_cpu_ad(14 downto 1),
-		O_BS	=> slv_BS
+		O_BS	=> slv_BS,
+		I_SLAP_TYPE => I_SLAP_TYPE
 	);
 
 	p_EEP_14A	: entity work.EEP_14A

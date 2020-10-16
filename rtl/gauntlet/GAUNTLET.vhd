@@ -44,7 +44,7 @@ entity FPGA_GAUNTLET is
 
 		-- System inputs
 		I_SYS					: in	std_logic_vector(4 downto 0);
-		I_SLAP_TYPE			: in  integer range 101 to 118; -- slapstic type can be changed dynamically
+		I_SLAP_TYPE			: in  integer range 0 to 118; -- slapstic type can be changed dynamically
 
 		O_LEDS				: out	std_logic_vector(4 downto 1);
 

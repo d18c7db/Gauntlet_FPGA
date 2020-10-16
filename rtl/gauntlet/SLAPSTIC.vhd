@@ -28,7 +28,7 @@ entity SLAPSTIC is
 		I_CSn       : in  std_logic;
 		I_A         : in  std_logic_vector(13 downto 0);
 		O_BS        : out std_logic_vector( 1 downto 0);
-		I_SLAP_TYPE : in  integer range 101 to 118 -- slapstic type can be changed dynamically
+		I_SLAP_TYPE : in  integer range 0 to 118 -- slapstic type can be changed dynamically
 	);
 end SLAPSTIC;
 
@@ -40,7 +40,7 @@ architecture RTL of SLAPSTIC is
 	signal additive    : std_logic:='0';
 	signal bitwise     : std_logic:='0';
 	signal init_done   : std_logic:='0';
-	signal chip_type_last : integer range 101 to 118 := 102;
+	signal chip_type_last : integer range 0 to 118 := 0;
 
 	signal addr        : std_logic_vector(15 downto 0) := (others=>'0');
 	signal ini_bank    : std_logic_vector( 1 downto 0) := (others=>'0');

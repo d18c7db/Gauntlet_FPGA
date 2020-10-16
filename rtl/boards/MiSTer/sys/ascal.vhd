@@ -447,7 +447,7 @@ ARCHITECTURE rtl OF ascal IS
   SIGNAL o_hdown,o_vdown : std_logic;
   SIGNAL o_primv,o_lastv,o_bibv : unsigned(0 TO 2);
   SIGNAL o_bibu : std_logic :='0';
-  SIGNAL o_dcptv : arr_uint12(1 TO 8) /* synthesis ramstyle = "logic" */;
+  SIGNAL o_dcptv : arr_uint12(1 TO 8); -- synthesis ramstyle = "logic"
   SIGNAL o_dcpt : uint12;
   SIGNAL o_hpixs,o_hpix0,o_hpix1,o_hpix2,o_hpix3 : type_pix;
   SIGNAL o_hpixq,o_vpixq,o_vpixq1 : arr_pix(0 TO 3);

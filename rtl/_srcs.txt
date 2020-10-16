@@ -1,6 +1,9 @@
-boards/mister/pll
-boards/mister/pll.v
-boards/mister/dpram.vhd
+boards/MiSTer/rtl/pll
+boards/MiSTer/rtl/pll.v
+
+boards/MiSTer/rtl/mem/dpram.vhd
+
+gauntlet/RGBI.vhd
 lib/hexy_chars.vhd
 lib/hexy.vhd
 lib/jt51
@@ -12,14 +15,9 @@ lib/T65/T65.vhd
 lib/TG68K/TG68K_Pack.vhd
 lib/TG68K/TG68KdotC_Kernel.vhd
 lib/TG68K/TG68K_ALU.vhd
-gauntlet/RGBI.vhd
 lib/bitmap/bmp_pkg.vhd
 lib/bitmap/bmp_out.vhd
 
-#gauntlet/VRAM0.vhd
-#gauntlet/VRAM1.vhd
-#gauntlet/VRAM2.vhd
-#gauntlet/CRAM.vhd
 gauntlet/ROMS.G1/EEP_14A.vhd
 gauntlet/ROMS.G1/PROM_3E.vhd
 gauntlet/ROMS.G1/PROM_4R.vhd
@@ -61,5 +59,6 @@ gauntlet/MAIN.vhd
 gauntlet/AUDIO.vhd
 gauntlet/VIDEO.vhd
 gauntlet/GAUNTLET.vhd
+
 boards/mister/Arcade-Gauntlet_SIM.sv
 boards/mister/tb_gauntlet.vhd

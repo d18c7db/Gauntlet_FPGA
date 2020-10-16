@@ -24,15 +24,11 @@ The implementation is functional right now, can coin up and start game, known pr
 ## MiSTer Install
 This repository follows the standard folder structure for distributing MiSTer files.
 
-ROMs are not included. In order to use this arcade, you need to provide the
-correct gauntlet.zip ROM.
+ROMs are not included. In order to use this arcade, you need to provide the correct gauntlet.zip ROM.
 
-To simplify the process .mra files are provided in the releases folder, that
-specifies the required ROMs with checksums. The ROMs .zip filename refers to the
-corresponding file of the M.A.M.E. project.
+To simplify the process .mra files are provided in the releases folder, that specifies the required ROMs with checksums. The ROMs .zip filename refers to the corresponding file of the M.A.M.E. project.
 
-Please refer to https://github.com/MiSTer-devel/Main_MiSTer/wiki/Arcade-Roms for
-information on how to setup and use the environment.
+Please refer to https://github.com/MiSTer-devel/Main_MiSTer/wiki/Arcade-Roms for information on how to setup and use the environment.
 
 Quickreference for folders and file placement:
 
@@ -41,9 +37,7 @@ Quickreference for folders and file placement:
 /_Arcade/mame/<mame rom>.zip
 /_Arcade/hbmame/<hbmame rom>.zip
 
-Gauntlet currently supports up to 4 joysticks for 4 players. (up, down, left, right, fire, start/magic, coin)
-mame keys layout is available for player 1 (up, down left, right, ctrl, alt, 5) and player 2 (R, F, D, G, A, S, 6)
-for player 3 and 4, only remains coins keys (7, and 8)
+Gauntlet currently supports up to 4 joysticks for 4 players. (up, down, left, right, fire, start/magic, coin) mame keys layout is available for player 1 (up, down left, right, ctrl, alt, 5) and player 2 (R, F, D, G, A, S, 6) for player 3 and 4, only remains coins keys (7, and 8)
 
 ## Building
 

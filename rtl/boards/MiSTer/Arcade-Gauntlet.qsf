@@ -46,17 +46,12 @@ set_global_assignment -name ROUTER_CLOCKING_TOPOLOGY_ANALYSIS ON
 set_global_assignment -name ECO_OPTIMIZE_TIMING ON
 set_global_assignment -name PERIPHERY_TO_CORE_PLACEMENT_AND_ROUTING_OPTIMIZATION ON
 set_global_assignment -name PHYSICAL_SYNTHESIS_ASYNCHRONOUS_SIGNAL_PIPELINING ON
-set_global_assignment -name ALM_REGISTER_PACKING_EFFORT MEDIUM
+set_global_assignment -name ALM_REGISTER_PACKING_EFFORT LOW
 set_global_assignment -name SEED 1
 
 set_global_assignment -name VERILOG_MACRO "ARCADE_SYS=1"
 set_global_assignment -name VERILOG_MACRO "USE_FB=1"
-#set_global_assignment -name VERILOG_MACRO "USE_SDRAM=1"
-#set_global_assignment -name VERILOG_MACRO "USE_DDRAM=1"
-set_global_assignment -name VHDL_INPUT_VERSION VHDL_2008
-set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim (VHDL)"
-set_global_assignment -name EDA_OUTPUT_DATA_FORMAT VHDL -section_id eda_simulation
-set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
+set_global_assignment -name VERILOG_MACRO "USE_SDRAM=0"
 
 source sys/sys.tcl
 source sys/sys_analog.tcl

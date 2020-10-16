@@ -24,20 +24,19 @@ The implementation is functional right now, can coin up and start game, known pr
 ## MiSTer Install
 This repository follows the standard folder structure for distributing MiSTer files.
 
-ROMs are not included. In order to use this arcade, you need to provide the correct gauntlet.zip ROM.
+ROMs are not included so in order to use this arcade, you need to provide the correct game ROM.
 
-To simplify the process .mra files are provided in the releases folder, that specifies the required ROMs with checksums. The ROMs .zip filename refers to the corresponding file of the M.A.M.E. project.
+To simplify the process .mra files are provided in the releases folder, that specify the required ROMs with checksums. The .zip filename refers to the corresponding ROM file of the MAME project.
 
 Please refer to https://github.com/MiSTer-devel/Main_MiSTer/wiki/Arcade-Roms for information on how to setup and use the environment.
 
 Quickreference for folders and file placement:
 
-/_Arcade/<game name>.mra
-/_Arcade/cores/<game rbf>.rbf
-/_Arcade/mame/<mame rom>.zip
-/_Arcade/hbmame/<hbmame rom>.zip
+/_Arcade/<game name>.mra  
+/_Arcade/cores/<game name>.rbf  
+/_Arcade/mame/<mame rom>.zip  
 
-Gauntlet currently supports up to 4 joysticks for 4 players. (up, down, left, right, fire, start/magic, coin) mame keys layout is available for player 1 (up, down left, right, ctrl, alt, 5) and player 2 (R, F, D, G, A, S, 6) for player 3 and 4, only remains coins keys (7, and 8)
+Gauntlet currently supports up to 4 joysticks for 4 players. (up, down, left, right, fire, start/magic, coin) MAME keys layout is available for player 1 (up, down left, right, ctrl, alt, 5) and player 2 (R, F, D, G, A, S, 6) for player 3 and 4, only coins keys (7, 8) are mapped.
 
 ## Building
 
@@ -50,4 +49,4 @@ NOTE: Pipistrello needs an additional custom SRAM board for this project since t
 The project files are under `rtl/boards/miSTer` and are setup for Quartus 17  
 *WARNING:* some MiSTer files in `sys` have been customized to allow the project to fully synthesize without errors due to the fitter being unable to fully place all memories.
 
-At this stage only Gauntlet can be played on MiSTer due to the ROM sizes only just barely fitting in FPGA bram, perhaps with more effort the ROMs can be placed in external memory.  
+At this stage only the ROMs for Gauntlet can fit inside the MiSTer FPGA but development effort is being made to place the ROMs in external SDRAM memory to that Gauntlet II and Vidicators part II can be played also.  

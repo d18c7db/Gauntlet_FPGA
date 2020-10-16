@@ -47,6 +47,6 @@ NOTE: Pipistrello needs an additional custom SRAM board for this project since t
 ### MiSTer
 
 The project files are under `rtl/boards/miSTer` and are setup for Quartus 17  
-*WARNING:* some MiSTer files in `sys` have been customized to allow the project to fully synthesize without errors due to the fitter being unable to fully place all memories.
+*WARNING:* some MiSTer files in `sys` have been customized slightly (ramstyle attributes) to allow the project to fully synthesize without errors due to the fitter being unable to fully place all memories.
 
-At this stage only the ROMs for Gauntlet can fit inside the MiSTer FPGA but development effort is being made to place the ROMs in external SDRAM memory to that Gauntlet II and Vidicators part II can be played also.  
+At this stage only the ROMs for Gauntlet can fit inside the MiSTer FPGA but development effort is being made to place the ROMs in external SDRAM memory so that Gauntlet II and Vindicators part II can be played also.  

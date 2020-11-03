@@ -2,6 +2,8 @@ boards/MiSTer/rtl/pll
 boards/MiSTer/rtl/pll.v
 
 boards/MiSTer/rtl/mem/dpram.vhd
+boards/MiSTer/rtl/mem/mt48lc16m16a2.v
+boards/MiSTer/rtl/mem/sdram.vhd
 
 gauntlet/RGBI.vhd
 lib/hexy_chars.vhd
@@ -60,5 +62,6 @@ gauntlet/AUDIO.vhd
 gauntlet/VIDEO.vhd
 gauntlet/GAUNTLET.vhd
 
-boards/mister/Arcade-Gauntlet_SIM.sv
-boards/mister/tb_gauntlet.vhd
+boards/MiSTer/hps_emu.vhd
+boards/mister/Arcade-Gauntlet_emu.sv
+boards/mister/tb_gauntlet_emu.vhd

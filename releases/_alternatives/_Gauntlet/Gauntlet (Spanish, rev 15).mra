@@ -1,8 +1,8 @@
 <misterromdescription>
 	<name>Gauntlet (Spanish, rev 15)</name>
-	<mameversion>0223</mameversion>
+	<mameversion>0225</mameversion>
 	<setname>gauntlets</setname>
-	<mratimestamp>20200812220841</mratimestamp>
+	<mratimestamp>20201112131415</mratimestamp>
 	<year>1985</year>
 	<manufacturer>Atari Games</manufacturer>
 	<category>Adventure / Fantasy</category>
@@ -26,18 +26,22 @@
 			<part crc="29ef9882" name="136037-114.1mn" map="0100"/>
 			<part crc="869330be" name="136037-112.1b"  map="1000"/>
 		</interleave>
-		<interleave output="16">
-			<part crc="69e50ae9" name="136037-1509.7a" map="01"/>
-			<part crc="54e2692c" name="136037-1510.7b" map="10"/>
-		</interleave>
+		<part repeat="0x80000">00</part>
 		<interleave output="16">
 			<part crc="b5183228" name="136037-1507.9a" map="01"/>
 			<part crc="afd3c501" name="136037-1508.9b" map="10"/>
 		</interleave>
+		<part repeat="0x20000">00</part>
 		<interleave output="16">
 			<part crc="6d99ed51" name="136037-205.10a" map="01"/>
 			<part crc="545ead91" name="136037-206.10b" map="10"/>
 		</interleave>
+		<part repeat="0x8000">00</part>
+		<interleave output="16">
+			<part crc="69e50ae9" name="136037-1509.7a" map="01"/>
+			<part crc="54e2692c" name="136037-1510.7b" map="10"/>
+		</interleave>
+		<part repeat="0x30000">00</part>
 		<part crc="fa19861f" name="136037-119.16s"/>
 		<part crc="6ee7f3cc" name="136037-120.16r"/>
 		<part crc="6c276a1d" name="136037-104.6p"/>

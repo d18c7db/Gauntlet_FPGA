@@ -276,24 +276,24 @@ always @(posedge clk_vid) begin
 	ce_vid <= !div;
 end
 
-arcade_video #(.WIDTH(262), .DW(12)) arcade_video
-(
-	.*,
-
-	.clk_video(clk_vid),
-	.ce_pix(ce_vid),
-
-	.RGB_in({r,g,b}),
-	.HBlank(~hblank),
-	.VBlank(~vblank),
-	.HSync(~hs),
-	.VSync(~vs),
-
-	.fx(status[5:3])
-);
-
-screen_rotate screen_rotate (.*);
-hps_io #(.STRLEN($size(CONF_STR)>>3)) hps_io
+//arcade_video #(.WIDTH(262), .DW(12)) arcade_video
+//(
+//	.*,
+//
+//	.clk_video(clk_vid),
+//	.ce_pix(ce_vid),
+//
+//	.RGB_in({r,g,b}),
+//	.HBlank(~hblank),
+//	.VBlank(~vblank),
+//	.HSync(~hs),
+//	.VSync(~vs),
+//
+//	.fx(status[5:3])
+//);
+//
+//screen_rotate screen_rotate (.*);
+hps_io_emu #(.STRLEN($size(CONF_STR)>>3)) hps_io
 (
 	.clk_sys(clk_sys),
 	.HPS_BUS(HPS_BUS),

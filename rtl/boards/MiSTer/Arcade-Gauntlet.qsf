@@ -51,7 +51,7 @@ set_global_assignment -name SEED 1
 
 set_global_assignment -name VERILOG_MACRO "ARCADE_SYS=1"
 set_global_assignment -name VERILOG_MACRO "USE_FB=1"
-set_global_assignment -name VERILOG_MACRO "USE_SDRAM=0"
+set_global_assignment -name VERILOG_MACRO "USE_SDRAM=1"
 
 source sys/sys.tcl
 source sys/sys_analog.tcl

@@ -36,9 +36,6 @@ set_false_path -from {cfg[*]}
 set_false_path -from {VSET[*]}
 set_false_path -to {wcalc[*] hcalc[*]}
 set_false_path -to {width[*] height[*]}
-
-set_multicycle_path -to {*_osd|osd_vcnt*} -setup 2
-set_multicycle_path -to {*_osd|osd_vcnt*} -hold 1
 set_false_path -to {*_osd|v_cnt*}
 set_false_path -to {*_osd|v_osd_start*}
 set_false_path -to {*_osd|v_info_start*}
@@ -57,3 +54,6 @@ set_false_path -from {FB_BASE[*] FB_BASE[*] FB_WIDTH[*] FB_HEIGHT[*] LFB_HMIN[*]
 set_false_path -to   {vol_att[*] scaler_flt[*] led_overtake[*] led_state[*]}
 set_false_path -from {vol_att[*] scaler_flt[*] led_overtake[*] led_state[*]}
 set_false_path -from {aflt_* acx* acy* areset*}
+
+set_multicycle_path -to {*_osd|osd_vcnt*} -setup 2
+set_multicycle_path -to {*_osd|osd_vcnt*} -hold 1

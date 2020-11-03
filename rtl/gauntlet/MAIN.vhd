@@ -413,10 +413,10 @@ begin
 --	gen_ram : if slap_type = 118 generate
 		sl_WRH <= not sl_WHn;
 		sl_WRL <= not sl_WLn;
---		p_RAM_11A : entity work.RAM_2K8 port map (I_MCKR => I_XCKR, I_EN => sl_RAM0, I_WR => sl_WRH, I_ADDR => slv_cpu_ad(11 downto 1), I_DATA => slv_cpu_do(15 downto 8), O_DATA => slv_11A_data );
---		p_RAM_11B : entity work.RAM_2K8 port map (I_MCKR => I_XCKR, I_EN => sl_RAM0, I_WR => sl_WRL, I_ADDR => slv_cpu_ad(11 downto 1), I_DATA => slv_cpu_do( 7 downto 0), O_DATA => slv_11B_data );
---		p_RAM_12A : entity work.RAM_2K8 port map (I_MCKR => I_XCKR, I_EN => sl_RAM1, I_WR => sl_WRH, I_ADDR => slv_cpu_ad(11 downto 1), I_DATA => slv_cpu_do(15 downto 8), O_DATA => slv_12A_data );
---		p_RAM_12B : entity work.RAM_2K8 port map (I_MCKR => I_XCKR, I_EN => sl_RAM1, I_WR => sl_WRL, I_ADDR => slv_cpu_ad(11 downto 1), I_DATA => slv_cpu_do( 7 downto 0), O_DATA => slv_12B_data );
+		p_RAM_11A : entity work.RAM_2K8 port map (I_MCKR => I_XCKR, I_EN => sl_RAM0, I_WR => sl_WRH, I_ADDR => slv_cpu_ad(11 downto 1), I_DATA => slv_cpu_do(15 downto 8), O_DATA => slv_11A_data );
+		p_RAM_11B : entity work.RAM_2K8 port map (I_MCKR => I_XCKR, I_EN => sl_RAM0, I_WR => sl_WRL, I_ADDR => slv_cpu_ad(11 downto 1), I_DATA => slv_cpu_do( 7 downto 0), O_DATA => slv_11B_data );
+		p_RAM_12A : entity work.RAM_2K8 port map (I_MCKR => I_XCKR, I_EN => sl_RAM1, I_WR => sl_WRH, I_ADDR => slv_cpu_ad(11 downto 1), I_DATA => slv_cpu_do(15 downto 8), O_DATA => slv_12A_data );
+		p_RAM_12B : entity work.RAM_2K8 port map (I_MCKR => I_XCKR, I_EN => sl_RAM1, I_WR => sl_WRL, I_ADDR => slv_cpu_ad(11 downto 1), I_DATA => slv_cpu_do( 7 downto 0), O_DATA => slv_12B_data );
 --	end generate;
 
 	-- gate 14L, buffer 13C

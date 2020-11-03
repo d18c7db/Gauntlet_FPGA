@@ -30,8 +30,10 @@ architecture RTL of PROM_4R is
 --		x"0",x"0",x"0",x"0",x"0",x"0",x"D",x"F",x"0",x"0",x"0",x"0",x"9",x"B",x"D",x"F", -- 0x00E0
 --		x"0",x"0",x"5",x"7",x"9",x"B",x"D",x"F",x"1",x"3",x"5",x"7",x"9",x"B",x"D",x"F"  -- 0x00F0
 --	);
---	attribute ram_style : string;
+--	attribute ram_style : string; -- for Xilinx ISE
 --	attribute ram_style of ROM : signal is "distributed";
+--	attribute ramstyle : string; -- for Intel Quartus
+--	attribute ramstyle of ROM : signal is "logic";
 begin
 	mem_proc : process
 	begin

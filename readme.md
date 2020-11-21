@@ -50,6 +50,3 @@ NOTE: Pipistrello needs an additional custom SRAM board for this project since t
 
 The project files are under `rtl/boards/miSTer` and are setup for Quartus 17  
 *WARNING:* some MiSTer files in `sys` have been customized slightly (ramstyle attributes) to allow the project to fully synthesize without errors due to the fitter being unable to fully place all memories.
-
-#### Problems
-SDRAM write timing problems seem to cause some small graphics corruption. Generally these go away if the same core is _reloaded_ again one more time. Work is in progress to elliminate this issue.

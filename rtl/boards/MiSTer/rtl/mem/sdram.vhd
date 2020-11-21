@@ -91,10 +91,10 @@ architecture rtl of sdram is
 
 	type state_t is (INIT, MODE, IDLE, ACTV, RDWR, RFSH);
 	signal state, state_last : state_t := INIT;
-	signal we_last         : std_logic := '0';
+	signal we_last, dq_write : std_logic := '0';
 	signal cmd             : std_logic_vector( 3 downto 0) := CMD_NOP;
 	signal addr_last       : std_logic_vector(22 downto 0) := (others=>'1');
-	signal dq_last         : std_logic_vector(31 downto 0) := (others=>'0');
+	signal dq_data         : std_logic_vector(31 downto 0) := (others=>'0');
 
 	-- NOTE: ranges _must_ be large enough for longest possible delay at highest clock freq
 	signal cycl_ctr        : integer range 0 to 32767 := 0; -- 200us @160MHz 32000 cycles
@@ -121,14 +121,14 @@ begin
 		(others => '0');
 
 	SDRAM_DQ   <=
-		dq_last(31 downto 16) when (we_last = '1') and (state = RDWR) and (cycl_ctr = 0 ) else
-		dq_last(15 downto  0) when (we_last = '1') and (state = RDWR) and (cycl_ctr = 1 ) else
+		dq_data(31 downto 16) when (dq_write = '1') and (state = RDWR) and (cycl_ctr = 0 ) else
+		dq_data(15 downto  0) when (dq_write = '1') and (state = RDWR) and (cycl_ctr = 1 ) else
 		(others=>'Z');
 
 	p_read : process
 	begin
 		wait until rising_edge(I_CLK);
-		if (we_last = '0') and (state_last = RDWR) then
+		if (dq_write = '0') and (state_last = RDWR) then
 			   if (cycl_ctr = tCASL  ) then O_DATA(31 downto 16) <= SDRAM_DQ;
 			elsif (cycl_ctr = tCASL+1) then O_DATA(15 downto  0) <= SDRAM_DQ;
 			end if;
@@ -138,6 +138,7 @@ begin
 	p_refresh : process
 	begin
 		wait until rising_edge(I_CLK);
+		state_last <= state;
 		if (I_RST = '1') or (state = INIT) or ((state_last /= state) and (state = RFSH)) then
 			rfsh_ctr <= 0;
 		else
@@ -149,14 +150,21 @@ begin
 	p_state : process
 	begin
 		wait until rising_edge(I_CLK);
-		state_last <= state;
 
 		if (I_RST = '1') then
 			cmd <= CMD_NOP;
 			state <= INIT;
 		else
 			cmd <= CMD_NOP;
+
 			if cycl_ctr < 32767 then cycl_ctr <= cycl_ctr + 1; end if;
+
+			we_last <= I_WE;
+			if (we_last = '0') and (I_WE = '1') then
+				dq_write <= '1';
+				dq_data <= I_DATA;
+			end if;
+
 			case state is
 
 				-- #INIT#
@@ -184,14 +192,9 @@ begin
 
 				-- #IDLE#
 				when IDLE =>
-					if (I_WE = '1') then
-						we_last <= '1';
-						dq_last <= I_DATA;
-					end if;
-
 					-- observe tRC ACTIVE-to-ACTIVE delay minus the time spent in ACTIVE-to-RDWR
 					if (cycl_ctr > tRC-tRCD-tCASL-1) then
-						if (I_ADDR /= addr_last) or (I_WE = '1') then
+						if (I_ADDR /= addr_last) or (dq_write = '1') then
 							addr_last <= I_ADDR;
 							cmd <= CMD_ACTIVE;
 							state <= ACTV;
@@ -208,7 +211,7 @@ begin
 				when ACTV =>
 					-- observe tRCD ACTIVE-to-RD/WR delay
 					if (cycl_ctr = tRCD-1) then
-						if (we_last = '1') then
+						if (dq_write = '1') then
 							cmd <= CMD_WRITE;
 						else
 							cmd <= CMD_READ;
@@ -221,7 +224,6 @@ begin
 				when RDWR =>
 					-- observe tCASL CAS Latency
 					if (cycl_ctr = tCASL + 3) then
-						we_last <= '0';
 					-- if a refresh is due soon, go direct to refresh state else idle
 						if (rfsh_ctr > tREF-20) then
 							cmd <= CMD_REFRESH;
@@ -230,6 +232,7 @@ begin
 							cmd <= CMD_NOP;
 							state <= IDLE;
 						end if;
+						dq_write <= '0';
 						cycl_ctr <= 0;
 					end if;
 

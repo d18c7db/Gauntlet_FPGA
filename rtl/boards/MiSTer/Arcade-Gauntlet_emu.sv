@@ -415,7 +415,7 @@ hps_io_emu #(.STRLEN($size(CONF_STR)>>3)) hps_io
 	end
 
 	assign sdram_addr = ioctl_download?ioctl_addr[24:2]:{5'd0,gp_addr};
-	assign ioctl_wait = ~sdram_ready && ioctl_addr[1] && ioctl_addr[0];
+	assign ioctl_wait = ~(locked && sdram_ready);
 
 	sdram #(.tCK_ns(1000/93.06817)) sdram
 	(
@@ -503,11 +503,12 @@ FPGA_GAUNTLET gauntlet
 
 	.I_RESET(RESET | status[0] | buttons[1] | ioctl_download),
 
-	.I_P1({~(p1[7] | joy0[3]), ~(p1[6] | joy0[2]), ~(p1[5] | joy0[1]), ~(p1[4] | joy0[0]), ~(p1[3]), ~(p1[2]), ~(p1[1] | joy0[4]), ~(p1[0] | joy0[5])}),
-	.I_P2({~(p2[7] | joy1[3]), ~(p2[6] | joy1[2]), ~(p2[5] | joy1[1]), ~(p2[4] | joy1[0]), ~(p2[3]), ~(p2[2]), ~(p2[1] | joy1[4]), ~(p2[0] | joy1[5])}),
-	.I_P3({~(p3[7] | joy2[3]), ~(p3[6] | joy2[2]), ~(p3[5] | joy2[1]), ~(p3[4] | joy2[0]), ~(p3[3]), ~(p3[2]), ~(p3[1] | joy2[4]), ~(p3[0] | joy2[5])}),
-	.I_P4({~(p4[7] | joy3[3]), ~(p4[6] | joy3[2]), ~(p4[5] | joy3[1]), ~(p4[4] | joy3[0]), ~(p4[3]), ~(p4[2]), ~(p4[1] | joy3[4]), ~(p4[0] | joy3[5])}),
-	.I_SYS({m_service, ~(m_coin1 | joy0[6]), ~(m_coin2 | joy1[6]), ~(m_coin3 | joy2[6]), ~(m_coin4 | joy3[6])}),
+	//            up       down     left     right    start    button3  button2  button1
+	.I_P1(~(p1 | {joy0[3], joy0[2], joy0[1], joy0[0], joy0[7], joy0[6], joy0[5], joy0[4]})),
+	.I_P2(~(p2 | {joy1[3], joy1[2], joy1[1], joy1[0], joy1[7], joy1[6], joy1[5], joy1[4]})),
+	.I_P3(~(p3 | {joy2[3], joy2[2], joy2[1], joy2[0], joy2[7], joy2[6], joy2[5], joy2[4]})),
+	.I_P4(~(p4 | {joy3[3], joy3[2], joy3[1], joy3[0], joy3[7], joy3[6], joy3[5], joy3[4]})),
+	.I_SYS({m_service, ~(m_coin1 | joy0[8]), ~(m_coin2 | joy1[8]), ~(m_coin3 | joy2[8]), ~(m_coin4 | joy3[8])}),
 	.I_SLAP_TYPE(slap_type),
 
 	.O_LEDS(),

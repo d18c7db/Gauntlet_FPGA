@@ -415,7 +415,7 @@ hps_io #(.STRLEN($size(CONF_STR)>>3)) hps_io
 	end
 
 	assign sdram_addr = ioctl_download?ioctl_addr[24:2]:{5'd0,gp_addr};
-	assign ioctl_wait = ~sdram_ready && ioctl_addr[1] && ioctl_addr[0];
+	assign ioctl_wait = ~(locked && sdram_ready);
 
 	sdram #(.tCK_ns(1000/93.06817)) sdram
 	(

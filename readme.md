@@ -49,4 +49,4 @@ NOTE: Pipistrello needs an additional custom SRAM board for this project since t
 ### MiSTer
 
 The project files are under `rtl/boards/miSTer` and are setup for Quartus 17  
-*WARNING:* some MiSTer files in `sys` have been customized slightly (ramstyle attributes) to allow the project to fully synthesize without errors due to the fitter being unable to fully place all memories.
+*WARNING:* In order to play Vindicators part 2, you must run the python script "descramble_2J.py 136059-1184.2j 136059-1184.des.2j" then copy the binary output file 136059-1184.des.2j into the zip file with the original ROMs.  

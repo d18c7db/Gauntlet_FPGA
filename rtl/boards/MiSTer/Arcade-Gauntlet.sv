@@ -409,7 +409,7 @@ hps_io #(.STRLEN($size(CONF_STR)>>3)) hps_io
 		sdram_we <= 1'b0;
 		if (ioctl_wr && (!ioctl_index) && ioctl_download && ioctl_addr[1] && ioctl_addr[0])
 		begin
-			sdram_data = {acc_bytes,ioctl_dout};
+			sdram_data <= {acc_bytes,ioctl_dout};
 			sdram_we <= 1'b1;
 		end
 	end

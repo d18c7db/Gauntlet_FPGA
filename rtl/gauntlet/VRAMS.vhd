@@ -90,7 +90,7 @@ begin
 		slv_MO when sl_MO_CSn = '0' else
 		slv_AL when sl_AL_CSn = '0' else
 --		slv_AL when sl_AL_CSn = '0' and (I_VRA < x"800" or I_VRA > x"F69") else 	-- disables reads from alphanumerics range 905000-905BB0
-		(others=>'Z'); -- floating
+		(others=>'0');
 
 -- PF video RAMs 6J, 7J
 	p_RAM_PF_LO : process

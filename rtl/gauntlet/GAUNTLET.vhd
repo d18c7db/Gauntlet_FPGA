@@ -74,6 +74,9 @@ entity FPGA_GAUNTLET is
 		O_MP_EN				: out	std_logic := '0';
 		O_MP_ADDR			: out	std_logic_vector(18 downto 0) := (others=>'0');
 		I_MP_DATA			: in 	std_logic_vector(15 downto 0) := (others=>'0');
+		-- MO control
+		O_4R_ADDR			: out	std_logic_vector( 7 downto 0);
+		I_4R_DATA			: in 	std_logic_vector( 3 downto 0);
 		-- Audio Program ROMs
 		O_AP_EN				: out	std_logic := '0';
 		O_AP_ADDR			: out	std_logic_vector(15 downto 0) := (others=>'0');
@@ -199,6 +202,8 @@ begin
 		O_GP_EN				=> O_GP_EN,
 		O_GP_ADDR			=> O_GP_ADDR,
 		I_GP_DATA			=> I_GP_DATA,
+		O_4R_ADDR			=> O_4R_ADDR,
+		I_4R_DATA			=> I_4R_DATA,
 		O_CP_ADDR			=> O_CP_ADDR,
 		I_CP_DATA			=> I_CP_DATA
 	);

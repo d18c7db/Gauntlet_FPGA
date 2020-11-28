@@ -10,6 +10,7 @@
 	<rbf>gauntlet</rbf>
 	<mameinfo parent="gauntlet" cpp="gauntlet" input="gauntlet"/>
 	<display type="raster" rotate="0"/>
+	<buttons names="LTrig,RTrig,LThumb,RThumb,Coin,Start" default="L,R,Y,A,Select,Start"/>
 	<rom index="1">
 		<part>76</part>
 	</rom>

@@ -50,6 +50,8 @@ entity VIDEO is
 		O_GP_EN				: out	std_logic;
 		O_GP_ADDR			: out	std_logic_vector(17 downto 0);
 		I_GP_DATA			: in 	std_logic_vector(31 downto 0);
+		O_4R_ADDR			: out	std_logic_vector( 7 downto 0);
+		I_4R_DATA			: in 	std_logic_vector( 3 downto 0);
 		O_CP_ADDR			: out	std_logic_vector(13 downto 0);
 		I_CP_DATA			: in 	std_logic_vector( 7 downto 0)
 	);
@@ -596,13 +598,8 @@ begin
 	end process;
 
 	-- PROM 4R is 74S287 (256x4) TTL PROM "136037-103"
-	u_4R : entity work.PROM_4R
-	port map (
-		CLK					=> sl_MCKF,
-		ADDR(7 downto 3)	=> slv_HPOS(8 downto 4),
-		ADDR(2 downto 0)	=> slv_HSIZ(2 downto 0),
-		DATA					=> slv_4R_data
-	);
+	O_4R_ADDR <= slv_HPOS(8 downto 4) & slv_HSIZ(2 downto 0);
+	slv_4R_data <= I_4R_DATA;
 
 	-- 5R counter
 	p_5R : process

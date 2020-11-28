@@ -38,9 +38,12 @@ set_global_assignment -name SDC_FILE  rtl/mem/sdram.sdc
 set_global_assignment -name VHDL_FILE ../../gauntlet/ROMS.G1/EEP_14A.vhd
 set_global_assignment -name VHDL_FILE ../../gauntlet/ROMS.G1/PROM_3E.vhd
 set_global_assignment -name VHDL_FILE ../../gauntlet/ROMS.G1/PROM_4R.vhd
+set_global_assignment -name VHDL_FILE ../../gauntlet/ROMS.G2/PROM_4R.vhd
+set_global_assignment -name VHDL_FILE ../../gauntlet/ROMS.V2/PROM_4R.vhd
 set_global_assignment -name VHDL_FILE ../../gauntlet/ROMS.G1/PROM_5E.vhd
 set_global_assignment -name VHDL_FILE ../../gauntlet/ROMS.G1/PROM_5L.vhd
 set_global_assignment -name VHDL_FILE ../../gauntlet/ROMS.G1/PROM_7U.vhd
+
 set_global_assignment -name VHDL_FILE ../../gauntlet/AUDIO.vhd
 set_global_assignment -name VHDL_FILE ../../gauntlet/CRAMS.vhd
 set_global_assignment -name VHDL_FILE ../../gauntlet/GPC.vhd

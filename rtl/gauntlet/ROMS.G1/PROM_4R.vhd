@@ -2,7 +2,7 @@ library ieee;
 	use ieee.std_logic_1164.all;
 	use ieee.numeric_std.all;
 
-entity PROM_4R is
+entity PROM_4R_G1 is
 port (
 	CLK  : in  std_logic;
 	ADDR : in  std_logic_vector(7 downto 0);
@@ -10,7 +10,7 @@ port (
 	);
 end entity;
 
-architecture RTL of PROM_4R is
+architecture RTL of PROM_4R_G1 is
 	type ROM_ARRAY is array (0 to 255) of std_logic_vector(3 downto 0);
 	signal ROM : ROM_ARRAY := (
 		x"1",x"3",x"5",x"7",x"9",x"B",x"D",x"F",x"1",x"3",x"5",x"7",x"9",x"B",x"D",x"F", -- 0x0000

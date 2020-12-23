@@ -272,7 +272,7 @@ end
 reg JoyW_Fw,JoyW_Bk,JoyX_Fw,JoyX_Bk;
 reg JoyY_Fw,JoyY_Bk,JoyZ_Fw,JoyZ_Bk;
 always @(posedge clk_sys) begin 
-	case ({joy0[3],joy0[2],joy0[1],joy0[0]}) // Up,down,Left,Right
+	case ({joy0[3],joy0[2],joy0[1],joy0[0]}) // Up,Down,Left,Right
 		4'b1010: begin JoyW_Fw=0; JoyW_Bk=0; JoyX_Fw=1; JoyX_Bk=0; end //Up_Left
 		4'b1000: begin JoyW_Fw=1; JoyW_Bk=0; JoyX_Fw=1; JoyX_Bk=0; end //Up
 		4'b1001: begin JoyW_Fw=1; JoyW_Bk=0; JoyX_Fw=0; JoyX_Bk=0; end //Up_Right
@@ -283,7 +283,7 @@ always @(posedge clk_sys) begin
 		4'b0010: begin JoyW_Fw=0; JoyW_Bk=1; JoyX_Fw=1; JoyX_Bk=0; end //Left
 		default: begin JoyW_Fw=0; JoyW_Bk=0; JoyX_Fw=0; JoyX_Bk=0; end
 	endcase
-	case ({joy1[3],joy1[2],joy1[1],joy1[0]}) // Up,down,Left,Right
+	case ({joy1[3],joy1[2],joy1[1],joy1[0]}) // Up,Down,Left,Right
 		4'b1010: begin JoyY_Fw=0; JoyY_Bk=0; JoyZ_Fw=1; JoyZ_Bk=0; end //Up_Left
 		4'b1000: begin JoyY_Fw=1; JoyY_Bk=0; JoyZ_Fw=1; JoyZ_Bk=0; end //Up
 		4'b1001: begin JoyY_Fw=1; JoyY_Bk=0; JoyZ_Fw=0; JoyZ_Bk=0; end //Up_Right
@@ -300,7 +300,7 @@ wire [7:0] I_P1 = (slap_type == 118) ?
 				  ~(p1 | {JoyX_Bk,JoyW_Bk,JoyX_Fw,JoyW_Fw,joy0[7:4]})
 				: ~(p1 | {joy0[3:0], joy0[7:4]});
 wire [7:0] I_P2 = (slap_type == 118) ? 
-				  ~(p2 | {JoyZ_Bk,JoyX_Bk,JoyZ_Fw,JoyX_Fw,joy1[7:4]})
+				  ~(p2 | {JoyZ_Bk,JoyY_Bk,JoyZ_Fw,JoyY_Fw,joy1[7:4]})
 				: ~(p2 | {joy1[3:0], joy1[7:4]});
 wire [7:0] I_P3 = (slap_type == 118) ?
 				  ~(p3 | { 6'b0,joy1[9],joy0[9]})
@@ -540,7 +540,7 @@ hps_io #(.STRLEN($size(CONF_STR)>>3)) hps_io
 
 	// total game dpram uses 416 of 553 M10K blocks
 
-	PROM_4R_G1 PROM_4R_G1(.CLK(clk_14M), .ADDR(r4_addr), .DATA(r4_data_G1) );
+	PROM_4R_G1 PROM_4R_G1(.CLK(clk_sys), .ADDR(r4_addr), .DATA(r4_data_G1) );
 	PROM_4R_G2 PROM_4R_G2(.CLK(clk_sys), .ADDR(r4_addr), .DATA(r4_data_G2) );
 	PROM_4R_V2 PROM_4R_V2(.CLK(clk_sys), .ADDR(r4_addr), .DATA(r4_data_V2) );
 

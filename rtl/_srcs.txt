@@ -6,8 +6,6 @@ boards/MiSTer/rtl/mem/mt48lc16m16a2.v
 boards/MiSTer/rtl/mem/sdram.vhd
 
 gauntlet/RGBI.vhd
-lib/hexy_chars.vhd
-lib/hexy.vhd
 lib/jt51
 lib/POKEY.vhd
 lib/T65/T65_Pack.vhd

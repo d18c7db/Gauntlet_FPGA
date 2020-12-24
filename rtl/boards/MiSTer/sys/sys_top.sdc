@@ -36,16 +36,19 @@ set_false_path -from {cfg[*]}
 set_false_path -from {VSET[*]}
 set_false_path -to {wcalc[*] hcalc[*]}
 set_false_path -to {width[*] height[*]}
+
+set_multicycle_path -to {*_osd|osd_vcnt*} -setup 2
+set_multicycle_path -to {*_osd|osd_vcnt*} -hold 1
 set_false_path -to {*_osd|v_cnt*}
 set_false_path -to {*_osd|v_osd_start*}
 set_false_path -to {*_osd|v_info_start*}
 set_false_path -to {*_osd|h_osd_start*}
-set_false_path -to {*_osd|half}
 set_false_path -from {*_osd|v_osd_start*}
 set_false_path -from {*_osd|v_info_start*}
 set_false_path -from {*_osd|h_osd_start*}
 set_false_path -from {*_osd|rot*}
 set_false_path -from {*_osd|dsp_width*}
+set_false_path -to {*_osd|half}
 
 set_false_path -to   {WIDTH[*] HFP[*] HS[*] HBP[*] HEIGHT[*] VFP[*] VS[*] VBP[*]}
 set_false_path -from {WIDTH[*] HFP[*] HS[*] HBP[*] HEIGHT[*] VFP[*] VS[*] VBP[*]}
@@ -55,5 +58,8 @@ set_false_path -to   {vol_att[*] scaler_flt[*] led_overtake[*] led_state[*]}
 set_false_path -from {vol_att[*] scaler_flt[*] led_overtake[*] led_state[*]}
 set_false_path -from {aflt_* acx* acy* areset*}
 
-set_multicycle_path -to {*_osd|osd_vcnt*} -setup 2
-set_multicycle_path -to {*_osd|osd_vcnt*} -hold 1
+set_false_path -from {ascal|o_ihsize*}
+set_false_path -from {ascal|o_ivsize*}
+set_false_path -from {ascal|o_format*}
+set_false_path -from {ascal|o_hdown}
+set_false_path -from {ascal|o_vdown}

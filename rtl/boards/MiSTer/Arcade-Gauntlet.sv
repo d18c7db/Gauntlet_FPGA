@@ -51,6 +51,7 @@ module emu
 	output        VGA_DE,    // = ~(VBlank | HBlank)
 	output        VGA_F1,
 	output [1:0]  VGA_SL,
+	output        VGA_SCALER, // Force VGA scaler
 
 	// Use framebuffer from DDRAM (USE_FB=1 in qsf)
 	// FB_FORMAT:
@@ -67,6 +68,15 @@ module emu
 	output [13:0] FB_STRIDE,
 	input         FB_VBL,
 	input         FB_LL,
+	output        FB_FORCE_BLANK,
+
+	// Palette control for 8bit modes.
+	// Ignored for other video modes.
+	output        FB_PAL_CLK,
+	output  [7:0] FB_PAL_ADDR,
+	output [23:0] FB_PAL_DOUT,
+	input  [23:0] FB_PAL_DIN,
+	output        FB_PAL_WR,
 
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
@@ -116,6 +126,8 @@ module emu
 	output  [6:0] USER_OUT
 );
 
+integer     slap_type = 104; // Slapstic type depends on game: 104=Gauntlet, 106=Gauntlet II, 107=2-Player Gauntlet, 118=Vindicators Part II
+
 wire        clk_7M;
 wire        clk_14M;
 wire        clk_sys;
@@ -149,8 +161,6 @@ wire [21:0] gamma_bus;
 wire        no_rotate = ~status[2] | direct_video | (slap_type == 118);
 wire        rotate_ccw = 0;
 
-integer     slap_type = 104; // Slapstic type depends on game: 104=Gauntlet, 106=Gauntlet II, 107=2-Player Gauntlet, 118=Vindicators Part II
-
 reg [7:0]   p1 = 8'h0;
 reg [7:0]   p2 = 8'h0;
 reg [7:0]   p3 = 8'h0;
@@ -163,10 +173,13 @@ reg         m_coin4   = 1'b0;
 wire        m_service = ~status[7];
 
 assign VGA_F1    = 0;
+assign VGA_SCALER= 0;
+
 assign USER_OUT  = '1;
 assign LED_USER  = ioctl_download;
 assign LED_POWER = 0;
 assign LED_DISK  = 0;
+assign {FB_PAL_CLK, FB_FORCE_BLANK, FB_PAL_ADDR, FB_PAL_DOUT, FB_PAL_WR} = '0;
 
 assign VIDEO_ARX = status[1] ? 8'd16 : status[2] ? 8'd3 : 8'd4;
 assign VIDEO_ARY = status[1] ? 8'd9  : status[2] ? 8'd4 : 8'd3;

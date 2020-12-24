@@ -18,9 +18,12 @@ lib/TG68K/TG68K_ALU.vhd
 lib/bitmap/bmp_pkg.vhd
 lib/bitmap/bmp_out.vhd
 
+gauntlet/ROMS.G1/PROM_4R.vhd
+gauntlet/ROMS.G2/PROM_4R.vhd
+gauntlet/ROMS.V2/PROM_4R.vhd
+
 gauntlet/ROMS.G1/EEP_14A.vhd
 gauntlet/ROMS.G1/PROM_3E.vhd
-gauntlet/ROMS.G1/PROM_4R.vhd
 gauntlet/ROMS.G1/PROM_5E.vhd
 gauntlet/ROMS.G1/PROM_5L.vhd
 gauntlet/ROMS.G1/PROM_7U.vhd

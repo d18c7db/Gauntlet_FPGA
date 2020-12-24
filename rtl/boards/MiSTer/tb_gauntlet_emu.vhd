@@ -175,6 +175,7 @@ begin
 		VGA_DE           => open,
 		VGA_F1           => open,
 		VGA_SL           => open,
+		VGA_SCALER       => open,
 
 		FB_EN            => open,
 		FB_FORMAT        => open,
@@ -184,6 +185,14 @@ begin
 		FB_STRIDE        => open,
 		FB_VBL           => '0',
 		FB_LL            => '0',
+		FB_FORCE_BLANK   => open,
+
+		FB_PAL_CLK  => open,
+		FB_PAL_ADDR => open,
+		FB_PAL_DOUT => open,
+		FB_PAL_DIN  => (others=>'0'),
+		FB_PAL_WR   => open,
+
 		LED_USER         => open,
 		LED_POWER        => open,
 		LED_DISK         => open,

@@ -114,7 +114,6 @@ architecture RTL of AUDIO is
 		sl_14P6,
 		sl_14P7,
 		sl_2H,
-		sl_1H_last,
 		sl_32V_last,
 		sl_B02,
 		sl_YAMRES,

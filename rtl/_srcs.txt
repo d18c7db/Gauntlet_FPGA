@@ -27,8 +27,6 @@ gauntlet/ROMS.G1/PROM_3E.vhd
 gauntlet/ROMS.G1/PROM_5E.vhd
 gauntlet/ROMS.G1/PROM_5L.vhd
 gauntlet/ROMS.G1/PROM_7U.vhd
-gauntlet/ROMS.G1/ROM_10A.vhd
-gauntlet/ROMS.G1/ROM_10B.vhd
 gauntlet/ROMS.G1/ROM_16R.vhd
 gauntlet/ROMS.G1/ROM_16S.vhd
 gauntlet/ROMS.G1/ROM_1A.vhd
@@ -44,6 +42,8 @@ gauntlet/ROMS.G1/ROM_7A.vhd
 gauntlet/ROMS.G1/ROM_7B.vhd
 gauntlet/ROMS.G1/ROM_9A.vhd
 gauntlet/ROMS.G1/ROM_9B.vhd
+gauntlet/ROMS.G1/ROM_10A.vhd
+gauntlet/ROMS.G1/ROM_10B.vhd
 
 gauntlet/RAM_2K8.vhd
 gauntlet/CRAMS.vhd

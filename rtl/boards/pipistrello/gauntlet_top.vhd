@@ -114,7 +114,6 @@ architecture RTL of GAUNTLET_TOP is
 		p3_coin, but_A, but_B, but_X, but_Y, but_Z, but_S,
 		p4_coin, p_stest,
 		int_reset,
-		sl_blank,
 		clk_7M,    gclk_7M,
 		clk_14M,   gclk_14M,
 		clk_28M,   gclk_28M, clk_28M_inv,
@@ -128,29 +127,34 @@ architecture RTL of GAUNTLET_TOP is
 		user_nBHE,
 
 		sl_cmpblk_n,
-		sl_cmpblk_n_out,
 		sl_dac_out_l,
 		sl_dac_out_r,
-		sl_hsync_n,
-		sl_vsync_n,
+		sl_HSync_n,
+		sl_VSync_n,
+		sl_HSync,
+		sl_VSync,
+		sl_blank,
 		sl_AP_EN,
 		sl_GP_EN,
-		sl_MP_EN,
-		sl_HSync,
-		sl_VSync
+		sl_MP_EN
 								: std_logic := '1';
 	-- video
 	signal
+		slv_4R_data,
 		slv_int,
 		slv_red,
 		slv_grn,
 		slv_blu,
+		slv_R,
+		slv_G,
+		slv_G,
 		slv_VideoI,
 		slv_VideoR,
 		slv_VideoG,
 		slv_VideoB
 								: std_logic_vector(3 downto 0) := (others => '0');
 	signal
+		slv_4R_addr,
 --		slv_ROM_10A,
 --		slv_ROM_10B,
 --		slv_ROM_9A,
@@ -163,6 +167,14 @@ architecture RTL of GAUNTLET_TOP is
 --		slv_ROM_5B,
 --		slv_ROM_3A,
 --		slv_ROM_3B,
+--		slv_ROM_1A,
+--		slv_ROM_1B,
+--		slv_ROM_2A,
+--		slv_ROM_2B,
+--		slv_ROM_1L,
+--		slv_ROM_1MN,
+--		slv_ROM_2L,
+--		slv_ROM_2MN,
 		joy_X,
 		joy_Y,
 		slv_ROM_16R,
@@ -195,6 +207,7 @@ begin
 
 	-- SRAM muxer, allows access to physical SRAM by either bootstrap or user
 	MEM_D		<= bs_DO		when bs_done = '0' and bs_nWE = '0' else (others => 'Z');	-- no need for user write
+
 	MEM_A		<= bs_AD		when bs_done = '0' else user_AD;
 	SRAM_nCS	<= bs_nCS	when bs_done = '0' else user_nCS;
 	MEM_nWE	<= bs_nWE	when bs_done = '0' else user_nWE;
@@ -287,7 +300,6 @@ begin
 	clk4_bufg : BUFG port map (O => gclk_dvi_n, I => clk_dvi_n);
 
 	u_gauntlet : entity work.FPGA_GAUNTLET
-	generic map (slap_type=>slap_type)
 	port map(
 		-- System Clock
 		I_CLK_14M	=> gclk_14M,
@@ -321,6 +333,7 @@ begin
 		I_SYS(2)		=> p2_coin,				-- COIN2
 		I_SYS(1)		=> p3_coin,				-- COIN3
 		I_SYS(0)		=> p4_coin,				-- COIN4-R
+		I_SLAP_TYPE	=>	slap_type,			-- slapstic type can be changed dynamically
 
 		O_LEDS		=> LEDS,
 
@@ -333,9 +346,11 @@ begin
 		O_VIDEO_R	=> slv_red,
 		O_VIDEO_G	=> slv_grn,
 		O_VIDEO_B	=> slv_blu,
-		O_HSYNC		=> sl_hsync_n,
-		O_VSYNC		=> sl_vsync_n,
-		O_CSYNC		=> sl_cmpblk_n,
+		O_HSYNC		=> sl_HSync_n,
+		O_VSYNC		=> sl_VSync_n,
+		O_CSYNC		=> open,
+		O_HBLANK		=> open,
+		O_VBLANK		=> open,
 
 		-- Access to external ROMs
 		-- GFX ROMs
@@ -349,11 +364,22 @@ begin
 		O_MP_EN		=> sl_MP_EN,  -- active high (AS)
 		O_MP_ADDR	=> slv_MP_ADDR,
 		I_MP_DATA	=> slv_MP_DATA,
+		-- MO control
+		O_4R_ADDR	=> slv_4R_addr,
+		I_4R_DATA	=> slv_4R_data,
 		-- Audio Program ROMs
 		O_AP_EN		=> sl_AP_EN,  -- active high (CPUENA)
 		O_AP_ADDR	=> slv_AP_ADDR,
 		I_AP_DATA	=> slv_AP_DATA
 	);
+
+	u_4R : entity work.PROM_4R port map (ADDR=>slv_4R_addr, DATA=>slv_4R_data);
+
+	-- convert input video from 16bit IRGB to 12 bit RGB
+	u_R : entity work.RGBI port map (ADDR(7 downto 4)=>slv_int, ADDR(3 downto 0)=>slv_red, DATA=>slv_R);
+	u_G : entity work.RGBI port map (ADDR(7 downto 4)=>slv_int, ADDR(3 downto 0)=>slv_grn, DATA=>slv_G);
+	u_B : entity work.RGBI port map (ADDR(7 downto 4)=>slv_int, ADDR(3 downto 0)=>slv_blu, DATA=>slv_B);
+
 	u_gc : entity work.gamecube
 	port map (
 		clk	=> gclk_28M,
@@ -416,13 +442,13 @@ begin
 		vpad			=>   0	-- create V black border
 	)
 	port map (
-		I_VIDEO(15 downto 12)=> slv_int,
-		I_VIDEO(11 downto 8) => slv_red,
-		I_VIDEO( 7 downto 4) => slv_grn,
-		I_VIDEO( 3 downto 0) => slv_blu,
+		I_VIDEO(15 downto 12)=> "0000",
+		I_VIDEO(11 downto 8) => slv_R,
+		I_VIDEO( 7 downto 4) => slv_G,
+		I_VIDEO( 3 downto 0) => slv_B,
 
-		I_HSYNC					=> sl_hsync_n,
-		I_VSYNC					=> sl_vsync_n,
+		I_HSYNC					=> sl_HSync_n,
+		I_VSYNC					=> sl_VSync_n,
 		--
 		O_VIDEO(15 downto 12)=> slv_VideoI,
 		O_VIDEO(11 downto 8) => slv_VideoR,
@@ -430,13 +456,13 @@ begin
 		O_VIDEO( 3 downto 0) => slv_VideoB,
 		O_HSYNC					=> sl_HSync,
 		O_VSYNC					=> sl_VSync,
-		O_CMPBLK_N				=> sl_cmpblk_n_out,
+		O_CMPBLK_N				=> sl_cmpblk_n,
 		--
 		CLK						=> clk_7M,
 		CLK_x2					=> gclk_14M
 	);
 
-	sl_blank <= not sl_cmpblk_n_out;
+	sl_blank <= not sl_cmpblk_n;
 
 	u_dvid : entity work.dvid
 	port map(
@@ -547,12 +573,12 @@ begin
 
 		case ram_state_ctr is
 			when 3 =>
-				user_AD <= "01" & slv_MP_ADDR;			-- set 68K program ROM address
+				user_AD <= "01" & slv_MP_ADDR;		-- set 68K program ROM address
 			when 0 =>
-				user_AD <= "000" & slv_GP_ADDR;			-- set graphics ROM address for lower data word
-				slv_MP_DATA <= MEM_D; 						-- get 68K program data word
+				user_AD <= "000" & slv_GP_ADDR;		-- set graphics ROM address for lower data word
+				slv_MP_DATA <= MEM_D; 					-- get 68K program data word
 			when 1 =>
-				user_AD <= "001" & slv_GP_ADDR;			-- set graphics ROM address for upper data word
+				user_AD <= "001" & slv_GP_ADDR;		-- set graphics ROM address for upper data word
 				slv_GP_DATA(15 downto  0) <= MEM_D;	-- get graphics ROM lower data word
 			when 2 =>
 				slv_GP_DATA(31 downto 16) <= MEM_D;	-- get graphics ROM upper data word
@@ -588,5 +614,19 @@ begin
 --		slv_ROM_6A  & slv_ROM_6B  when slv_MP_ADDR(18 downto 15)="0101" else -- /ROM2 50000
 --		slv_ROM_5A  & slv_ROM_5B  when slv_MP_ADDR(18 downto 15)="0110" else -- /ROM3 60000
 --		slv_ROM_3A  & slv_ROM_3B  when slv_MP_ADDR(18 downto 15)="0111" else -- /ROM4 70000
+--		(others=>'1');
+
+	-- VIDEO ROMS
+--	ROM_1A  : entity work.ROM_1A  port map ( CLK=>gclk_28M, DATA=>slv_ROM_1A , ADDR=>slv_GP_ADDR(14 downto 0) );
+--	ROM_1B  : entity work.ROM_1B  port map ( CLK=>gclk_28M, DATA=>slv_ROM_1B , ADDR=>slv_GP_ADDR(14 downto 0) );
+--	ROM_1L  : entity work.ROM_1L  port map ( CLK=>gclk_28M, DATA=>slv_ROM_1L , ADDR=>slv_GP_ADDR(14 downto 0) );
+--	ROM_1MN : entity work.ROM_1MN port map ( CLK=>gclk_28M, DATA=>slv_ROM_1MN, ADDR=>slv_GP_ADDR(14 downto 0) );
+--	ROM_2A  : entity work.ROM_2A  port map ( CLK=>gclk_28M, DATA=>slv_ROM_2A , ADDR=>slv_GP_ADDR(14 downto 0) );
+--	ROM_2B  : entity work.ROM_2B  port map ( CLK=>gclk_28M, DATA=>slv_ROM_2B , ADDR=>slv_GP_ADDR(14 downto 0) );
+--	ROM_2L  : entity work.ROM_2L  port map ( CLK=>gclk_28M, DATA=>slv_ROM_2L , ADDR=>slv_GP_ADDR(14 downto 0) );
+--	ROM_2MN : entity work.ROM_2MN port map ( CLK=>gclk_28M, DATA=>slv_ROM_2MN, ADDR=>slv_GP_ADDR(14 downto 0) );
+--	slv_GP_DATA <=
+--		slv_ROM_2L  & slv_ROM_2A & slv_ROM_1L  & slv_ROM_1A when slv_GP_ADDR(17 downto 15)="000" else
+--		slv_ROM_2MN & slv_ROM_2B & slv_ROM_1MN & slv_ROM_1B when slv_GP_ADDR(17 downto 15)="001" else
 --		(others=>'1');
 end RTL;

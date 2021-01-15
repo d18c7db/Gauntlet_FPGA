@@ -447,10 +447,10 @@ begin
 	p_5J_5F_4F : process
 	begin
 		wait until rising_edge(I_MCKR);
-		if sl_H03 = '1' and sl_4H = '0' then
-			if sl_VSYNCn = '0' and sl_PFHSTn = '0' then
+		if sl_H03 = '1' and sl_4H = '0' and sl_PFHSTn = '0' then
+			if sl_VSYNCn = '0' then
 				slv_PFV	<= slv_VRD( 1 downto 0) & '0' & slv_VRD(15 downto 7);
-			elsif sl_PFHSTn = '0' and sl_VBLANKn = '1' then
+			elsif sl_VBLANKn = '1' then
 				slv_PFV	<= slv_PFV + 1;
 			end if;
 		end if;

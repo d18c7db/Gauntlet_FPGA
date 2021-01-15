@@ -113,10 +113,7 @@ architecture RTL of VGA_SCANCONV is
 	attribute ram_style of DPRAM : signal is "block";
 
 begin
-	-- convert input video from 16bit IRGB to 12 bit RGB
-	u_R : entity work.RGBI port map (ADDR(7 downto 4)=>I_VIDEO(15 downto 12), ADDR(3 downto 0)=>I_VIDEO(11 downto 8), DATA=>ivideo(11 downto 8));
-	u_G : entity work.RGBI port map (ADDR(7 downto 4)=>I_VIDEO(15 downto 12), ADDR(3 downto 0)=>I_VIDEO( 7 downto 4), DATA=>ivideo( 7 downto 4));
-	u_B : entity work.RGBI port map (ADDR(7 downto 4)=>I_VIDEO(15 downto 12), ADDR(3 downto 0)=>I_VIDEO( 3 downto 0), DATA=>ivideo( 3 downto 0));
+	ivideo <= I_VIDEO;
 
 	-- simple dual port RAM (read port)
 	p_SDP_RAM_RD : process

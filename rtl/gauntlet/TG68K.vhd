@@ -103,29 +103,31 @@ begin
 			clk_ena <= '0';
 			as_ena  <= '1';
 		else
-			clk_ena <= '0';
-			as_ena  <= '1';
-			case phase is
-				when "00" =>
-					if busstate/="01" then
-						phase <= "01";
+			if clkena_ext = '1' then
+				clk_ena <= '0';
+				as_ena  <= '1';
+				case phase is
+					when "00" =>
+						if busstate/="01" then
+							phase <= "01";
+							as_ena <= '0';
+						end if;
+					when "01" =>
+						phase <= "10";
 						as_ena <= '0';
-					end if;
-				when "01" =>
-					phase <= "10";
-					as_ena <= '0';
-				when "10" =>
-					if DTACK='0' or VPA='0' or skipFetch = '1' then
-						phase <= "11";
-						data_latch <= DI;
-					else
-						as_ena  <= '0';
-					end if;
-				when "11" =>
-					phase <= "00";
-					clk_ena <= '1';
-				when others => null;
-			end case;
+					when "10" =>
+						if DTACK='0' or VPA='0' or skipFetch = '1' then
+							phase <= "11";
+							data_latch <= DI;
+						else
+							as_ena  <= '0';
+						end if;
+					when "11" =>
+						phase <= "00";
+						clk_ena <= '1';
+					when others => null;
+				end case;
+			end if;
 		end if;
 	end process;
 end;

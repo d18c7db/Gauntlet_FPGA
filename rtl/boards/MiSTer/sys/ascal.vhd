@@ -471,6 +471,7 @@ ARCHITECTURE rtl OF ascal IS
   SIGNAL o_off : arr_uint4(0 TO 2);
   SIGNAL o_bibu : std_logic :='0';
   SIGNAL o_dcptv : arr_uint12(1 TO 8);
+  ATTRIBUTE ramstyle OF o_dcptv : SIGNAL IS "logic";
   SIGNAL o_dcpt : uint12;
   SIGNAL o_hpixs,o_hpix0,o_hpix1,o_hpix2,o_hpix3 : type_pix;
   SIGNAL o_hpixq,o_vpixq,o_vpixq1 : arr_pix(0 TO 3);
@@ -937,8 +938,8 @@ ARCHITECTURE rtl OF ascal IS
 
   SIGNAL o_h_poly : arr_uv36(0 TO 2**FRAC-1):=init_poly;
   SIGNAL o_v_poly : arr_uv36(0 TO 2**FRAC-1):=init_poly;
-  ATTRIBUTE ramstyle OF o_h_poly : SIGNAL IS "no_rw_check";
-  ATTRIBUTE ramstyle OF o_v_poly : SIGNAL IS "no_rw_check";
+  ATTRIBUTE ramstyle OF o_h_poly : SIGNAL IS "no_rw_check,logic";
+  ATTRIBUTE ramstyle OF o_v_poly : SIGNAL IS "no_rw_check,logic";
   SIGNAL o_h_poly_a,o_v_poly_a : integer RANGE 0 TO 2**FRAC-1;
   SIGNAL o_h_poly_dr,o_h_poly_dr2,o_v_poly_dr,o_v_poly_dr2 : unsigned(35 DOWNTO 0);
   SIGNAL o_h_poly_pix,o_v_poly_pix : type_pix;

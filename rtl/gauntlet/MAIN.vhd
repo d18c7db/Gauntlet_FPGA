@@ -563,10 +563,10 @@ begin
 
 	-- CPU input data bus mux
 	slv_cpu_di <=
-										  I_MP_DATA when sl_R_Wn='1' and sl_13L_Y0 ='0' else -- ROMs 10A/B, 9A/B, 7A/B
-											  I_DATA when sl_R_Wn='1' and sl_VBUSn  ='0' else -- 9E, 10E VID BUS
-		  slv_11A_data & slv_11B_data when sl_R_Wn='1' and sl_13M_Y0 ='0' else -- RAMs 11A/B
-		  slv_12A_data & slv_12B_data when sl_R_Wn='1' and sl_13M_Y1 ='0' else -- RAMs 12A/B
+									  I_MP_DATA when sl_R_Wn='1' and sl_13L_Y0 ='0' else -- ROMs 10A/B, 9A/B, 7A/B
+										  I_DATA when sl_R_Wn='1' and sl_VBUSn  ='0' else -- 9E, 10E VID BUS
+			  slv_11A_data & slv_11B_data when sl_R_Wn='1' and sl_13M_Y0 ='0' else -- RAMs 11A/B
+			  slv_12A_data & slv_12B_data when sl_R_Wn='1' and sl_13M_Y1 ='0' else -- RAMs 12A/B
 						x"00" & slv_EEP_14A  when sl_R_Wn='1' and sl_EEP_CEn='0' and sl_EEP_OEn='0' else -- EEPROM
 						x"00" & slv_SBDI     when                 sl_SNDRDn ='0' else -- 14J sound latch
 						x"00" & I_P1         when                 sl_PL1n   ='0' else -- 14AB

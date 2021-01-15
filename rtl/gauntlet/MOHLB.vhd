@@ -59,27 +59,27 @@ begin
 	-- Line Buffer A
 	u_LBA : entity work.LINEBUF
 	port map (
-		I_MCKR    =>	I_MCKR,
+		I_MCKR    => I_MCKR,
 		I_BUFCLRn => I_BUFCLRn,
-		I_LDn     =>	I_LDABn,
-		I_FLBn    =>	sl_FLBAn,
-		I_CSn     =>	sl_2_3X8,
-		I_HPOS    =>	I_HPOS,
-		I_MOSR    =>	I_MOSR,
-		O_MPX     =>	slv_MPXA
+		I_LDn     => I_LDABn,
+		I_FLBn    => sl_FLBAn,
+		I_CSn     => sl_2_3X8,
+		I_HPOS    => I_HPOS,
+		I_MOSR    => I_MOSR,
+		O_MPX     => slv_MPXA
 	);
 
 	-- Line Buffer B
 	u_LBB : entity work.LINEBUF
 	port map (
-		I_MCKR    =>	I_MCKR,
+		I_MCKR    => I_MCKR,
 		I_BUFCLRn => I_BUFCLRn,
-		I_LDn     =>	I_LDABn,
-		I_FLBn    =>	sl_FLBBn,
-		I_CSn     =>	sl_2_3X8,
-		I_HPOS    =>	I_HPOS,
-		I_MOSR    =>	I_MOSR,
-		O_MPX     =>	slv_MPXB
+		I_LDn     => I_LDABn,
+		I_FLBn    => sl_FLBBn,
+		I_CSn     => sl_2_3X8,
+		I_HPOS    => I_HPOS,
+		I_MOSR    => I_MOSR,
+		O_MPX     => slv_MPXB
 	);
 
 	-- MPX bus mux

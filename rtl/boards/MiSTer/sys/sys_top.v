@@ -52,7 +52,7 @@ module sys_top
 	output [23:0] HDMI_TX_D,
 	output        HDMI_TX_HS,
 	output        HDMI_TX_VS,
-	
+
 	input         HDMI_TX_INT,
 
 	//////////// SDR ///////////

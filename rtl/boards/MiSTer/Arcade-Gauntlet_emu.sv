@@ -219,6 +219,7 @@ pll pll
 );
 
 always @(posedge clk_sys) if (ioctl_wr && (ioctl_index==254) && !ioctl_addr[24:3]) sw[ioctl_addr[2:0]] <= ioctl_dout;
+always @(posedge clk_sys) if (ioctl_wr && (ioctl_index==1)) slap_type <= ioctl_dout;
 
 wire pressed = ps2_key[9];
 always @(posedge clk_sys) begin
@@ -330,7 +331,7 @@ always @(posedge clk_vid) begin
 	ce_vid <= !div;
 end
 
-//arcade_video #(.WIDTH(262), .DW(12)) arcade_video
+//arcade_video #(.WIDTH(320), .DW(12)) arcade_video
 //(
 //	.*,
 //
@@ -401,8 +402,6 @@ hps_io_emu #(.STRLEN($size(CONF_STR)>>3)) hps_io
 
 	wire [ 7:0] r4_addr;
 	wire [ 3:0] r4_data, r4_data_G1, r4_data_G2, r4_data_V2;
-
-	always @(posedge clk_sys) if (ioctl_wr && (ioctl_index==1)) slap_type <= ioctl_dout;
 
 	// ioctl_addr 000000..01FFFF = video ROMs 2L  2A  1L  1A  (4*32KB)
 	// ioctl_addr 020000..03FFFF = video ROMs 2MN 2B  1MN 1B  (4*32KB)

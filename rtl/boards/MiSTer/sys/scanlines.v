@@ -55,7 +55,7 @@ always @(*) begin
 end
 
 always @(posedge clk) begin
-	reg [23:0] dout1, dout2 /* synthesis ramstyle = "logic" */;
+	reg [23:0] dout1, dout2;
 	reg de1,de2,vs1,vs2,hs1,hs2;
 
 	dout   <= dout2; dout2 <= dout1; dout1 <= d;     

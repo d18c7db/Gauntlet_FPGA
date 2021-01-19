@@ -19,6 +19,10 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 //============================================================================
+`define USE_FB=0
+`define USE_DDRAM=0
+`define USE_SDRAM=0
+`define DUAL_SDRAM=0
 
 module emu
 (
@@ -40,8 +44,8 @@ module emu
 	output        CE_PIXEL,
 
 	//Video aspect ratio for HDMI. Most retro systems have ratio 4:3.
-	output  [7:0] VIDEO_ARX,
-	output  [7:0] VIDEO_ARY,
+	output [11:0] VIDEO_ARX,
+	output [11:0] VIDEO_ARY,
 
 	output  [7:0] VGA_R,
 	output  [7:0] VGA_G,
@@ -53,13 +57,14 @@ module emu
 	output [1:0]  VGA_SL,
 	output        VGA_SCALER, // Force VGA scaler
 
-	// Use framebuffer from DDRAM (USE_FB=1 in qsf)
+`ifdef USE_FB
+	// Use framebuffer in DDRAM (USE_FB=1 in qsf)
 	// FB_FORMAT:
 	//    [2:0] : 011=8bpp(palette) 100=16bpp 101=24bpp 110=32bpp
 	//    [3]   : 0=16bits 565 1=16bits 1555
 	//    [4]   : 0=RGB  1=BGR (for 16/24/32 modes)
 	//
-	// FB_STRIDE either 0 (rounded to 256 bytes) or multiple of 16 bytes.
+	// FB_STRIDE either 0 (rounded to 256 bytes) or multiple of pixel size (in bytes)
 	output        FB_EN,
 	output  [4:0] FB_FORMAT,
 	output [11:0] FB_WIDTH,
@@ -77,6 +82,7 @@ module emu
 	output [23:0] FB_PAL_DOUT,
 	input  [23:0] FB_PAL_DIN,
 	output        FB_PAL_WR,
+`endif
 
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
@@ -86,11 +92,28 @@ module emu
 	output  [1:0] LED_POWER,
 	output  [1:0] LED_DISK,
 
+	// I/O board button press simulation (active high)
+	// b[1]: user button
+	// b[0]: osd button
+	output  [1:0] BUTTONS,
+
 	input         CLK_AUDIO, // 24.576 MHz
 	output [15:0] AUDIO_L,
 	output [15:0] AUDIO_R,
-	output        AUDIO_S,    // 1 - signed audio samples, 0 - unsigned
+	output        AUDIO_S,   // 1 - signed audio samples, 0 - unsigned
+	output  [1:0] AUDIO_MIX, // 0 - no mix, 1 - 25%, 2 - 50%, 3 - 100% (mono)
 
+	//ADC
+	inout   [3:0] ADC_BUS,
+
+	//SD-SPI
+	output        SD_SCK,
+	output        SD_MOSI,
+	input         SD_MISO,
+	output        SD_CS,
+	input         SD_CD,
+
+`ifdef USE_DDRAM
 	//High latency DDR3 RAM interface
 	//Use for non-critical time purposes
 	output        DDRAM_CLK,
@@ -103,8 +126,10 @@ module emu
 	output [63:0] DDRAM_DIN,
 	output  [7:0] DDRAM_BE,
 	output        DDRAM_WE,
+`endif
 
-	//SDRAM interface
+`ifdef USE_SDRAM
+	//SDRAM interface with lower latency
 	output        SDRAM_CLK,
 	output        SDRAM_CKE,
 	output [12:0] SDRAM_A,
@@ -116,6 +141,27 @@ module emu
 	output        SDRAM_nCAS,
 	output        SDRAM_nRAS,
 	output        SDRAM_nWE,
+`endif
+
+`ifdef DUAL_SDRAM
+	//Secondary SDRAM
+	input         SDRAM2_EN,
+	output        SDRAM2_CLK,
+	output [12:0] SDRAM2_A,
+	output  [1:0] SDRAM2_BA,
+	inout  [15:0] SDRAM2_DQ,
+	output        SDRAM2_nCS,
+	output        SDRAM2_nCAS,
+	output        SDRAM2_nRAS,
+	output        SDRAM2_nWE,
+`endif
+
+	input         UART_CTS,
+	output        UART_RTS,
+	input         UART_RXD,
+	output        UART_TXD,
+	output        UART_DTR,
+	input         UART_DSR,
 
 	// Open-drain User port.
 	// 0 - D+/RX
@@ -123,8 +169,24 @@ module emu
 	// 2..6 - USR2..USR6
 	// Set USER_OUT to 1 to read from USER_IN.
 	input   [6:0] USER_IN,
-	output  [6:0] USER_OUT
+	output  [6:0] USER_OUT,
+
+	input         OSD_STATUS
 );
+
+///////// Default values for ports not used in this core /////////
+
+assign ADC_BUS  = 'Z;
+assign USER_OUT = '1;
+assign {UART_RTS, UART_TXD, UART_DTR} = 0;
+assign {SD_SCK, SD_MOSI, SD_CS} = 'Z;
+//assign {SDRAM_DQ, SDRAM_A, SDRAM_BA, SDRAM_CLK, SDRAM_CKE, SDRAM_DQML, SDRAM_DQMH, SDRAM_nWE, SDRAM_nCAS, SDRAM_nRAS, SDRAM_nCS} = 'Z;
+assign {DDRAM_CLK, DDRAM_BURSTCNT, DDRAM_ADDR, DDRAM_DIN, DDRAM_BE, DDRAM_RD, DDRAM_WE} = 'Z;  
+
+//assign VGA_SL = 0;
+
+assign VGA_F1 = 0;
+assign VGA_SCALER = 0;
 
 integer     slap_type = 104; // Slapstic type depends on game: 104=Gauntlet, 106=Gauntlet II, 107=2-Player Gauntlet, 118=Vindicators Part II
 
@@ -132,8 +194,8 @@ wire        clk_7M;
 wire        clk_14M;
 wire        clk_sys;
 wire        clk_vid;
-reg         ce_vid;
-wire        locked;
+reg         ce_pix;
+wire        pll_locked;
 wire        hblank, vblank;
 wire        hs, vs;
 reg  [ 7:0] sw[8];
@@ -150,6 +212,16 @@ wire [ 7:0] ioctl_index;
 wire [24:0] ioctl_addr;
 wire [ 7:0] ioctl_dout;
 
+assign AUDIO_S = 1'b1; // signed samples
+assign AUDIO_L = aud_l;
+assign AUDIO_R = aud_r;
+assign AUDIO_MIX = 0;
+
+assign LED_USER  = ioctl_download;
+assign LED_DISK = 0;
+assign LED_POWER = 0;
+assign BUTTONS = 0;
+
 wire [15:0] joy0;
 wire [15:0] joy1;
 wire [15:0] joy2;
@@ -158,8 +230,7 @@ wire [15:0] joy3;
 wire [10:0] ps2_key;
 
 wire [21:0] gamma_bus;
-wire        no_rotate = ~status[2] | direct_video | (slap_type == 118);
-wire        rotate_ccw = 0;
+wire reset = RESET | status[0] | buttons[1]| ioctl_download;
 
 reg [7:0]   p1 = 8'h0;
 reg [7:0]   p2 = 8'h0;
@@ -172,28 +243,18 @@ reg         m_coin3   = 1'b0;
 reg         m_coin4   = 1'b0;
 wire        m_service = ~status[7];
 
-assign VGA_F1    = 0;
-assign VGA_SCALER= 0;
-
-assign USER_OUT  = '1;
-assign LED_USER  = ioctl_download;
-assign LED_POWER = 0;
-assign LED_DISK  = 0;
 assign {FB_PAL_CLK, FB_FORCE_BLANK, FB_PAL_ADDR, FB_PAL_DOUT, FB_PAL_WR} = '0;
 
-assign VIDEO_ARX = status[1] ? 8'd16 : status[2] ? 8'd3 : 8'd4;
-assign VIDEO_ARY = status[1] ? 8'd9  : status[2] ? 8'd4 : 8'd3;
+wire [1:0] ar = status[9:8];
 
-assign AUDIO_L = aud_l;
-assign AUDIO_R = aud_r;
-assign AUDIO_S = 1'b1; // signed samples
+assign VIDEO_ARX = (!ar) ? 12'd4 : (ar - 1'd1);
+assign VIDEO_ARY = (!ar) ? 12'd3 : 12'd0;
 
 `include "build_id.v"
 localparam CONF_STR = {
 	"A.GAUNTLET;;",
 	"-;",
-	"H0O1,Aspect Ratio,Original,Wide;",
-	"H1H0O2,Orientation,Vert,Horz;",
+	"O89,Aspect ratio,Original,Full Screen,[ARC1],[ARC2];",
 	"O35,Scandoubler Fx,None,HQ2x,CRT 25%,CRT 50%,CRT 75%;",
 	"-;",
 	"DIP;",
@@ -205,7 +266,7 @@ localparam CONF_STR = {
 	"V,v",`BUILD_DATE
 };
 
-///////////////////////   CLOCKS   ///////////////////////////////
+////////////////////   CLOCKS   ///////////////////
 pll pll
 (
 	.refclk(CLK_50M),
@@ -215,7 +276,7 @@ pll pll
 	.outclk_2(clk_vid),   // 57.27272 MHz
 	.outclk_3(clk_sys),   // 93.06817 MHz
 	.outclk_4(SDRAM_CLK), // 93.06817 MHz
-	.locked(locked)
+	.locked(pll_locked)
 );
 
 always @(posedge clk_sys) if (ioctl_wr && (ioctl_index==254) && !ioctl_addr[24:3]) sw[ioctl_addr[2:0]] <= ioctl_dout;
@@ -328,15 +389,16 @@ always @(posedge clk_vid) begin
 	reg [2:0] div;
 
 	div <= div + 1'd1;
-	ce_vid <= !div;
+	ce_pix <= !div;
 end
 
+//screen_rotate screen_rotate (.*);
 //arcade_video #(.WIDTH(320), .DW(12)) arcade_video
 //(
 //	.*,
 //
 //	.clk_video(clk_vid),
-//	.ce_pix(ce_vid),
+//	.ce_pix(ce_pix),
 //
 //	.RGB_in({r,g,b}),
 //	.HBlank(~hblank),
@@ -347,7 +409,6 @@ end
 //	.fx(status[5:3])
 //);
 //
-//screen_rotate screen_rotate (.*);
 hps_io_emu #(.STRLEN($size(CONF_STR)>>3)) hps_io
 (
 	.clk_sys(clk_sys),
@@ -363,10 +424,10 @@ hps_io_emu #(.STRLEN($size(CONF_STR)>>3)) hps_io
 	.status_menumask({(slap_type == 118),direct_video}),
 	.direct_video(direct_video),
 
+	.ioctl_download(ioctl_download),
+	.ioctl_wr(ioctl_wr),
 	.ioctl_addr(ioctl_addr),
 	.ioctl_dout(ioctl_dout),
-	.ioctl_wr(ioctl_wr),
-	.ioctl_download(ioctl_download),
 	.ioctl_index(ioctl_index),
 	.ioctl_wait(ioctl_wait),
 
@@ -471,11 +532,11 @@ hps_io_emu #(.STRLEN($size(CONF_STR)>>3)) hps_io
 	end
 
 	assign sdram_addr = ioctl_download?ioctl_addr[24:2]:{5'd0,gp_addr};
-	assign ioctl_wait = ~(locked && sdram_ready);
+	assign ioctl_wait = ~(pll_locked && sdram_ready);
 
 	sdram #(.tCK_ns(1000/93.06817)) sdram
 	(
-		.I_RST(~locked),
+		.I_RST(~pll_locked),
 		.I_CLK(clk_sys),
 
 		// controller interface
@@ -563,7 +624,7 @@ FPGA_GAUNTLET gauntlet
 	.I_CLK_14M(clk_14M),
 	.I_CLK_7M(clk_7M),
 
-	.I_RESET(RESET | status[0] | buttons[1] | ioctl_download),
+	.I_RESET(reset),
 
 	.I_P1(I_P1),
 	.I_P2(I_P2),

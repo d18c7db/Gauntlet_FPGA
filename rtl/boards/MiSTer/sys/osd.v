@@ -258,7 +258,7 @@ reg [23:0] rdout;
 assign dout = rdout;
 
 always @(posedge clk_video) begin
-	reg [23:0] ordout1, nrdout1, rdout2, rdout3 /* synthesis ramstyle = "logic" */;
+	reg [23:0] ordout1, nrdout1, rdout2, rdout3;
 	reg de1,de2,de3;
 	reg osd_mux;
 	reg vs1,vs2,vs3;

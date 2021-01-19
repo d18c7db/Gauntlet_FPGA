@@ -34,7 +34,7 @@ entity SYNGEN is
 		O_PFHSTn  : out std_logic;
 		O_BUFCLRn : out std_logic;
 
-		O_HBLKn				: out	std_logic;	-- HBLANK
+		O_HBLKn   : out std_logic;	-- HBLANK
 		O_VBLKn   : out std_logic; -- VBLANK
 		O_VSCK    : out std_logic;
 		O_CK0n    : out std_logic; -- pin  4 RCLOCK

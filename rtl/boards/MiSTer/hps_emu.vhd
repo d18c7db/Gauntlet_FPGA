@@ -11,7 +11,7 @@ port (
 	EXT_BUS                  : inout std_logic_vector(35 downto 0);
 	gamma_bus                : inout std_logic_vector(21 downto 0);
 
-	conf_str                 : in  std_logic_vector(1903 downto 0);
+	conf_str                 : in  std_logic_vector((STRLEN*8)-1 downto 0);
 	forced_scandoubler       : out std_logic;
 
 	buttons                  : out std_logic_vector( 1 downto 0);

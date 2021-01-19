@@ -187,19 +187,30 @@ begin
 		FB_LL            => '0',
 		FB_FORCE_BLANK   => open,
 
-		FB_PAL_CLK  => open,
-		FB_PAL_ADDR => open,
-		FB_PAL_DOUT => open,
-		FB_PAL_DIN  => (others=>'0'),
-		FB_PAL_WR   => open,
+		FB_PAL_CLK       => open,
+		FB_PAL_ADDR      => open,
+		FB_PAL_DOUT      => open,
+		FB_PAL_DIN       => (others=>'0'),
+		FB_PAL_WR        => open,
 
 		LED_USER         => open,
 		LED_POWER        => open,
 		LED_DISK         => open,
+		BUTTONS          => open,
+
 		CLK_AUDIO        => '0',
 		AUDIO_L          => open,
 		AUDIO_R          => open,
 		AUDIO_S          => open,
+		AUDIO_MIX        => open,
+
+		ADC_BUS          => open,
+
+		SD_SCK           =>open,
+		SD_MOSI          =>open,
+		SD_MISO          =>'1',
+		SD_CS            =>open,
+		SD_CD            =>'1',
 
 		DDRAM_CLK        => open,
 		DDRAM_BUSY       => '1',
@@ -224,8 +235,18 @@ begin
 		SDRAM_nRAS       => SDRAM_nRAS,
 		SDRAM_nWE        => SDRAM_nWE,
 
+		SDRAM2_EN        => '0',
+
+		UART_CTS         => '1',
+		UART_RTS         => open,
+		UART_RXD         => '1',
+		UART_TXD         => open,
+		UART_DTR         => open,
+		UART_DSR         => '1',
+
 		USER_IN          => (others=>'0'),
-		USER_OUT         => open
+		USER_OUT         => open,
+		OSD_STATUS       => '1'
 	);
 
 	p_clk50 : process

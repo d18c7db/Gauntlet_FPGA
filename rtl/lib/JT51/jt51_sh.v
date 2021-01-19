@@ -18,7 +18,6 @@
     Date: 27-10-2016
     */
 
-`timescale 1ns / 1ps
 
 module jt51_sh #(parameter width=5, stages=32, rstval=1'b0 ) (
     input                           rst,
@@ -28,7 +27,7 @@ module jt51_sh #(parameter width=5, stages=32, rstval=1'b0 ) (
     output      [width-1:0]         drop
 );
 
-reg [stages-1:0] bits[width-1:0] /* synthesis ramstyle = "MLAB" */;
+reg [stages-1:0] bits[width-1:0];
 
 genvar i;
 generate

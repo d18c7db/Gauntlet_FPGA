@@ -18,7 +18,6 @@
     Version: 1.0 Date: 27-10-2016
     */
 
-`timescale 1ns / 1ps
 
 module jt51_acc(
     input                   rst,
@@ -36,8 +35,8 @@ module jt51_acc(
     input   signed  [10:0]  noise,
     output  signed  [15:0]  left,
     output  signed  [15:0]  right,
-    output  reg signed  [15:0]  xleft=0,  // exact outputs
-    output  reg signed  [15:0]  xright=0
+    output  reg signed  [15:0]  xleft,  // exact outputs
+    output  reg signed  [15:0]  xright    
 );
 
 reg signed [13:0] op_val;

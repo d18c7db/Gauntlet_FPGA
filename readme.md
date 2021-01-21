@@ -22,6 +22,8 @@ The implementation is functional right now, can coin up and start game, known pr
 * Game EPROM is implemented as RAM so game settings are lost on power off.
 
 ## MiSTer Install
+On a [MiSTer](https://github.com/MiSTer-devel/Main_MiSTer/wiki) FPGA board, a [SDRAM expansion](https://github.com/MiSTer-devel/Main_MiSTer/wiki/SDRAM-Board) daughterboard is needed to play Gauntlet II and Vindicators part II.
+
 This repository follows the standard folder structure for distributing MiSTer files.
 
 ROMs are not included so in order to use this arcade, you need to provide the correct game ROM.  

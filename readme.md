@@ -22,7 +22,7 @@ The implementation is functional right now, can coin up and start game, known pr
 * Game EPROM is implemented as RAM so game settings are lost on power off.
 
 ## MiSTer Install
-On a [MiSTer](https://github.com/MiSTer-devel/Main_MiSTer/wiki) FPGA board, a [SDRAM expansion](https://github.com/MiSTer-devel/Main_MiSTer/wiki/SDRAM-Board) daughterboard is needed to play Gauntlet II and Vindicators part II.
+The core <b>must have</b> a [SDRAM expansion](https://github.com/MiSTer-devel/Main_MiSTer/wiki/SDRAM-Board) daughterboard in order to play correctly on a [MiSTer](https://github.com/MiSTer-devel/Main_MiSTer/wiki) FPGA board. This applies to all three games namely Gauntlet, Gauntlet II and Vindicators part II. Without the SDRAM, the core will still run and display some text but will be missing the sprites and background textures (graphics).
 
 This repository follows the standard folder structure for distributing MiSTer files.
 

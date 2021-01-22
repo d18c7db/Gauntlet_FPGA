@@ -28,6 +28,8 @@ This repository follows the standard folder structure for distributing MiSTer fi
 
 ROMs are not included so in order to use this arcade, you need to provide the correct game ROM.  
 
+*WARNING:* In order to play Vindicators part 2, you must run the python script "descramble_2J.py 136059-1184.2j 136059-1184.des.2j" then copy the binary output file 136059-1184.des.2j into the zip file with the original ROMs.  
+
 To simplify the process .mra files are provided in the releases folder, that specify the required ROMs with checksums. The .zip filename refers to the corresponding ROM file of the MAME project.
 
 Please refer to https://github.com/MiSTer-devel/Main_MiSTer/wiki/Arcade-Roms for information on how to setup and use the environment.
@@ -40,7 +42,7 @@ Quickreference for folders and file placement:
 
 Gauntlet currently supports up to 4 joysticks for 4 players. (up, down, left, right, fire, start/magic, coin) MAME keys layout is available for player 1 (up, down left, right, ctrl, alt, 5) and player 2 (R, F, D, G, A, S, 6) for player 3 and 4, only coins keys (7, 8) are mapped.  
 
-The tank controls used in Vindicators are mapped to one joystick. For Vindicators keyboard is supported, 5,6 are coin, 1,2 start game, QWERASDF and YUIOHJKL controls for player 1 and 2 respectively.  
+The tank controls used in Vindicators are mapped to one joystick. For Vindicators keyboard is supported, 5,6 are coin, 1,2 start game, QWERASDF and YUIOHJKL controls for player 1 and 2 respectively. Joysticks are connected but may need remapping.  
 
 ## Building
 

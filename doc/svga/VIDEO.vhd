@@ -611,21 +611,49 @@ begin
 
 	slv_VRA <= slv_VRAM when sl_NXLDL = '0' else "111111" & slv_VRAM( 5 downto 0); -- pullups RN7
 
--- Offset Alphanumerics and prevent duplicate display of Alphas by restricting to certain ranges
+-- Offset Alphanumerics "VVVVVVHHHHHH" H+1 = 8 pix left, V+1 + 2 pixel up
+-- slv_AL_offset forms address lines MA12..MA1 with MA14,MA13=10 addressing alphanumeric range
+-- MA12 must be set so final address is:
+-- A23 12 = 1001 0000 0101
+-- A11-7 = V(7..3)
+-- A6-1  = H(8..3)
+-- A0 = upper/lower byte in word
+
+-- ALPHA RAM range 905000-905F6E (lines 30 by 42 chars)
+
+-- word at 905000 first line first char,        000 00000 000000 V=0  H=0
+-- word at 905052 first line last visible char, 052 00000 101001 V=0  H=41
+
+-- word at 905080 second line first char        080 00001 000000 V=1  H=0
+-- word at 9050D2 second line last visible char 0D2 00001 101001 V=1  H=41
+
+-- word at 905E80 last line first char          E80 11101 000000 V=29 H=0
+-- word at 905ED2 last line last visible char   ED2 11101 101001 V=29 H=41
+
+-- playfield text 0-29 player stats 30-41
+-- H +1 moves right 8 pixels
+-- V +1 moves    up 8 pixels
+
 	slv_AL_offset <=
-	('1' & slv_V(7 downto 3) & slv_H(8 downto 3)) + "000000011100" -- "VVVVVVHHHHHH" +1 = 8 pix left
-	when to_integer(unsigned(slv_H)) > 296 and to_integer(unsigned(slv_V)) < 240 else -- normal text
-	x"81D" when to_integer(unsigned(slv_H)) > 522 and to_integer(unsigned(slv_V)) > 239 else
-	x"F80"; -- F80 points to 905F00 = blank
+	-- display playfield text when H reaches 280 and offset text by -35*8 = -280
+	('1' & slv_V(7 downto 3) & (slv_H(8 downto 3) - "100011") )
+	when to_integer(unsigned(slv_V)) < 240 and to_integer(unsigned(slv_H)) > 279 else
+	-- old playfield H pixels 232+104=336 new playfield 512+104=616 offset 616-336=280
+	-- when outside the playfield coordinates, 81D word pointer to 904000+81D*2 = address 90503A = black
+	x"81D"
+	when to_integer(unsigned(slv_V)) > 239 and to_integer(unsigned(slv_H)) > 511 else
+
+	-- when inside the playfield coordinates, F80 word pointer to 904000+F80*2 = address 905F00 = transparent
+	x"F80";
 
 	-- 8C, 8E, 8D selectors create video RAM address high
 	-- 7L, 8L, 8K selectors create video RAM address low
 	slv_VRAM <=
-		slv_MA(12 downto 1)									when slv_VAS = "11" else	-- c3
---		'1' & slv_V(7 downto 3) & slv_H(8 downto 3)	when slv_VAS = "10" else	-- c2
-		slv_AL_offset											when slv_VAS = "10" else	-- c2
-		sl_MC1 & sl_MC0 & slv_LINK(9 downto  0)		when slv_VAS = "01" else	-- c1
-		slv_PFH(8 downto 3) & slv_PFV(8 downto 3)		when slv_VAS = "00";			-- c0
+		slv_MA(12 downto 1)									when slv_VAS = "11" else	-- c3 CPU
+--		'1' & slv_V(7 downto 3) & slv_H(8 downto 3)	when slv_VAS = "10" else	-- c2 AL
+		slv_AL_offset											when slv_VAS = "10" else	-- c2 AL
+		sl_MC1 & sl_MC0 & slv_LINK(9 downto 0)			when slv_VAS = "01" else	-- c1 MO
+		slv_PFH(8 downto 3) & slv_PFV(8 downto 3)		when slv_VAS = "00";			-- c0 PF
 
 	-- 7S latch
 	p_7S : process
@@ -768,7 +796,7 @@ begin
 		wait until rising_edge(I_MCKR);
 		if sl_H03 = '1' and sl_4H = '0' and sl_PFHSTn = '0' then
 			if sl_VSYNCn = '0' then
-				slv_PFV	<= slv_VRD( 1 downto 0) & "0000000000"; -- '0' & slv_VRD(15 downto 7); -- disable YPOS
+				slv_PFV	<= slv_VRD( 1 downto 0) & "0000000000"; -- '0' & slv_VRD(15 downto 7); -- disable YPOS -- +1 moves up by 1
 			elsif sl_VBLANKn = '1' then
 				slv_PFV	<= slv_PFV + 1;
 			end if;
@@ -906,7 +934,7 @@ begin
 	end process;
 
 	-- 5N, 5P adders and gates 4T
-	slv_HPOS <= slv_XPOS + (slv_adder_a + "111111001"); -- add 2's complement to XPOS +1 right 1 pixel
+	slv_HPOS <= slv_XPOS + (slv_adder_a + "111111001"); -- +1 right 1 pixel
 
 	-- 3P latch
 	p_3P : process

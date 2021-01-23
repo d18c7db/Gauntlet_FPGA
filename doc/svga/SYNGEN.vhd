@@ -91,10 +91,18 @@ begin
 	sl_LMPDn   <= '0' when to_integer(unsigned(slv_hcnt)) =   5 else '1'; -- enables /BUFCLR to clear HLB counters at start of each line when 421H =101 (mod 8)
 
 	sl_VBLANKn <= '0' when to_integer(unsigned(slv_vcnt)) > 519 else '1'; --  V blanking
-	sl_HBLANKn <= '0' when to_integer(unsigned(slv_hcnt)) <  10  or to_integer(unsigned(slv_hcnt)) > 632 else '1'; -- H blanking left/right
+	sl_HBLANKn <= '0' when to_integer(unsigned(slv_hcnt)) <  10  or to_integer(unsigned(slv_hcnt)) > 10+(512+104)-2 else '1'; -- H blanking left/right
 
-	sl_VSYNCn  <= '0' when to_integer(unsigned(slv_vcnt)) > 558 and to_integer(unsigned(slv_vcnt)) < 561 else '1'; -- V sync both +1 moves pic   up 1 pixel
-	sl_HSYNCn  <= '0' when to_integer(unsigned(slv_hcnt)) > 697 and to_integer(unsigned(slv_hcnt)) < 729 else '1'; -- H sync last +1 moves pic left 1 pixel
+	sl_VSYNCn  <= '0' when to_integer(unsigned(slv_vcnt)) > 558 and to_integer(unsigned(slv_vcnt)) < 558+ 3 else '1'; -- V sync both +1 moves pic   up 1 pixel
+	sl_HSYNCn  <= '0' when to_integer(unsigned(slv_hcnt)) > 697 and to_integer(unsigned(slv_hcnt)) < 697+32 else '1'; -- H sync last +1 moves pic left 1 pixel
+
+-- pixel clock 28.636360 MHz, line freq 35.79545 KHz, frame rate 59.659 Hz
+--                V stats                H stats
+-- active video:   0..519  520 lines    10..624    615 pixels
+--  front porch: 520..558   39 lines   625..697     73 pixels
+--         sync: 559..560    2 lines   697..729     33 pixels
+--   back porch: 561..599   39 lines   730..799..9  79 pixels
+--        total:           600 lines               800 pixels
 
 	-- H, V counters
 	p_h_v_count : process

@@ -57,7 +57,7 @@ architecture RTL of PFHS is
 								: std_logic_vector(7 downto 0) := (others=>'1');
 	signal
 		slv_10F
-								: std_logic_vector(8 downto 0) := "000001111"; -- +1 moves playfield left by 1
+								: std_logic_vector(8 downto 0) := "000001111";
 	signal
 		slv_11E
 								: std_logic_vector(8 downto 0) := (others=>'1');

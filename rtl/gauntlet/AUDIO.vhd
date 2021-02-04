@@ -133,9 +133,7 @@ architecture RTL of AUDIO is
 								: std_logic_vector( 3 downto 0) := (others => '0');
 	signal
 		out_l,
-		out_r,
-		slv_l,
-		slv_r
+		out_r
 								: std_logic_vector(15 downto 0) := (others => '0');
 	signal
 		tctr,

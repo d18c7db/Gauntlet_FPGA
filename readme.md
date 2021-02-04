@@ -1,6 +1,7 @@
 # Atari Gauntlet FPGA Arcade
+by Alex (https://github.com/d18c7db)..
 
-## About
+## About  
 This is an FPGA implementation of Atari's arcade game "Gauntlet" from 1985, based on the SP-284 schematic circuit diagram.  
 
 It successfully runs all three games Gauntlet, Gauntlet II and Vindicators II that run on the original arcade. All sounds are implemeted, Pokey, YM2151 and TMS5220 Voice Synthesis Processor (see my [TMS5220 repository](https://github.com/d18c7db/TMS5220_FPGA) for more details on the VSP).  
@@ -22,9 +23,9 @@ The implementation is functional right now, can coin up and start game, known pr
 * Game EPROM is implemented as RAM so game settings are lost on power off.
 
 ## MiSTer Install
-The core <b>must have</b> a [SDRAM expansion](https://github.com/MiSTer-devel/Main_MiSTer/wiki/SDRAM-Board) daughterboard in order to play correctly on a [MiSTer](https://github.com/MiSTer-devel/Main_MiSTer/wiki) FPGA board. This applies to all three games namely Gauntlet, Gauntlet II and Vindicators part II. Without the SDRAM, the core will still run and display some text but will be missing the sprites and background textures (graphics).
+The core <b>must have</b> a [SDRAM expansion](https://github.com/MiSTer-devel/Main_MiSTer/wiki/SDRAM-Board) daughterboard in order to play correctly on a [MiSTer](https://github.com/MiSTer-devel/Main_MiSTer/wiki) FPGA board. This applies to all three games namely Gauntlet, Gauntlet II and Vindicators part II. Without the SDRAM, the core will still run and display some text but will be missing the sprites and background textures (graphics).  
 
-This repository follows the standard folder structure for distributing MiSTer files.
+This repository follows the standard folder structure for distributing MiSTer files.  
 
 ROMs are not included so in order to use this arcade, you need to provide the correct game ROM.  
 
@@ -49,10 +50,9 @@ The tank controls used in Vindicators are mapped to one joystick. For Vindicator
 ### Pipistrello
 On a [Pipistrello](http://pipistrello.saanlima.com/index.php?title=Welcome_to_Pipistrello) FPGA board, a [SRAM expansion](https://oshpark.com/profiles/d18c7db) daughterboard is needed.  
 
-The project files are under `rtl/boards/pipistrello` and are setup for Xilinx ISE 14.7  
+The project files are under `/pipistrello` and are setup for Xilinx ISE 14.7  
 NOTE: Pipistrello needs an additional custom SRAM board for this project since the FPGA doesn't have enough internal memory. See https://oshpark.com/profiles/d18c7db  
 
 ### MiSTer
 
-The project files are under `rtl/boards/miSTer` and are setup for Quartus 17  
-*WARNING:* In order to play Vindicators part 2, you must run the python script "descramble_2J.py 136059-1184.2j 136059-1184.des.2j" then copy the binary output file 136059-1184.des.2j into the zip file with the original ROMs.  
+The project files are under folder `/MiSTer` and are setup for Quartus 17  

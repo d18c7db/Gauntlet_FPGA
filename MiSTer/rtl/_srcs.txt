@@ -1,9 +1,9 @@
-boards/MiSTer/rtl/pll
-boards/MiSTer/rtl/pll.v
+pll
+pll.v
 
-boards/MiSTer/rtl/mem/dpram.vhd
-boards/MiSTer/rtl/mem/mt48lc16m16a2.v
-boards/MiSTer/rtl/mem/sdram.vhd
+mem/dpram.vhd
+mem/mt48lc16m16a2.v
+mem/sdram.vhd
 
 gauntlet/RGBI.vhd
 lib/jt51
@@ -63,6 +63,6 @@ gauntlet/AUDIO.vhd
 gauntlet/VIDEO.vhd
 gauntlet/GAUNTLET.vhd
 
-boards/MiSTer/hps_emu.vhd
-boards/mister/Arcade-Gauntlet_emu.sv
-boards/mister/tb_gauntlet_emu.vhd
+../hps_emu.vhd
+../Arcade-Gauntlet_emu.sv
+../tb_gauntlet_emu.vhd

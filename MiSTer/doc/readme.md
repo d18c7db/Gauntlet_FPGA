@@ -145,7 +145,7 @@ Adding debug code to the simulator to dump selected busses to a log file and deb
 [![More Stripes](images/SIM11.png)](images/SIM11.png)  
 [![Flipped blocks](images/SIM12.png)](images/SIM12.png)  
 
-The raw data from the correctly functioning SLAGS can be seen below. This is an example of what the `SLAGS` `MO` shifter output dumped into a .ppm file looks like before it is turned into an index into the color palette.
+The raw data from the correctly functioning SLAGS can be seen below. This is an example of what the `SLAGS` `MO` shifter output dumped into a .ppm file looks like before it is turned into an index into the color palette.  
 [![SLAGS MO output](images/SLAGS_MO.png)](images/SLAGS_MO.png)  
 
 And this is the corresponding `PF` shifters output. Since these values are intercepted straight from the SLAGS outputs before they hit the color palette, each value is written into the .ppm file three times (R=G=B) so as to form a grayscale image.

@@ -147,7 +147,7 @@ architecture RTL of GAUNTLET_TOP is
 		slv_blu,
 		slv_R,
 		slv_G,
-		slv_G,
+		slv_B,
 		slv_VideoI,
 		slv_VideoR,
 		slv_VideoG,
@@ -373,7 +373,7 @@ begin
 		I_AP_DATA	=> slv_AP_DATA
 	);
 
-	u_4R : entity work.PROM_4R port map (ADDR=>slv_4R_addr, DATA=>slv_4R_data);
+	u_4R : entity work.PROM_4R_G1 port map (CLK=>gclk_14M, ADDR=>slv_4R_addr, DATA=>slv_4R_data);
 
 	-- convert input video from 16bit IRGB to 12 bit RGB
 	u_R : entity work.RGBI port map (ADDR(7 downto 4)=>slv_int, ADDR(3 downto 0)=>slv_red, DATA=>slv_R);

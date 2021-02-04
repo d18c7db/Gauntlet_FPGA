@@ -18,7 +18,7 @@ library ieee;
 
 entity SLAGS is
 	port(
-		I_PHIN    : in  std_logic; -- RCLOCK
+		I_MCKR    : in  std_logic; -- RCLOCK
 		I_A       : in  std_logic_vector(7 downto 0);
 		I_B       : in  std_logic_vector(7 downto 0);
 		I_HLDAn   : in  std_logic; -- /HOLDA
@@ -73,7 +73,7 @@ begin
 	-- latch 8B
 	p_8B : process
 	begin
-		wait until rising_edge(I_PHIN);
+		wait until rising_edge(I_MCKR);
 		if sl_LDPFn = '0' then
 			sl_PFFLP		<= I_FLP;
 			sl_PF_HLDAn	<= I_HLDAn;
@@ -84,7 +84,7 @@ begin
 	-- latch 11A
 	p_11A : process
 	begin
-		wait until rising_edge(I_PHIN);
+		wait until rising_edge(I_MCKR);
 		if sl_LDMOn = '0' then
 			sl_MOFLP		<= I_FLP;
 			sl_MO_HLDAn	<= I_HLDAn;
@@ -106,10 +106,10 @@ begin
 	sel_PFSA(1)	<= not (sl_LDPFn and not (sl_PF_HLDAn and (    sl_PFFLP)));
 
 	-- LS299 shifters
-	u_MOSB : entity work.LS299 port map ( I_CK=>I_PHIN, I_DATA=>I_B, I_SL=>'0', I_SR=>'0', I_SEL=>sel_MOSB, O_SL=>sl_MOFDB, O_SR=>sl_MOSDB );
-	u_MOSA : entity work.LS299 port map ( I_CK=>I_PHIN, I_DATA=>I_A, I_SL=>'0', I_SR=>'0', I_SEL=>sel_MOSA, O_SL=>sl_MOFDA, O_SR=>sl_MOSDA );
-	u_PFSB : entity work.LS299 port map ( I_CK=>I_PHIN, I_DATA=>I_B, I_SL=>'0', I_SR=>'0', I_SEL=>sel_PFSB, O_SL=>sl_PFFDB, O_SR=>sl_PFSDB );
-	u_PFSA : entity work.LS299 port map ( I_CK=>I_PHIN, I_DATA=>I_A, I_SL=>'0', I_SR=>'0', I_SEL=>sel_PFSA, O_SL=>sl_PFFDA, O_SR=>sl_PFSDA );
+	u_MOSB : entity work.LS299 port map ( I_CK=>I_MCKR, I_DATA=>I_B, I_SL=>'0', I_SR=>'0', I_SEL=>sel_MOSB, O_SL=>sl_MOFDB, O_SR=>sl_MOSDB );
+	u_MOSA : entity work.LS299 port map ( I_CK=>I_MCKR, I_DATA=>I_A, I_SL=>'0', I_SR=>'0', I_SEL=>sel_MOSA, O_SL=>sl_MOFDA, O_SR=>sl_MOSDA );
+	u_PFSB : entity work.LS299 port map ( I_CK=>I_MCKR, I_DATA=>I_B, I_SL=>'0', I_SR=>'0', I_SEL=>sel_PFSB, O_SL=>sl_PFFDB, O_SR=>sl_PFSDB );
+	u_PFSA : entity work.LS299 port map ( I_CK=>I_MCKR, I_DATA=>I_A, I_SL=>'0', I_SR=>'0', I_SEL=>sel_PFSA, O_SL=>sl_PFFDA, O_SR=>sl_PFSDA );
 
 	-- selectors 1A, 1B, 4B, 5B 0=A 1=B
 	-- selects left or right shifter outputs based on FLP
@@ -120,7 +120,7 @@ begin
 	-- 2 clock cycle delay line
 	p_2A_2B_3A_3B : process
 	begin
-		wait until rising_edge(I_PHIN);
+		wait until rising_edge(I_MCKR);
 		slv_3B <= slv_1B_4B;
 		slv_3A <= slv_3B;
 		slv_2B <= slv_1A_5B;

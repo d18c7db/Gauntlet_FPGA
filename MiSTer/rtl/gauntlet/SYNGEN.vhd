@@ -103,7 +103,7 @@ begin
 	O_NXLn    <= not sl_o19;
 	O_PFHSTn  <= not sl_o12;
 	O_V       <= slv_vcnt;
-	O_HBLKn		<= sl_HBLANKn;				-- From SP-313 this is /HBLANK
+	O_HBLKn   <= sl_HBLANKn; -- From SP-313 this is /HBLANK
 	O_VBLKn   <= sl_VBLANKn;
 	O_VIDBn   <= sl_VBLANKn and sl_HBLANKn;
 	O_VRESn   <= sl_VRESn;

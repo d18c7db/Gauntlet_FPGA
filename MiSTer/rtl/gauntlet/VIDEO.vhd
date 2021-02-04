@@ -489,7 +489,7 @@ begin
 	-- 1K Storage/Logic Array Graphics Shifter
 	u_1K : entity work.SLAGS
 	port map (
-		I_PHIN		=> I_MCKR,
+		I_MCKR		=> I_MCKR,
 		I_A			=> slv_GP_DATA( 7 downto  0),
 		I_B			=> slv_GP_DATA(15 downto  8),
 		I_HLDAn		=> '1',
@@ -507,7 +507,7 @@ begin
 	-- 2K Storage/Logic Array Graphics Shifter
 	u_2K : entity work.SLAGS
 	port map (
-		I_PHIN		=> I_MCKR,
+		I_MCKR		=> I_MCKR,
 		I_A			=> slv_GP_DATA(23 downto 16),
 		I_B			=> slv_GP_DATA(31 downto 24),
 		I_HLDAn		=> '1',

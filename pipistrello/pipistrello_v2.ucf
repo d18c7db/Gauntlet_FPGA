@@ -122,7 +122,7 @@ NET "LEDS<1>"         LOC = "V16"  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE
 NET "LEDS<2>"         LOC = "U16"  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8 ; # active high red
 NET "LEDS<3>"         LOC = "A16"  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8 ; # active high green
 NET "LEDS<4>"         LOC = "A15"  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8 ; # active high red
-#NET "LEDS<5>"        LOC = "A12"  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8 ; # active high red
+NET "LEDS<5>"         LOC = "A12"  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8 ; # active high red
 
 # Switch
 NET "I_RESET"        LOC = "N14"  | IOSTANDARD = LVCMOS33 | PULLDOWN ; # active high

@@ -5,7 +5,7 @@
 -- Create Date:   00:00:00 01/01/2020
 -- Design Name:
 -- Module Name:   tb_gc.vhd
--- Project Name:  gauntlet
+-- Project Name:  gamecube
 -- Target Device:
 -- Tool versions:
 -- Description:

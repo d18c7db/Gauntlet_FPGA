@@ -132,8 +132,8 @@ architecture RTL of AUDIO is
 		sph_ctr
 								: std_logic_vector( 3 downto 0) := (others => '0');
 	signal
-		out_l,
-		out_r
+		slv_l,
+		slv_r
 								: std_logic_vector(15 downto 0) := (others => '0');
 	signal
 		tctr,
@@ -188,13 +188,13 @@ begin
 		s_chan_r <= ( (s_audio_TMS + s_audio_YMR) + ( s_audio_POK ) );
 
 		-- convert to unsigned slv for DAC usage
-		out_l <= std_logic_vector(s_chan_l + 16383);
-		out_r <= std_logic_vector(s_chan_r + 16383);
---		out_l <= std_logic_vector((not s_chan_l(s_chan_l'left)) & s_chan_l(s_chan_l'left-1 downto 0));
---		out_r <= std_logic_vector((not s_chan_r(s_chan_r'left)) & s_chan_r(s_chan_r'left-1 downto 0));
+		slv_l <= std_logic_vector(s_chan_l + 16383);
+		slv_r <= std_logic_vector(s_chan_r + 16383);
+--		slv_l <= std_logic_vector((not s_chan_l(s_chan_l'left)) & s_chan_l(s_chan_l'left-1 downto 0));
+--		slv_r <= std_logic_vector((not s_chan_r(s_chan_r'left)) & s_chan_r(s_chan_r'left-1 downto 0));
 
-		O_AUDIO_L <= out_l;
-		O_AUDIO_R <= out_r;
+		O_AUDIO_L <= slv_l;
+		O_AUDIO_R <= slv_r;
 	end process;
 
 	O_RD68Kn <= sl_RD68Kn;
@@ -397,7 +397,7 @@ begin
 	sl_2H <= I_1H and I_2H;
 
 	-- YM2151 sound
-	u_15R : JT51
+	u_15R : jt51
 	port map(
 		-- inputs
 		rst		=> sl_YAMRES,	-- active high reset

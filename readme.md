@@ -51,7 +51,6 @@ The tank controls used in Vindicators are mapped to one joystick. For Vindicator
 On a [Pipistrello](http://pipistrello.saanlima.com/index.php?title=Welcome_to_Pipistrello) FPGA board, a [SRAM expansion](https://oshpark.com/profiles/d18c7db) daughterboard is needed.  
 
 The project files are under `/pipistrello` and are setup for Xilinx ISE 14.7  
-NOTE: Pipistrello needs an additional custom SRAM board for this project since the FPGA doesn't have enough internal memory. See https://oshpark.com/profiles/d18c7db  
 
 ### MiSTer
 

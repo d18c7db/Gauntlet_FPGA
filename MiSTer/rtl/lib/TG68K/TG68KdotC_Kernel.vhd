@@ -363,7 +363,6 @@ architecture logic of TG68KdotC_Kernel is
 
 
 BEGIN
-
 ALU: TG68K_ALU
 	generic map(
 		MUL_Mode => MUL_Mode,				--0=>16Bit,	1=>32Bit,	2=>switchable with CPU(1),		3=>no MUL,

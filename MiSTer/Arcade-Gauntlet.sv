@@ -335,7 +335,7 @@ always @(posedge clk_sys) begin
 			'h03B: p3[5]        <= pressed; // left  (J)
 			'h04B: p3[4]        <= pressed; // right (L)
 			'h114: p3[1]        <= pressed; // fire  (right ctrl)
-			'h111: p3[0]        <= pressed; // magic (right shift)
+			'h059: p3[0]        <= pressed; // magic (right shift)
 
 			'h075: p4[7]        <= pressed; // up    (numpad 8)
 			'h072: p4[6]        <= pressed; // down  (numpad 2)

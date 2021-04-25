@@ -315,13 +315,13 @@ always @(posedge clk_sys) begin
 		endcase
 		else
 		casex(ps2_key[8:0])
-			// Gauntlet I and II controls
-			'hX75: p1[7]        <= pressed; // up    (up_arrow)
-			'hX72: p1[6]        <= pressed; // down  (down_arrow)
-			'hX6B: p1[5]        <= pressed; // left  (left_arrow)
-			'hX74: p1[4]        <= pressed; // right (right_arrow)
-			'h014: p1[1]        <= pressed; // fire  (ctrl)
-			'h011: p1[0]        <= pressed; // magic (alt)
+			// Gauntlet I and II - Default MAME Controls Assignment
+			'h175: p1[7]        <= pressed; // up    (up_arrow)
+			'h172: p1[6]        <= pressed; // down  (down_arrow)
+			'h16B: p1[5]        <= pressed; // left  (left_arrow)
+			'h174: p1[4]        <= pressed; // right (right_arrow)
+			'h014: p1[1]        <= pressed; // fire  (left ctrl)
+			'h011: p1[0]        <= pressed; // magic (left alt)
 
 			'h02D: p2[7]        <= pressed; // up    (R)
 			'h02B: p2[6]        <= pressed; // down  (F)
@@ -329,6 +329,20 @@ always @(posedge clk_sys) begin
 			'h034: p2[4]        <= pressed; // right (G)
 			'h01C: p2[1]        <= pressed; // fire  (A)
 			'h01B: p2[0]        <= pressed; // magic (S)
+
+			'h043: p3[7]        <= pressed; // up    (I)
+			'h042: p3[6]        <= pressed; // down  (K)
+			'h03B: p3[5]        <= pressed; // left  (J)
+			'h04B: p3[4]        <= pressed; // right (L)
+			'h114: p3[1]        <= pressed; // fire  (right ctrl)
+			'h111: p3[0]        <= pressed; // magic (right shift)
+
+			'h075: p4[7]        <= pressed; // up    (numpad 8)
+			'h072: p4[6]        <= pressed; // down  (numpad 2)
+			'h06B: p4[5]        <= pressed; // left  (numpad 4)
+			'h074: p4[4]        <= pressed; // right (numpad 6)
+			'h070: p4[1]        <= pressed; // fire  (numpad 0)
+			'h071: p4[0]        <= pressed; // magic (numpad .)
 
 			'h02E: m_coin1      <= pressed; // coin1 (5)
 			'h036: m_coin2      <= pressed; // coin2 (6)

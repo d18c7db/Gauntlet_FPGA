@@ -41,7 +41,7 @@ Quickreference for folders and file placement:
 /_Arcade/cores/<game name>.rbf  
 /_Arcade/mame/<mame rom>.zip  
 
-Gauntlet currently supports up to 4 joysticks for 4 players. (up, down, left, right, fire, start/magic, coin) MAME keys layout is available for player 1 (up, down left, right, ctrl, alt, 5) and player 2 (R, F, D, G, A, S, 6) for player 3 and 4, only coins keys (7, 8) are mapped.  
+Gauntlet currently supports up to 4 joysticks for 4 players. MAME keys layout is available for (up, down, left, right, fire, start/magic, coin) as follows: player 1 (up, down left, right, left ctrl, left alt, 5), player 2 (R, F, D, G, A, S, 6), player 3 (I, K, J, L, right ctrl, right shift) and player 4 on numeric pad (num 8, num 2, num 4, num 6, num 0, num .)  
 
 The tank controls used in Vindicators are mapped to one joystick. For Vindicators keyboard is supported, 5,6 are coin, 1,2 start game, QWERASDF and YUIOHJKL controls for player 1 and 2 respectively. Joysticks are connected but may need remapping.  
 

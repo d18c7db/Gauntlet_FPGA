@@ -72,8 +72,8 @@ architecture RTL of TMS5220 is
 	type CH_ARRAY is array (0 to 51) of integer range     0 to  127; --  7 bits
 	type PI_ARRAY is array (0 to 63) of integer range     0 to  255; --  8 bits
 	type KV_ARRAY is array (0 to  9) of integer range  -512 to  511; -- 10 bits
-	type MU_ARRAY is array (0 to 10) of integer range -8192 to 8191; -- 14 bits
-	type MX_ARRAY is array (0 to  9) of integer range -8192 to 8191; -- 14 bits
+	type MU_ARRAY is array (0 to 10) of integer range -4096 to 4095; -- 13 bits
+	type MX_ARRAY is array (0 to  9) of integer range -4096 to 4095; -- 13 bits
 	type KT_ARRAY is array (0 to  9, 0 to 31) of integer range -512 to 511; -- 10 bits
 
 	constant FIFO_bits   : integer := 128; -- FIFO size in bits
@@ -188,7 +188,7 @@ architecture RTL of TMS5220 is
 		m_new_frame_voiced,
 		m_new_frame_unvoiced,
 		m_new_frame_repeat,
-		m_new_frame_repeat_last,
+--		m_new_frame_repeat_last,
 		m_new_frame_zero,
 		m_new_frame_stop,
 		m_pitch_zero,
@@ -208,10 +208,10 @@ architecture RTL of TMS5220 is
 								: std_logic_vector( 7 downto 0) := (others=>'0');
 	signal
 		m_speech
-								: std_logic_vector(11 downto 0) := (others=>'0');
+								: std_logic_vector(13 downto 0) := (others=>'0');
 	signal
 		m_shift
-								: std_logic_vector(11 downto 0) := (others=>'0');
+								: std_logic_vector(13 downto 0) := (others=>'0');
 	signal
 		m_RNG
 								: std_logic_vector(12 downto 0) := (others=>'1');
@@ -303,12 +303,12 @@ begin
 	m_PHI(3) <= (    phictr(1)) or phictr(0);
 	m_PHI(4) <= (not phictr(1)) or phictr(0);
 
-	m_speech <= std_logic_vector(to_unsigned(this_sample, 12));
+	m_speech <= std_logic_vector(to_signed(this_sample, m_speech'length)); --
 
 	-- ROMCLK __--__--__--__--__--__--__--__--__--__--__--__--__--__--__--__--__--__--__--__--__--__--__
 	--           0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19   0   1
 	-- T11    __----____________________________________________________________________________----____
-	-- I/O    __________|LSB|   |   |   |   |   |   |   |   |MSB|_______________________________________
+	-- I/O    __|LSB|   |   |   |   |   |   |   |   |   |   |   |   |MSB|_______________________________
 
 	-- digital serial output of DAC
 	p_SERDO : process
@@ -321,7 +321,7 @@ begin
 				m_shift <= m_speech;
 			else
 				m_T11 <= '0';
-				m_shift <= '0' & m_shift(11 downto 1);
+				m_shift <= '0' & m_shift(m_shift'left downto 1);
 			end if;
 		end if;
 	end process;
@@ -885,7 +885,7 @@ begin
 						m_new_frame_unvoiced <= '0';
 						m_new_frame_zero     <= '0';
 						m_new_frame_stop     <= '0';
-						m_new_frame_repeat_last<= m_new_frame_repeat;
+--						m_new_frame_repeat_last<= m_new_frame_repeat;
 						m_new_frame_energy_idx <= tmp_new_frame_energy_idx;
 						m_new_frame_pitch_idx  <= tmp_new_frame_pitch_idx;
 						m_new_frame_k_idx(0)   <= tmp_new_frame_k_idx(0);

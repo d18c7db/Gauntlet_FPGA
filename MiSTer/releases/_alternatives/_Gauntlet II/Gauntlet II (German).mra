@@ -1,16 +1,34 @@
 <misterromdescription>
-	<name>Gauntlet II (German)</name>
-	<mameversion>0225</mameversion>
-	<setname>gaunt2g</setname>
-	<mratimestamp>20201112131415</mratimestamp>
+	<name>Gauntlet II</name>
+	<region>Germany</region>
+	<homebrew>no</homebrew>
+	<bootleg>no</bootleg>
+	<version></version>
+	<alternative>Gauntlet II</alternative>
+	<platform></platform>
+	<series>Gauntlet</series>
 	<year>1985</year>
-	<manufacturer>Atari Games</manufacturer>
-	<category>Adventure / Fantasy</category>
-	<category>Maze / Extra</category>
+	<manufacturer>Atari</manufacturer>
+	<category>Shooter - Multidirectional</category>
+
+	<setname>gaunt2g</setname>
+	<parent>gaunt2</parent>
+	<mameversion>0225</mameversion>
 	<rbf>gauntlet</rbf>
-	<mameinfo parent="gauntlet" cpp="gauntlet" input="gauntlet"/>
-	<display type="raster" rotate="0"/>
-	<buttons names="Magic/Start,Fire,-,-,Coin,-" default="B,A,R"/>
+	<about></about>
+
+	<resolution>15kHz</resolution>
+	<rotation>horizontal</rotation>
+	<flip></flip>
+
+	<players>4</players>
+	<joystick>8-way</joystick>
+	<special_controls></special_controls>
+	<num_buttons>2</num_buttons>
+	<buttons default="B,A,R" names="Magic/Start,Fire,-,-,Coin,-"></buttons>
+
+	<switches></switches>
+
 	<rom index="1">
 		<part>6A</part>
 	</rom>
@@ -58,4 +76,13 @@
 		<part crc="5c731006" name="136043-1120.16r"/>
 		<part crc="bddc3dfc" name="136043-1104.6p"/>
 	</rom>
+	<rom index="2"></rom>
+	<rom index="3"></rom>
+	<rom index="4"></rom>
+
+	<nvram></nvram>
+
+	<remark></remark>
+
+	<mratimestamp>20210430005030</mratimestamp>
 </misterromdescription>

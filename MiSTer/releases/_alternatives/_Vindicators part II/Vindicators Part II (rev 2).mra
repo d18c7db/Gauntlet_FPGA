@@ -1,16 +1,34 @@
 <misterromdescription>
-	<name>Vindicators Part II (rev 2)</name>
-	<mameversion>0225</mameversion>
-	<setname>vindctr2r2</setname>
-	<mratimestamp>20201112131415</mratimestamp>
+	<name>Vindicators Part II</name>
+	<region></region>
+	<homebrew>no</homebrew>
+	<bootleg>no</bootleg>
+	<version>Rev 2</version>
+	<alternative>Vindicators Part II</alternative>
+	<platform></platform>
+	<series>Vindicators</series>
 	<year>1985</year>
-	<manufacturer>Atari Games</manufacturer>
-	<category>Adventure / Fantasy</category>
-	<category>Maze / Extra</category>
+	<manufacturer>Atari</manufacturer>
+	<category>Shooter - Multidirectional</category>
+
+	<setname>vindctr2r2</setname>
+	<parent>vindctr2</parent>
+	<mameversion>0225</mameversion>
 	<rbf>gauntlet</rbf>
-	<mameinfo parent="gauntlet" cpp="gauntlet" input="gauntlet"/>
-	<display type="raster" rotate="0"/>
-	<buttons names="LTrig,RTrig,LThumb,RThumb,Coin,Start" default="L,R,Y,A,Select,Start"/>
+	<about></about>
+
+	<resolution>15kHz</resolution>
+	<rotation>horizontal</rotation>
+	<flip></flip>
+
+	<players>2 (simultaneous)</players>
+	<joystick>2-way vertical</joystick>
+	<special_controls>twin stick</special_controls>
+	<num_buttons>4</num_buttons>
+	<buttons default="L,R,Y,A,Select,Start" names="LTrig,RTrig,LThumb,RThumb,Coin,Start"></buttons>
+
+	<switches></switches>
+
 	<rom index="1">
 		<part>76</part>
 	</rom>
@@ -81,4 +99,13 @@
 		<part crc="eef0a003" name="136059-1160.16s"/>
 		<part crc="f99b631a" name="136059-1198.6p"/>
 	</rom>
+	<rom index="2"></rom>
+	<rom index="3"></rom>
+	<rom index="4"></rom>
+
+	<nvram></nvram>
+
+	<remark></remark>
+
+	<mratimestamp>20210430005030</mratimestamp>
 </misterromdescription>

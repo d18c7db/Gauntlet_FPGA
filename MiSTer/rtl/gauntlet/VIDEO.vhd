@@ -880,17 +880,14 @@ begin
 
 	-- 8U dual 4:1 mux
 	sl_CRA7 <=
-		slv_GPC_CA(7)	when slv_GPC_CA(9 downto 8) = "11" else
-		slv_GPC_CA(7)	when slv_GPC_CA(9 downto 8) = "10" else
+		sl_ALC4D			when slv_GPC_CA(9 downto 8) = "00" else
 		sl_6X6			when slv_GPC_CA(9 downto 8) = "01" else
-		sl_ALC4D			when slv_GPC_CA(9 downto 8) = "00";
+		slv_GPC_CA(7);
 
 	-- 8U dual 4:1 mux
 	sl_CRA5 <=
-		slv_GPC_CA(5)	when slv_GPC_CA(9 downto 8) = "11" else
-		slv_GPC_CA(5)	when slv_GPC_CA(9 downto 8) = "10" else
-		slv_GPC_CA(5)	when slv_GPC_CA(9 downto 8) = "01" else
-		sl_ALC3D			when slv_GPC_CA(9 downto 8) = "00";
+		sl_ALC3D			when slv_GPC_CA(9 downto 8) = "00" else
+		slv_GPC_CA(5);
 
 	-- 6X F/F
 	p_6X : process

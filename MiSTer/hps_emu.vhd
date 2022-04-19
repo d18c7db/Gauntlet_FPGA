@@ -7,30 +7,28 @@ generic (
 	STRLEN : natural:=0; PS2DIV : natural:=0; WIDE : natural:=0; VDNUM : natural:=1; PS2WE : natural:=0);
 port (
 	clk_sys                  : in  std_logic;
-	HPS_BUS                  : inout std_logic_vector(45 downto 0);
-	EXT_BUS                  : inout std_logic_vector(35 downto 0);
-	gamma_bus                : inout std_logic_vector(21 downto 0);
+	HPS_BUS                  : inout std_logic_vector(48 downto 0);
 
-	conf_str                 : in  std_logic_vector((STRLEN*8)-1 downto 0);
-	forced_scandoubler       : out std_logic;
+	joystick_0               : out std_logic_vector(31 downto 0);
+	joystick_1               : out std_logic_vector(31 downto 0);
+	joystick_2               : out std_logic_vector(31 downto 0);
+	joystick_3               : out std_logic_vector(31 downto 0);
 
+	ps2_key                  : out std_logic_vector(10 downto 0);
 	buttons                  : out std_logic_vector( 1 downto 0);
-	status                   : out std_logic_vector(31 downto 0);
-	status_menumask          : in  std_logic_vector( 1 downto 0);
+	forced_scandoubler       : out std_logic;
 	direct_video             : out std_logic;
 
+	gamma_bus                : inout std_logic_vector(21 downto 0);
+	status                   : out std_logic_vector(63 downto 0);
 	ioctl_download           : out std_logic;
+	ioctl_index              : out std_logic_vector(15 downto 0);
 	ioctl_wr                 : out std_logic;
-	ioctl_addr               : out std_logic_vector(24 downto 0) := (others=>'0');
+	ioctl_addr               : out std_logic_vector(26 downto 0) := (others=>'0');
 	ioctl_dout               : out std_logic_vector( 7 downto 0) := (others=>'0');
-	ioctl_index              : out std_logic_vector( 7 downto 0);
 	ioctl_wait               : in  std_logic;
 
-	joystick_0               : out std_logic_vector(15 downto 0);
-	joystick_1               : out std_logic_vector(15 downto 0);
-	joystick_2               : out std_logic_vector(15 downto 0);
-	joystick_3               : out std_logic_vector(15 downto 0);
-	ps2_key                  : out std_logic_vector(10 downto 0)
+	EXT_BUS                  : inout std_logic_vector(35 downto 0)
 );
 
 end hps_io_emu;

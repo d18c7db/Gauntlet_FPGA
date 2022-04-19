@@ -22,8 +22,12 @@ architecture RTL of PROM_5L is
 		x"04",x"09",x"0E",x"13",x"18",x"1D",x"22",x"27",x"05",x"0B",x"11",x"17",x"1D",x"23",x"29",x"2F", -- 0x0060
 		x"06",x"0D",x"14",x"1B",x"22",x"29",x"30",x"37",x"07",x"0F",x"17",x"1F",x"27",x"2F",x"37",x"3F"  -- 0x0070
 	);
+	-- Ask Xilinx synthesis to use distributed logic RAMs if possible
 	attribute ram_style : string;
 	attribute ram_style of ROM : signal is "distributed";
+	-- Ask Quartus synthesis to use distributed logic RAMs if possible
+	attribute ramstyle : string;
+	attribute ramstyle of ROM : signal is "logic";
 begin
 	mem_proc : process
 	begin

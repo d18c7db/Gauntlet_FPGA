@@ -16,8 +16,12 @@ architecture RTL of PROM_3E is
 		x"A",x"A",x"5",x"A",x"F",x"F",x"5",x"5",x"A",x"A",x"5",x"A",x"F",x"F",x"5",x"5", -- 0x0000
 		x"A",x"A",x"5",x"A",x"F",x"F",x"5",x"5",x"A",x"A",x"A",x"A",x"A",x"A",x"A",x"A"  -- 0x0010
 	);
+	-- Ask Xilinx synthesis to use distributed logic RAMs if possible
 	attribute ram_style : string;
 	attribute ram_style of ROM : signal is "distributed";
+	-- Ask Quartus synthesis to use distributed logic RAMs if possible
+	attribute ramstyle : string;
+	attribute ramstyle of ROM : signal is "logic";
 begin
 	mem_proc : process
 	begin

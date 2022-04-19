@@ -47,8 +47,12 @@ architecture RTL of PROM_7U is
 		x"D5",x"FF",x"FE",x"DD",x"D5",x"FF",x"FC",x"DD",x"CD",x"FF",x"FE",x"FF",x"CD",x"FF",x"FC",x"FF"  -- 0x01F0
 	);
 
+	-- Ask Xilinx synthesis to use block RAMs if possible
 	attribute ram_style : string;
 	attribute ram_style of ROM : signal is "block";
+	-- Ask Quartus synthesis to use block RAMs if possible
+	attribute ramstyle : string;
+	attribute ramstyle of ROM : signal is "M10K";
 begin
 	mem_proc : process
 	begin

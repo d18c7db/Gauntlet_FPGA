@@ -19,7 +19,7 @@ architecture RTL of ROM_6P is
 	);
 
 	attribute ram_style : string;
-	attribute ram_style of ROM : signal is "block";
+	attribute ram_style of ROM : signal is "auto";
 begin
 	mem_proc : process
 	begin

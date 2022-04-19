@@ -108,9 +108,12 @@ architecture RTL of VGA_SCANCONV is
 	type RAM_ARRAY_1Kx16 is array (0 to 1023) of std_logic_vector(15 downto 0);
 	signal DPRAM : RAM_ARRAY_1Kx16:=(others=>(others=>'0'));
 
-	-- Ask synthesis tools to use block RAMs if possible
+	-- Ask Xilinx synthesis tools to use block RAMs if possible
 	attribute ram_style : string;
 	attribute ram_style of DPRAM : signal is "block";
+	-- Ask Quartus synthesis tools to use block RAMs if possible
+	attribute ramstyle : string;
+	attribute ramstyle of DPRAM : signal is "M10K";
 
 begin
 	ivideo <= I_VIDEO;

@@ -55,7 +55,7 @@ architecture RTL of VRAMS is
 	signal RAM_MO_HI : RAM_ARRAY_4Kx8:=(others=>(others=>'0'));
 	signal RAM_AL_HI : RAM_ARRAY_4Kx8:=(others=>(others=>'0'));
 
-	-- Tell synthesis to use block RAMs if possible
+	-- Ask Xilinx synthesis to use block RAMs if possible
 	attribute ram_style : string;
 	attribute ram_style of RAM_PF_LO : signal is "block";
 	attribute ram_style of RAM_MO_LO : signal is "block";
@@ -63,6 +63,14 @@ architecture RTL of VRAMS is
 	attribute ram_style of RAM_PF_HI : signal is "block";
 	attribute ram_style of RAM_MO_HI : signal is "block";
 	attribute ram_style of RAM_AL_HI : signal is "block";
+	-- Ask Quartus synthesis to use block RAMs if possible
+	attribute ramstyle : string;
+	attribute ramstyle of RAM_PF_LO : signal is "M10K";
+	attribute ramstyle of RAM_MO_LO : signal is "M10K";
+	attribute ramstyle of RAM_AL_LO : signal is "M10K";
+	attribute ramstyle of RAM_PF_HI : signal is "M10K";
+	attribute ramstyle of RAM_MO_HI : signal is "M10K";
+	attribute ramstyle of RAM_AL_HI : signal is "M10K";
 begin
 	-------------------------
 	-- sheet 9 RAM decoder --

@@ -31,9 +31,12 @@ architecture RTL of RAM_2K8 is
 	type RAM_ARRAY_2Kx8 is array (0 to 2047) of std_logic_vector(7 downto 0);
 	signal RAM : RAM_ARRAY_2Kx8 := (others=>(others=>'0'));
 
-	-- Ask synthesis tools to use block RAM if possible
+	-- Ask Xilinx synthesis to use block RAMs if possible
 	attribute ram_style : string;
 	attribute ram_style of RAM : signal is "block";
+	-- Ask Quartus synthesis to use block RAMs if possible
+	attribute ramstyle : string;
+	attribute ramstyle of RAM : signal is "M10K";
 
 begin
 	p_RAM : process

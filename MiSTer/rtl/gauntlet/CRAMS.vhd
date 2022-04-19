@@ -38,10 +38,14 @@ architecture RTL of CRAMS is
 	type RAM_ARRAY_1Kx8 is array (0 to 1023) of std_logic_vector(7 downto 0);
 	signal CRAM_U : RAM_ARRAY_1Kx8:=(others=>(others=>'0'));
 	signal CRAM_L : RAM_ARRAY_1Kx8:=(others=>(others=>'0'));
-	-- Tell synthesis to use block RAMs if possible
+	-- Ask Xilinx synthesis to use block RAMs if possible
 	attribute ram_style : string;
 	attribute ram_style of CRAM_U : signal is "block";
 	attribute ram_style of CRAM_L : signal is "block";
+	-- Ask Quartus synthesis to use block RAMs if possible
+	attribute ramstyle : string;
+	attribute ramstyle of CRAM_U : signal is "M10K";
+	attribute ramstyle of CRAM_L : signal is "M10K";
 begin
 	------------------------
 	-- sheet 15 Color RAM --

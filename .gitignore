@@ -43,5 +43,7 @@ unused
 debug
 testbed
 tb
+doc
+scripts
 minterm
 **/.DS_Store

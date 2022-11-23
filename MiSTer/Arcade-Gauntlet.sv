@@ -191,7 +191,7 @@ assign VGA_DISABLE = 0;
 assign HDMI_FREEZE = 0;
 
 integer     slap_type = 104; // Slapstic type depends on game: 104=Gauntlet, 106=Gauntlet II, 107=2-Player Gauntlet, 118=Vindicators Part II
-
+wire        gauntlet_4p = (slap_type == 104 || slap_type == 106);
 wire        clk_7M;
 wire        clk_14M;
 wire        clk_sys;
@@ -224,10 +224,8 @@ assign LED_DISK = 0;
 assign LED_POWER = 0;
 assign BUTTONS = 0;
 
-wire [31:0] joystick_0;
-wire [31:0] joystick_1;
-wire [31:0] joystick_2;
-wire [31:0] joystick_3;
+wire [31:0] joystick_0, joystick_1, joystick_2, joystick_3;
+wire [31:0] joystick_0_mux, joystick_1_mux, joystick_2_mux, joystick_3_mux;
 
 wire [10:0] ps2_key;
 
@@ -250,6 +248,11 @@ wire [2:0] fx = status[4:2];
 wire m_service = ~status[5];
 wire reset = RESET | status[6] | buttons[1]| ioctl_download;
 
+wire [1:0] joy_warrior  = status[11:10];
+wire [1:0] joy_valkyrie = status[13:12];
+wire [1:0] joy_wizard   = status[15:14];
+wire [1:0] joy_elf      = status[17:16];
+
 assign VIDEO_ARX = (!ar) ? 12'd4 : (ar - 1'd1);
 assign VIDEO_ARY = (!ar) ? 12'd3 : 12'd0;
 
@@ -259,6 +262,11 @@ localparam CONF_STR = {
 	"-;",
 	"O01,Aspect ratio,Original,Full Screen,[ARC1],[ARC2];",
 	"O24,Scandoubler Fx,None,HQ2x,CRT 25%,CRT 50%,CRT 75%;",
+	"-;",
+	"h2OAB,Warrior,Joystick 1,Joystick 2,Joystick 3,Joystick 4;",
+	"h2OCD,Valkyrie,Joystick 2,Joystick 3,Joystick 4,Joystick 1;",
+	"h2OEF,Wizard,Joystick 3,Joystick 4,Joystick 1,Joystick 2;",
+	"h2OGH,Elf,Joystick 4,Joystick 1,Joystick 2,Joystick 3;",
 	"-;",
 	"DIP;",
 	"-;",
@@ -388,18 +396,54 @@ always @(posedge clk_sys) begin
 	endcase
 end
 
+always_comb begin
+	if (gauntlet_4p) begin
+		case (joy_warrior)
+			2'b00   : joystick_0_mux = joystick_0;
+			2'b01   : joystick_0_mux = joystick_1;
+			2'b10   : joystick_0_mux = joystick_2;
+			2'b11   : joystick_0_mux = joystick_3;
+		endcase
+		case (joy_valkyrie)
+			2'b00   : joystick_1_mux = joystick_1;
+			2'b01   : joystick_1_mux = joystick_2;
+			2'b10   : joystick_1_mux = joystick_3;
+			2'b11   : joystick_1_mux = joystick_0;
+		endcase
+		case (joy_wizard)
+			2'b00   : joystick_2_mux = joystick_2;
+			2'b01   : joystick_2_mux = joystick_3;
+			2'b10   : joystick_2_mux = joystick_0;
+			2'b11   : joystick_2_mux = joystick_1;
+		endcase
+		case (joy_elf)
+			2'b00   : joystick_3_mux = joystick_3;
+			2'b01   : joystick_3_mux = joystick_0;
+			2'b10   : joystick_3_mux = joystick_1;
+			2'b11   : joystick_3_mux = joystick_2;
+		endcase
+	end
+	else
+	begin
+		joystick_0_mux = joystick_0;
+		joystick_1_mux = joystick_1;
+		joystick_2_mux = joystick_2;
+		joystick_3_mux = joystick_3;
+	end
+end
+
 wire [7:0] I_P1 = (slap_type == 118) ?
-				  ~(p1 | {JoyX_Bk,JoyW_Bk,JoyX_Fw,JoyW_Fw,joystick_0[7:4]})
-				: ~(p1 | {joystick_0[3:0], joystick_0[7:4]});
+				  ~(p1 | {JoyX_Bk,JoyW_Bk,JoyX_Fw,JoyW_Fw,joystick_0_mux[7:4]})
+				: ~(p1 | {joystick_0_mux[3:0], joystick_0_mux[7:4]});
 wire [7:0] I_P2 = (slap_type == 118) ? 
-				  ~(p2 | {JoyZ_Bk,JoyY_Bk,JoyZ_Fw,JoyY_Fw,joystick_1[7:4]})
-				: ~(p2 | {joystick_1[3:0], joystick_1[7:4]});
+				  ~(p2 | {JoyZ_Bk,JoyY_Bk,JoyZ_Fw,JoyY_Fw,joystick_1_mux[7:4]})
+				: ~(p2 | {joystick_1_mux[3:0], joystick_1_mux[7:4]});
 wire [7:0] I_P3 = (slap_type == 118) ?
-				  ~(p3 | { 6'b0,joystick_1[9],joystick_0[9]})
-				: ~(p3 | {joystick_2[3:0], joystick_2[7:4]});
+				  ~(p3 | { 6'b0,joystick_1_mux[9],joystick_0_mux[9]})
+				: ~(p3 | {joystick_2_mux[3:0], joystick_2_mux[7:4]});
 wire [7:0] I_P4 = (slap_type == 118) ?
 				  ~(p4)
-				: ~(p4 | {joystick_3[3:0], joystick_3[7:4]});
+				: ~(p4 | {joystick_3_mux[3:0], joystick_3_mux[7:4]});
 
 ///////////////////////////////////////////////////
 always @(posedge clk_video) begin
@@ -431,7 +475,7 @@ hps_io #(.CONF_STR(CONF_STR)) hps_io
 
 	.buttons(buttons),
 	.status(status),
-	.status_menumask({(slap_type == 118),direct_video}),
+	.status_menumask({gauntlet_4p,(slap_type == 118),direct_video}),
 	.direct_video(direct_video),
 
 	.ioctl_download(ioctl_download),
@@ -640,7 +684,7 @@ FPGA_GAUNTLET gauntlet
 	.I_P3(I_P3),
 	.I_P4(I_P4),
 	
-	.I_SYS({m_service, ~(m_coin1 | joystick_0[8]), ~(m_coin2 | joystick_1[8]), ~(m_coin3 | joystick_2[8]), ~(m_coin4 | joystick_3[8])}),
+	.I_SYS({m_service, ~(m_coin1 | joystick_0_mux[8]), ~(m_coin2 | joystick_1_mux[8]), ~(m_coin3 | joystick_2_mux[8]), ~(m_coin4 | joystick_3_mux[8])}),
 	.I_SLAP_TYPE(slap_type),
 
 	.O_LEDS(),

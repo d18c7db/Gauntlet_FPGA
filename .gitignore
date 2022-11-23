@@ -37,4 +37,9 @@ c5_pin_model_dump.txt
 *.xml
 *_netlist
 *.cdf
+ROM_*.VHD
+unused
+debug
+testbed
+minterm
 **/.DS_Store

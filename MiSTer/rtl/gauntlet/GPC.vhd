@@ -37,7 +37,7 @@ end GPC;
 architecture RTL of GPC is
 	signal
 		sl_gate,
-		sl_3C6,
+		sl_8C6,
 		sl_3F2,
 		sl_1C12,
 		sl_4HD,
@@ -61,8 +61,8 @@ begin
 	-- 8D tristate buffers
 	O_CA <= I_MA & "ZZZZZZZZ" when I_SEL = '0' else slv_CRAS & slv_9D;
 
-	-- gate 3C output  6 (PFX7..3)
-	sl_3C6  <= (not (I_P(7) or I_P(6) or I_P(5) or I_P(4) or I_P(3)));
+	-- gate 8C output  6 (PFX7..3)
+	sl_8C6  <= (not (I_P(7) or I_P(6) or I_P(5) or I_P(4) or I_P(3)));
 
 	-- gate 1C output 12 (MPX3..1)
 	sl_1C12 <= (not (I_M(3) and I_M(2) and I_M(1)));
@@ -72,8 +72,8 @@ begin
 
 	-- These equations describe the PROM 3E contents,
 	-- top 2 data bits are the same as bottom 2 data bits as can be seen in PROM dump
-	PROM_3E_data(1)  <= sl_gate and     ((sl_3C6 and I_PFM) or   (not I_M(7)) or (I_M(0)   and (not sl_1C12)) );
-	PROM_3E_data(0)  <= sl_gate and not ((sl_3C6 and I_PFM) or (((not I_M(7)) or (I_M(0))) and (not sl_1C12)) );
+	PROM_3E_data(1)  <= sl_gate and     ((sl_8C6 and I_PFM) or   (not I_M(7)) or (I_M(0)   and (not sl_1C12)) );
+	PROM_3E_data(0)  <= sl_gate and not ((sl_8C6 and I_PFM) or (((not I_M(7)) or (I_M(0))) and (not sl_1C12)) );
 
 	-- Graphic Priority Control selection
 --	3C9   3C7   4C7   4C9   7C7   7C9   6C7   6C9		case

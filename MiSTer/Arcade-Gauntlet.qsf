@@ -48,7 +48,6 @@ set_global_assignment -name ECO_OPTIMIZE_TIMING ON
 set_global_assignment -name PERIPHERY_TO_CORE_PLACEMENT_AND_ROUTING_OPTIMIZATION ON
 set_global_assignment -name PHYSICAL_SYNTHESIS_ASYNCHRONOUS_SIGNAL_PIPELINING ON
 set_global_assignment -name ALM_REGISTER_PACKING_EFFORT MEDIUM
-set_global_assignment -name PHYSICAL_SYNTHESIS_EFFORT EXTRA
 set_global_assignment -name SEED 1
 
 #set_global_assignment -name VERILOG_MACRO "MISTER_FB=1"
@@ -64,6 +63,9 @@ set_global_assignment -name SEED 1
 
 # disable adaptive scanline filtering
 #set_global_assignment -name VERILOG_MACRO "MISTER_DISABLE_ADAPTIVE=1"
+
+#use only 1MB per frame for scaler to free ~21MB DDR3 RAM
+#set_global_assignment -name VERILOG_MACRO "MISTER_SMALL_VBUF=1"
 
 source sys/sys.tcl
 source sys/sys_analog.tcl

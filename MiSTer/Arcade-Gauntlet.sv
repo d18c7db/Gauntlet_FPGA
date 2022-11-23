@@ -53,13 +53,14 @@ module emu
 	output        VGA_F1,
 	output [1:0]  VGA_SL,
 	output        VGA_SCALER, // Force VGA scaler
+	output        VGA_DISABLE, // analog out is off
 
 	input  [11:0] HDMI_WIDTH,
 	input  [11:0] HDMI_HEIGHT,
 	output        HDMI_FREEZE,
 
 `ifdef MISTER_FB
-	// Use framebuffer in DDRAM (USE_FB=1 in qsf)
+	// Use framebuffer in DDRAM (MISTER_FB=1 in qsf)
 	// FB_FORMAT:
 	//    [2:0] : 011=8bpp(palette) 100=16bpp 101=24bpp 110=32bpp
 	//    [3]   : 0=16bits 565 1=16bits 1555
@@ -185,7 +186,8 @@ assign {DDRAM_CLK, DDRAM_BURSTCNT, DDRAM_ADDR, DDRAM_DIN, DDRAM_BE, DDRAM_RD, DD
 
 //assign VGA_SL = 0;
 assign VGA_F1 = 0;
-assign VGA_SCALER = 0;
+assign VGA_SCALER  = 0;
+assign VGA_DISABLE = 0;
 assign HDMI_FREEZE = 0;
 
 integer     slap_type = 104; // Slapstic type depends on game: 104=Gauntlet, 106=Gauntlet II, 107=2-Player Gauntlet, 118=Vindicators Part II
@@ -193,22 +195,23 @@ integer     slap_type = 104; // Slapstic type depends on game: 104=Gauntlet, 106
 wire        clk_7M;
 wire        clk_14M;
 wire        clk_sys;
-wire        clk_vid;
+wire        clk_video;
 reg         ce_pix;
 wire        pll_locked;
 wire        hblank, vblank;
 wire        hs, vs;
+//reg  [ 7:0] sw[8];
 wire [ 3:0] r,g,b, gvid_I, gvid_R, gvid_G, gvid_B;
 wire [15:0] aud_l, aud_r;
-wire [31:0] status;
+wire [127:0] status;
 wire [ 1:0] buttons;
 wire        forced_scandoubler;
 wire        direct_video;
 wire        ioctl_download;
 wire        ioctl_wr;
 wire        ioctl_wait;
-wire [ 7:0] ioctl_index;
-wire [24:0] ioctl_addr;
+wire [15:0] ioctl_index;
+wire [26:0] ioctl_addr;
 wire [ 7:0] ioctl_dout;
 
 assign AUDIO_S = 1'b1; // signed samples
@@ -221,15 +224,14 @@ assign LED_DISK = 0;
 assign LED_POWER = 0;
 assign BUTTONS = 0;
 
-wire [15:0] joy0;
-wire [15:0] joy1;
-wire [15:0] joy2;
-wire [15:0] joy3;
+wire [31:0] joystick_0;
+wire [31:0] joystick_1;
+wire [31:0] joystick_2;
+wire [31:0] joystick_3;
 
 wire [10:0] ps2_key;
 
 wire [21:0] gamma_bus;
-wire reset = RESET | status[0] | buttons[1]| ioctl_download;
 
 reg [7:0]   p1 = 8'h0;
 reg [7:0]   p2 = 8'h0;
@@ -240,11 +242,13 @@ reg         m_coin1   = 1'b0;
 reg         m_coin2   = 1'b0;
 reg         m_coin3   = 1'b0;
 reg         m_coin4   = 1'b0;
-wire        m_service = ~status[7];
 
-//assign {FB_PAL_CLK, FB_FORCE_BLANK, FB_PAL_ADDR, FB_PAL_DOUT, FB_PAL_WR} = '0;
+assign {FB_PAL_CLK, FB_FORCE_BLANK, FB_PAL_ADDR, FB_PAL_DOUT, FB_PAL_WR} = '0;
 
-wire [1:0] ar = status[9:8];
+wire [1:0] ar = status[1:0];
+wire [2:0] fx = status[4:2];
+wire m_service = ~status[5];
+wire reset = RESET | status[6] | buttons[1]| ioctl_download;
 
 assign VIDEO_ARX = (!ar) ? 12'd4 : (ar - 1'd1);
 assign VIDEO_ARY = (!ar) ? 12'd3 : 12'd0;
@@ -253,13 +257,13 @@ assign VIDEO_ARY = (!ar) ? 12'd3 : 12'd0;
 localparam CONF_STR = {
 	"A.GAUNTLET;;",
 	"-;",
-	"O89,Aspect ratio,Original,Full Screen,[ARC1],[ARC2];",
-	"O35,Scandoubler Fx,None,HQ2x,CRT 25%,CRT 50%,CRT 75%;",
+	"O01,Aspect ratio,Original,Full Screen,[ARC1],[ARC2];",
+	"O24,Scandoubler Fx,None,HQ2x,CRT 25%,CRT 50%,CRT 75%;",
 	"-;",
 	"DIP;",
 	"-;",
-	"O7,Service,Off,On;",
-	"R0,Reset;",
+	"O5,Service,Off,On;",
+	"R6,Reset;",
 	"J1,Button1,Button2,Button3,Button4,Coin,VStart;",
 	"jn,A,B,X,Y,R,Start;",
 	"V,v",`BUILD_DATE
@@ -272,12 +276,13 @@ pll pll
 	.rst(1'b0),
 	.outclk_0(clk_7M),    //  7.15909 MHz
 	.outclk_1(clk_14M),   // 14.31818 MHz
-	.outclk_2(clk_vid),   // 57.27272 MHz
+	.outclk_2(clk_video), // 57.27272 MHz
 	.outclk_3(clk_sys),   // 93.06817 MHz
 	.outclk_4(SDRAM_CLK), // 93.06817 MHz
 	.locked(pll_locked)
 );
 
+//always @(posedge clk_sys) if (ioctl_wr && (ioctl_index==254) && !ioctl_addr[24:3]) sw[ioctl_addr[2:0]] <= ioctl_dout;
 always @(posedge clk_sys) if (ioctl_wr && (ioctl_index==1)) slap_type <= ioctl_dout;
 
 wire pressed = ps2_key[9];
@@ -359,7 +364,7 @@ end
 reg JoyW_Fw,JoyW_Bk,JoyX_Fw,JoyX_Bk;
 reg JoyY_Fw,JoyY_Bk,JoyZ_Fw,JoyZ_Bk;
 always @(posedge clk_sys) begin 
-	case ({joy0[3],joy0[2],joy0[1],joy0[0]}) // Up,Down,Left,Right
+	case ({joystick_0[3],joystick_0[2],joystick_0[1],joystick_0[0]}) // Up,Down,Left,Right
 		4'b1010: begin JoyW_Fw=0; JoyW_Bk=0; JoyX_Fw=1; JoyX_Bk=0; end //Up_Left
 		4'b1000: begin JoyW_Fw=1; JoyW_Bk=0; JoyX_Fw=1; JoyX_Bk=0; end //Up
 		4'b1001: begin JoyW_Fw=1; JoyW_Bk=0; JoyX_Fw=0; JoyX_Bk=0; end //Up_Right
@@ -370,7 +375,7 @@ always @(posedge clk_sys) begin
 		4'b0010: begin JoyW_Fw=0; JoyW_Bk=1; JoyX_Fw=1; JoyX_Bk=0; end //Left
 		default: begin JoyW_Fw=0; JoyW_Bk=0; JoyX_Fw=0; JoyX_Bk=0; end
 	endcase
-	case ({joy1[3],joy1[2],joy1[1],joy1[0]}) // Up,Down,Left,Right
+	case ({joystick_1[3],joystick_1[2],joystick_1[1],joystick_1[0]}) // Up,Down,Left,Right
 		4'b1010: begin JoyY_Fw=0; JoyY_Bk=0; JoyZ_Fw=1; JoyZ_Bk=0; end //Up_Left
 		4'b1000: begin JoyY_Fw=1; JoyY_Bk=0; JoyZ_Fw=1; JoyZ_Bk=0; end //Up
 		4'b1001: begin JoyY_Fw=1; JoyY_Bk=0; JoyZ_Fw=0; JoyZ_Bk=0; end //Up_Right
@@ -384,41 +389,35 @@ always @(posedge clk_sys) begin
 end
 
 wire [7:0] I_P1 = (slap_type == 118) ?
-				  ~(p1 | {JoyX_Bk,JoyW_Bk,JoyX_Fw,JoyW_Fw,joy0[7:4]})
-				: ~(p1 | {joy0[3:0], joy0[7:4]});
+				  ~(p1 | {JoyX_Bk,JoyW_Bk,JoyX_Fw,JoyW_Fw,joystick_0[7:4]})
+				: ~(p1 | {joystick_0[3:0], joystick_0[7:4]});
 wire [7:0] I_P2 = (slap_type == 118) ? 
-				  ~(p2 | {JoyZ_Bk,JoyY_Bk,JoyZ_Fw,JoyY_Fw,joy1[7:4]})
-				: ~(p2 | {joy1[3:0], joy1[7:4]});
+				  ~(p2 | {JoyZ_Bk,JoyY_Bk,JoyZ_Fw,JoyY_Fw,joystick_1[7:4]})
+				: ~(p2 | {joystick_1[3:0], joystick_1[7:4]});
 wire [7:0] I_P3 = (slap_type == 118) ?
-				  ~(p3 | { 6'b0,joy1[9],joy0[9]})
-				: ~(p3 | {joy2[3:0], joy2[7:4]});
+				  ~(p3 | { 6'b0,joystick_1[9],joystick_0[9]})
+				: ~(p3 | {joystick_2[3:0], joystick_2[7:4]});
 wire [7:0] I_P4 = (slap_type == 118) ?
 				  ~(p4)
-				: ~(p4 | {joy3[3:0], joy3[7:4]});
+				: ~(p4 | {joystick_3[3:0], joystick_3[7:4]});
 
 ///////////////////////////////////////////////////
-always @(posedge clk_vid) begin
+always @(posedge clk_video) begin
 	reg [2:0] div;
 
 	div <= div + 1'd1;
 	ce_pix <= !div;
 end
 
-//screen_rotate screen_rotate (.*);
 arcade_video #(.WIDTH(320), .DW(12)) arcade_video
 (
 	.*,
-
-	.clk_video(clk_vid),
-	.ce_pix(ce_pix),
 
 	.RGB_in({r,g,b}),
 	.HBlank(~hblank),
 	.VBlank(~vblank),
 	.HSync(~hs),
 	.VSync(~vs),
-
-	.fx(status[5:3])
 );
 
 hps_io #(.CONF_STR(CONF_STR)) hps_io
@@ -442,10 +441,10 @@ hps_io #(.CONF_STR(CONF_STR)) hps_io
 	.ioctl_index(ioctl_index),
 	.ioctl_wait(ioctl_wait),
 
-	.joystick_0(joy0),
-	.joystick_1(joy1),
-	.joystick_2(joy2),
-	.joystick_3(joy3),
+	.joystick_0(joystick_0),
+	.joystick_1(joystick_1),
+	.joystick_2(joystick_2),
+	.joystick_3(joystick_3),
 	.ps2_key(ps2_key)
 );
 
@@ -641,7 +640,7 @@ FPGA_GAUNTLET gauntlet
 	.I_P3(I_P3),
 	.I_P4(I_P4),
 	
-	.I_SYS({m_service, ~(m_coin1 | joy0[8]), ~(m_coin2 | joy1[8]), ~(m_coin3 | joy2[8]), ~(m_coin4 | joy3[8])}),
+	.I_SYS({m_service, ~(m_coin1 | joystick_0[8]), ~(m_coin2 | joystick_1[8]), ~(m_coin3 | joystick_2[8]), ~(m_coin4 | joystick_3[8])}),
 	.I_SLAP_TYPE(slap_type),
 
 	.O_LEDS(),

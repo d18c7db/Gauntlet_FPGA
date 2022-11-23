@@ -188,7 +188,6 @@ architecture RTL of TMS5220 is
 		m_new_frame_voiced,
 		m_new_frame_unvoiced,
 		m_new_frame_repeat,
---		m_new_frame_repeat_last,
 		m_new_frame_zero,
 		m_new_frame_stop,
 		m_pitch_zero,
@@ -885,7 +884,6 @@ begin
 						m_new_frame_unvoiced <= '0';
 						m_new_frame_zero     <= '0';
 						m_new_frame_stop     <= '0';
---						m_new_frame_repeat_last<= m_new_frame_repeat;
 						m_new_frame_energy_idx <= tmp_new_frame_energy_idx;
 						m_new_frame_pitch_idx  <= tmp_new_frame_pitch_idx;
 						m_new_frame_k_idx(0)   <= tmp_new_frame_k_idx(0);

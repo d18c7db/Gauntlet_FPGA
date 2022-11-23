@@ -31,9 +31,9 @@ set_global_assignment -name VHDL_FILE rtl/lib/T65/T65_Pack.vhd
 set_global_assignment -name VHDL_FILE rtl/lib/TG68K/TG68K_ALU.vhd
 set_global_assignment -name VHDL_FILE rtl/lib/TG68K/TG68K_Pack.vhd
 set_global_assignment -name VHDL_FILE rtl/lib/TG68K/TG68KdotC_Kernel.vhd
-set_global_assignment -name VHDL_FILE rtl/mem/dpram.vhd
-set_global_assignment -name VHDL_FILE rtl/mem/sdram.vhd
-set_global_assignment -name SDC_FILE  rtl/mem/sdram.sdc
+set_global_assignment -name VHDL_FILE rtl/lib/mem/dpram.vhd
+set_global_assignment -name VHDL_FILE rtl/lib/mem/sdram.vhd
+set_global_assignment -name SDC_FILE  rtl/lib/mem/sdram.sdc
 
 set_global_assignment -name VHDL_FILE rtl/gauntlet/ROMS.G1/EEP_14A.vhd
 set_global_assignment -name VHDL_FILE rtl/gauntlet/ROMS.G1/PROM_3E.vhd

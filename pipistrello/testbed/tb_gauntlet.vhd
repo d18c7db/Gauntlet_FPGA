@@ -43,11 +43,36 @@ architecture RTL of tb_gauntlet is
 	signal MEM_CK			: std_logic := '0';
 
 	--Outputs
+
+	signal I_USB_RXD		: std_logic;
 	signal serio			: std_logic := 'Z';
+
+	signal txval 			: std_logic_vector( 7 downto 0);
+
 	signal MEM_A			: std_logic_vector(20 downto 0);
 	signal MEM_D			: std_logic_vector(15 downto 0);
 
 	constant CLK_period  : TIME := 1000 ns / 50;		-- 50MHz external clock
+	constant UART_period : TIME := 1000 ms / 256000;
+
+	procedure TXBYTE (
+		signal val : in  std_logic_vector(7 downto 0);
+		signal txd : out std_logic
+	) is
+	constant UART_period  : TIME := 1000 ms / 256000;
+	variable bitnum : integer := 8;
+	begin
+		txd <= '0';	-- start bit
+		wait for UART_period;
+
+		for bitnum in 0 to 7 loop
+			txd <= val(bitnum);	-- send bit
+			wait for UART_period;
+		end loop;
+
+		txd <= '1';	-- stop bit
+		wait for UART_period;
+	end TXBYTE;
 
 begin
 	u_ROMS_EXT : entity work.ROMS_EXT
@@ -78,6 +103,9 @@ begin
 		MEM_nBHE		=> open,
 		MEM_nBLE		=> open,
 		MEM_CK		=> MEM_CK,
+
+--		O_USB_TXD	=> open,
+--		I_USB_RXD	=> I_USB_RXD,
 
 		-- Video output
 		TMDS_P		=> open,
@@ -110,6 +138,46 @@ begin
 		I_RESET <= '1';
 		wait for CLK_period*32;
 		I_RESET <= '0';
+
+		I_USB_RXD <= '1';
+--		wait for 1 ms;
+--
+--		txval <= x"1B";			--  ESC 1B 0001 1011
+--		TXBYTE(txval, I_USB_RXD);
+--		wait for 500 us;
+--
+--		txval <= x"64";			--  d 64 0110 0100
+--		TXBYTE(txval, I_USB_RXD);
+--		wait for 500 us;
+--
+--		txval <= x"77";			--  w 77 0111 0111
+--		TXBYTE(txval, I_USB_RXD);
+--		wait for 500 us;
+--
+--		txval <= x"77";			--  w 77 0111 0111
+--		TXBYTE(txval, I_USB_RXD);
+--		wait for 500 us;
+--
+--		txval <= x"77";			--  w 77 0111 0111
+--		TXBYTE(txval, I_USB_RXD);
+--		wait for 500 us;
+--
+--		txval <= x"77";			--  w 77 0111 0111
+--		TXBYTE(txval, I_USB_RXD);
+--		wait for 500 us;
+--
+--		txval <= x"77";			--  w 77 0111 0111
+--		TXBYTE(txval, I_USB_RXD);
+--		wait for 500 us;
+--
+--		txval <= x"77";			--  w 77 0111 0111
+--		TXBYTE(txval, I_USB_RXD);
+--		wait for 500 us;
+--
+--		txval <= x"52";
+--		TXBYTE(txval, I_USB_RXD);
+--		wait for 500 us;
+
 		wait;
 	end process;
 end RTL;

@@ -21,6 +21,12 @@
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 
+-- 14.10.2020 TG bugfix chk2.b
+-- 13.10.2020 TG go back to old aligned design and bugfix chk2
+-- 11.10.2020 TG next try CHK2 flags
+-- 10.10.2020 TG bugfix division N-flag
+-- 09.10.2020 TG bugfix division overflow
+-- 2/3.10.2020 some tweaks by retrofun, gyurco and robinsonb5
 -- 17.03.2020 TG bugfix move data to (extended address)
 -- 13.03.2020 TG bugfix extended addess mode - thanks Adam Polkosnik
 -- 15.02.2020 TG bugfix DIVS.W with result $8000
@@ -102,86 +108,85 @@ entity TG68KdotC_Kernel is
 	generic(
 		SR_Read : integer:= 2;				--0=>user,		1=>privileged,		2=>switchable with CPU(0)
 		VBR_Stackframe : integer:= 2;		--0=>no,			1=>yes/extended,	2=>switchable with CPU(0)
-		extAddr_Mode : integer:= 2;		--0=>no,			1=>yes,				2=>switchable with CPU(1)
+		extAddr_Mode : integer:= 2;			--0=>no,			1=>yes,				2=>switchable with CPU(1)
 		MUL_Mode : integer := 2;			--0=>16Bit,		1=>32Bit,			2=>switchable with CPU(1),  3=>no MUL,
 		DIV_Mode : integer := 2;			--0=>16Bit,		1=>32Bit,			2=>switchable with CPU(1),  3=>no DIV,
 		BitField : integer := 2;			--0=>no,			1=>yes,				2=>switchable with CPU(1)
 
 		BarrelShifter : integer := 1;		--0=>no,			1=>yes,				2=>switchable with CPU(1)
-		MUL_Hardware : integer := 1		--0=>no,			1=>yes,
+		MUL_Hardware  : integer := 1		--0=>no,			1=>yes,
 		);
-	port(clk						: in std_logic;
+	port(clk					: in std_logic;
 		nReset					: in std_logic;			--low active
 		clkena_in				: in std_logic:='1';
 		data_in					: in std_logic_vector(15 downto 0);
 		IPL						: in std_logic_vector(2 downto 0):="111";
 		IPL_autovector			: in std_logic:='0';
-		berr						: in std_logic:='0';					-- only 68000 Stackpointer dummy
+		berr					: in std_logic:='0';					-- only 68000 Stackpointer dummy
 		CPU						: in std_logic_vector(1 downto 0):="00";  -- 00->68000  01->68010  11->68020(only some parts - yet)
-		addr_out					: out std_logic_vector(31 downto 0);
+		addr_out				: out std_logic_vector(31 downto 0);
 		data_write				: out std_logic_vector(15 downto 0);
 		nWr						: out std_logic;
-		nUDS						: out std_logic;
-		nLDS						: out std_logic;
-		busstate					: out std_logic_vector(1 downto 0);	-- 00-> fetch code 10->read data 11->write data 01->no memaccess
+		nUDS					: out std_logic;
+		nLDS					: out std_logic;
+		busstate				: out std_logic_vector(1 downto 0);	-- 00-> fetch code 10->read data 11->write data 01->no memaccess
+		longword				: out std_logic;
 		nResetOut				: out std_logic;
-		FC							: out std_logic_vector(2 downto 0);
-		clr_berr					: out std_logic;
+		FC						: out std_logic_vector(2 downto 0);
+		clr_berr				: out std_logic;
 -- for debug
 		skipFetch				: out std_logic;
 		regin_out				: out std_logic_vector(31 downto 0);
-		CACR_out					: out std_logic_vector( 3 downto 0);
+		CACR_out				: out std_logic_vector( 3 downto 0);
 		VBR_out					: out std_logic_vector(31 downto 0)
 		);
 end TG68KdotC_Kernel;
 
 architecture logic of TG68KdotC_Kernel is
-
-
 	signal use_VBR_Stackframe	: std_logic;
 
 	signal syncReset			: std_logic_vector(3 downto 0);
 	signal Reset				: std_logic;
 	signal clkena_lw			: std_logic;
 	signal TG68_PC				: std_logic_vector(31 downto 0);
-	signal tmp_TG68_PC		: std_logic_vector(31 downto 0);
-	signal TG68_PC_add		: std_logic_vector(31 downto 0);
-	signal PC_dataa			: std_logic_vector(31 downto 0);
-	signal PC_datab			: std_logic_vector(31 downto 0);
+	signal tmp_TG68_PC			: std_logic_vector(31 downto 0);
+	signal TG68_PC_add			: std_logic_vector(31 downto 0);
+	signal PC_dataa				: std_logic_vector(31 downto 0);
+	signal PC_datab				: std_logic_vector(31 downto 0);
 	signal memaddr				: std_logic_vector(31 downto 0);
 	signal state				: std_logic_vector(1 downto 0);
-	signal datatype			: std_logic_vector(1 downto 0);
-	signal set_datatype		: std_logic_vector(1 downto 0);
-	signal exe_datatype		: std_logic_vector(1 downto 0);
-	signal setstate			: std_logic_vector(1 downto 0);
-	signal setaddrvalue		: std_logic;
+	signal datatype				: std_logic_vector(1 downto 0);
+	signal set_datatype			: std_logic_vector(1 downto 0);
+	signal exe_datatype			: std_logic_vector(1 downto 0);
+	signal setstate				: std_logic_vector(1 downto 0);
+	signal setaddrvalue			: std_logic;
 	signal addrvalue			: std_logic;
 
 	signal opcode				: std_logic_vector(15 downto 0);
 	signal exe_opcode			: std_logic_vector(15 downto 0);
-	signal sndOPC				: std_logic_vector(15 downto 0) := (OTHERS => '0');
+	signal sndOPC				: std_logic_vector(15 downto 0);
 
 	signal exe_pc				: std_logic_vector(31 downto 0);--TH
-	signal last_opc_pc		: std_logic_vector(31 downto 0);--TH
+	signal last_opc_pc			: std_logic_vector(31 downto 0);--TH
 	signal last_opc_read		: std_logic_vector(15 downto 0);
 	signal registerin			: std_logic_vector(31 downto 0);
 	signal reg_QA				: std_logic_vector(31 downto 0);
 	signal reg_QB				: std_logic_vector(31 downto 0);
 	signal Wwrena,Lwrena		: bit;
 	signal Bwrena				: bit;
-	signal Regwrena_now		: bit;
-	signal rf_dest_addr		: std_logic_vector(3 downto 0);
-	signal rf_source_addr	: std_logic_vector(3 downto 0);
-	signal rf_source_addrd	: std_logic_vector(3 downto 0);
+	signal Regwrena_now			: bit;
+	signal rf_dest_addr			: std_logic_vector(3 downto 0);
+	signal rf_source_addr		: std_logic_vector(3 downto 0);
+	signal rf_source_addrd		: std_logic_vector(3 downto 0);
 
 	signal regin				: std_logic_vector(31 downto 0);
 	type   regfile_t is array(0 to 15) of std_logic_vector(31 downto 0);
 	signal regfile				: regfile_t := (OTHERS => (OTHERS => '0')); -- mikej stops sim X issues;
 
-	attribute ram_style : string; -- for Xilinx ISE
-	attribute ram_style of regfile : signal is "distributed";
-	attribute ramstyle : string; -- for Intel Quartus
-	attribute ramstyle of regfile : signal is "logic";
+	attribute ram_style				: string; -- for Xilinx ISE
+	attribute ram_style of regfile	: signal is "distributed";
+	attribute ramstyle				: string; -- for Intel Quartus
+	attribute ramstyle of regfile	: signal is "logic";
 
 	signal RDindex_A			: integer range 0 to 15;
 	signal RDindex_B			: integer range 0 to 15;
@@ -189,111 +194,114 @@ architecture logic of TG68KdotC_Kernel is
 
 
 	signal addr					: std_logic_vector(31 downto 0);
-	signal memaddr_reg		: std_logic_vector(31 downto 0);
+	signal memaddr_reg			: std_logic_vector(31 downto 0);
 	signal memaddr_delta		: std_logic_vector(31 downto 0);
-	signal use_base			: bit;
+	signal memaddr_delta_rega	: std_logic_vector(31 downto 0);
+	signal memaddr_delta_regb	: std_logic_vector(31 downto 0);
+	signal use_base				: bit;
 
 	signal ea_data				: std_logic_vector(31 downto 0);
 	signal OP1out				: std_logic_vector(31 downto 0);
 	signal OP2out				: std_logic_vector(31 downto 0);
-	signal OP1outbrief		: std_logic_vector(15 downto 0);
+	signal OP1outbrief			: std_logic_vector(15 downto 0);
 	signal OP1in				: std_logic_vector(31 downto 0);
-	signal ALUout	: std_logic_vector(31 downto 0);
-	signal data_write_tmp	: std_logic_vector(31 downto 0);
-	signal data_write_muxin	: std_logic_vector(31 downto 0);
-	signal data_write_mux	: std_logic_vector(47 downto 0);
-	signal nextpass			: bit;
-	signal setnextpass		: bit;
-	signal setdispbyte		: bit;
+	signal ALUout				: std_logic_vector(31 downto 0);
+	signal data_write_tmp		: std_logic_vector(31 downto 0);
+	signal data_write_muxin		: std_logic_vector(31 downto 0);
+	signal data_write_mux		: std_logic_vector(47 downto 0);
+	signal nextpass				: bit;
+	signal setnextpass			: bit;
+	signal setdispbyte			: bit;
 	signal setdisp				: bit;
-	signal regdirectsource	:bit;		-- checken !!!
-	signal addsub_q			: std_logic_vector(31 downto 0);
+	signal regdirectsource		: bit;		-- checken !!!
+	signal addsub_q				: std_logic_vector(31 downto 0);
 	signal briefdata			: std_logic_vector(31 downto 0);
 	signal c_out				: std_logic_vector(2 downto 0);
 
-	signal mem_address		: std_logic_vector(31 downto 0);
+	signal mem_address			: std_logic_vector(31 downto 0);
 	signal memaddr_a			: std_logic_vector(31 downto 0);
 
-	signal TG68_PC_brw		: bit;
-	signal TG68_PC_word		: bit;
-	signal getbrief			: bit;
+	signal TG68_PC_brw			: bit;
+	signal TG68_PC_word			: bit;
+	signal getbrief				: bit;
 	signal brief				: std_logic_vector(15 downto 0);
-	signal data_is_source	: bit;
-	signal store_in_tmp		: bit;
+	signal data_is_source		: bit;
+	signal store_in_tmp			: bit;
 	signal write_back			: bit;
-	signal exec_write_back	: bit;
-	signal setstackaddr		: bit;
+	signal exec_write_back		: bit;
+	signal setstackaddr			: bit;
 	signal writePC				: bit;
 	signal writePCbig			: bit;
-	signal set_writePCbig	: bit;
+	signal set_writePCbig		: bit;
+	signal writePCnext			: bit;
 	signal setopcode			: bit;
 	signal decodeOPC			: bit;
 	signal execOPC				: bit;
-	signal execOPC_ALU		: bit;
+	signal execOPC_ALU			: bit;
 	signal setexecOPC			: bit;
 	signal endOPC				: bit;
 	signal setendOPC			: bit;
 	signal Flags				: std_logic_vector(7 downto 0);	-- ...XNZVC
 	signal FlagsSR				: std_logic_vector(7 downto 0);	-- T.S.0III
 	signal SRin					: std_logic_vector(7 downto 0);
-	signal exec_DIRECT		: bit;
-	signal exec_tas			: std_logic;
-	signal set_exec_tas		: std_logic;
+	signal exec_DIRECT			: bit;
+	signal exec_tas				: std_logic;
+	signal set_exec_tas			: std_logic;
 
 	signal exe_condition		: std_logic;
 	signal ea_only				: bit;
-	signal source_areg		: std_logic;
-	signal source_lowbits	: bit;
-	signal source_LDRLbits 	: bit;
-	signal source_LDRMbits 	: bit;
-	signal source_2ndHbits	: bit;
-	signal source_2ndMbits	: bit;
-	signal source_2ndLbits	: bit;
+	signal source_areg			: std_logic;
+	signal source_lowbits		: bit;
+	signal source_LDRLbits 		: bit;
+	signal source_LDRMbits 		: bit;
+	signal source_2ndHbits		: bit;
+	signal source_2ndMbits		: bit;
+	signal source_2ndLbits		: bit;
 	signal dest_areg			: std_logic;
-	signal dest_LDRareg		: std_logic;
+	signal dest_LDRareg			: std_logic;
 	signal dest_LDRHbits		: bit;
 	signal dest_LDRLbits		: bit;
 	signal dest_2ndHbits		: bit;
 	signal dest_2ndLbits		: bit;
 	signal dest_hbits			: bit;
-	signal rot_bits			: std_logic_vector(1 downto 0);
-	signal set_rot_bits		: std_logic_vector(1 downto 0);
+	signal rot_bits				: std_logic_vector(1 downto 0);
+	signal set_rot_bits			: std_logic_vector(1 downto 0);
 	signal rot_cnt				: std_logic_vector(5 downto 0);
-	signal set_rot_cnt		: std_logic_vector(5 downto 0);
+	signal set_rot_cnt			: std_logic_vector(5 downto 0);
 	signal movem_actiond		: bit;
 	signal movem_regaddr		: std_logic_vector(3 downto 0);
 	signal movem_mux			: std_logic_vector(3 downto 0);
-	signal movem_presub		: bit;
+	signal movem_presub			: bit;
 	signal movem_run			: bit;
 	signal ea_calc_b			: std_logic_vector(31 downto 0);
-	signal set_direct_data	: bit;
-	signal use_direct_data	: bit;
-	signal direct_data		: bit;
+	signal set_direct_data		: bit;
+	signal use_direct_data		: bit;
+	signal direct_data			: bit;
 
 	signal set_V_Flag			: bit;
-	signal set_vectoraddr	: bit;
+	signal set_vectoraddr		: bit;
 	signal writeSR				: bit;
 	signal trap_berr			: bit;
-	signal trap_illegal		: bit;
-	signal trap_addr_error	: bit;
+	signal trap_illegal			: bit;
+	signal trap_addr_error		: bit;
 	signal trap_priv			: bit;
 	signal trap_trace			: bit;
 	signal trap_1010			: bit;
 	signal trap_1111			: bit;
 	signal trap_trap			: bit;
 	signal trap_trapv			: bit;
-	signal trap_interrupt	: bit;
-	signal trapmake			: bit;
+	signal trap_interrupt		: bit;
+	signal trapmake				: bit;
 	signal trapd				: bit;
 	signal trap_SR				: std_logic_vector(7 downto 0);
 	signal make_trace			: std_logic;
 	signal make_berr			: std_logic;
-	signal useStackframe2	: std_logic;
+	signal useStackframe2		: std_logic;
 
-	signal set_stop			: bit;
+	signal set_stop				: bit;
 	signal stop					: bit;
-	signal trap_vector		: std_logic_vector(31 downto 0);
-	signal trap_vector_vbr	: std_logic_vector(31 downto 0);
+	signal trap_vector			: std_logic_vector(31 downto 0);
+	signal trap_vector_vbr		: std_logic_vector(31 downto 0);
 	signal USP					: std_logic_vector(31 downto 0);
 --	signal illegal_write_mode	: bit;
 --	signal illegal_read_mode	: bit;
@@ -303,14 +311,14 @@ architecture logic of TG68KdotC_Kernel is
 	signal rIPL_nr				: std_logic_vector(2 downto 0);
 	signal IPL_vec				: std_logic_vector(7 downto 0);
 	signal interrupt			: bit;
-	signal setinterrupt		: bit;
+	signal setinterrupt			: bit;
 	signal SVmode				: std_logic;
 	signal preSVmode			: std_logic;
 	signal Suppress_Base		: bit;
-	signal set_Suppress_Base: bit;
-	signal set_Z_error 		: bit;
-	signal Z_error 			: bit;
-	signal ea_build_now		: bit;
+	signal set_Suppress_Base	: bit;
+	signal set_Z_error 			: bit;
+	signal Z_error 				: bit;
+	signal ea_build_now			: bit;
 	signal build_logical		: bit;
 	signal build_bcd			: bit;
 
@@ -319,11 +327,12 @@ architecture logic of TG68KdotC_Kernel is
 	signal bf_ext_out			: std_logic_vector(7 downto 0);
 --	signal byte					: bit;
 	signal long_start			: bit;
-	signal long_start_alu	: bit;
-	signal non_aligned		: std_logic;
+	signal long_start_alu		: bit;
+	signal non_aligned			: std_logic;
+	signal check_aligned		: std_logic;
 	signal long_done			: bit;
 	signal memmask				: std_logic_vector(5 downto 0);
-	signal set_memmask		: std_logic_vector(5 downto 0);
+	signal set_memmask			: std_logic_vector(5 downto 0);
 	signal memread				: std_logic_vector(3 downto 0);
 	signal wbmemmask			: std_logic_vector(5 downto 0);
 	signal memmaskmux			: std_logic_vector(5 downto 0);
@@ -332,19 +341,19 @@ architecture logic of TG68KdotC_Kernel is
 	signal PCbase				: std_logic;
 	signal set_PCbase			: std_logic;
 
-	signal last_data_read	: std_logic_vector(31 downto 0);
-	signal last_data_in		: std_logic_vector(31 downto 0);
+	signal last_data_read		: std_logic_vector(31 downto 0);
+	signal last_data_in			: std_logic_vector(31 downto 0);
 
 	signal bf_offset			: std_logic_vector(5 downto 0);
-	signal bf_width			: std_logic_vector(5 downto 0) := (OTHERS => '0');
-	signal bf_bhits			: std_logic_vector(5 downto 0);
-	signal bf_shift			: std_logic_vector(5 downto 0);
-	signal alu_width			: std_logic_vector(5 downto 0) := (OTHERS => '0');
-	signal alu_bf_shift		: std_logic_vector(5 downto 0);
+	signal bf_width				: std_logic_vector(5 downto 0);
+	signal bf_bhits				: std_logic_vector(5 downto 0);
+	signal bf_shift				: std_logic_vector(5 downto 0);
+	signal alu_width			: std_logic_vector(5 downto 0);
+	signal alu_bf_shift			: std_logic_vector(5 downto 0);
 	signal bf_loffset			: std_logic_vector(5 downto 0);
-	signal bf_full_offset	: std_logic_vector(31 downto 0);
-	signal alu_bf_ffo_offset: std_logic_vector(31 downto 0);
-	signal alu_bf_loffset	: std_logic_vector(5 downto 0);
+	signal bf_full_offset		: std_logic_vector(31 downto 0);
+	signal alu_bf_ffo_offset	: std_logic_vector(31 downto 0);
+	signal alu_bf_loffset		: std_logic_vector(5 downto 0);
 
 	signal movec_data			: std_logic_vector(31 downto 0);
 	signal VBR					: std_logic_vector(31 downto 0);
@@ -354,51 +363,53 @@ architecture logic of TG68KdotC_Kernel is
 
 
 	signal set					: bit_vector(lastOpcBit downto 0);
-	signal set_exec			: bit_vector(lastOpcBit downto 0);
+	signal set_exec				: bit_vector(lastOpcBit downto 0);
 	signal exec					: bit_vector(lastOpcBit downto 0);
 
-	signal micro_state		: micro_states;
-	signal next_micro_state	: micro_states;
+	signal micro_state			: micro_states;
+	signal next_micro_state		: micro_states;
 
 
 
 BEGIN
+
 ALU: TG68K_ALU
 	generic map(
 		MUL_Mode => MUL_Mode,				--0=>16Bit,	1=>32Bit,	2=>switchable with CPU(1),		3=>no MUL,
 		MUL_Hardware => MUL_Hardware,		--0=>no,		1=>yes,
 		DIV_Mode => DIV_Mode,				--0=>16Bit,	1=>32Bit,	2=>switchable with CPU(1),		3=>no DIV,
-		BarrelShifter => BarrelShifter	--0=>no,		1=>yes,		2=>switchable with CPU(1)
+		BarrelShifter => BarrelShifter		--0=>no,		1=>yes,		2=>switchable with CPU(1)
 		)
 	port map(
-		clk => clk,								--: in std_logic;
+		clk => clk,							--: in std_logic;
 		Reset => Reset,						--: in std_logic;
-		CPU => CPU,								--: in std_logic_vector(1 downto 0):="00";  -- 00->68000  01->68010  11->68020(only some parts - yet)
+		CPU => CPU,							--: in std_logic_vector(1 downto 0):="00";  -- 00->68000  01->68010  11->68020(only some parts - yet)
 		clkena_lw => clkena_lw,				--: in std_logic:='1';
 		execOPC => execOPC_ALU,				--: in bit;
 		decodeOPC => decodeOPC,				--: in bit;
-		exe_condition => exe_condition,	--: in std_logic;
+		exe_condition => exe_condition,		--: in std_logic;
 		exec_tas => exec_tas,				--: in std_logic;
 		long_start => long_start_alu,		--: in bit;
 		non_aligned => non_aligned,
+		check_aligned => check_aligned,
 		movem_presub => movem_presub,		--: in bit;
 		set_stop => set_stop,				--: in bit;
 		Z_error => Z_error,					--: in bit;
 
 		rot_bits => rot_bits,				--: in std_logic_vector(1 downto 0);
-		exec => exec,							--: in bit_vector(lastOpcBit downto 0);
-		OP1out => OP1out,						--: in std_logic_vector(31 downto 0);
-		OP2out => OP2out,						--: in std_logic_vector(31 downto 0);
-		reg_QA => reg_QA,						--: in std_logic_vector(31 downto 0);
-		reg_QB => reg_QB,						--: in std_logic_vector(31 downto 0);
-		opcode => opcode,						--: in std_logic_vector(15 downto 0);
+		exec => exec,						--: in bit_vector(lastOpcBit downto 0);
+		OP1out => OP1out,					--: in std_logic_vector(31 downto 0);
+		OP2out => OP2out,					--: in std_logic_vector(31 downto 0);
+		reg_QA => reg_QA,					--: in std_logic_vector(31 downto 0);
+		reg_QB => reg_QB,					--: in std_logic_vector(31 downto 0);
+		opcode => opcode,					--: in std_logic_vector(15 downto 0);
 		exe_opcode => exe_opcode,			--: in std_logic_vector(15 downto 0);
 		exe_datatype => exe_datatype,		--: in std_logic_vector(1 downto 0);
-		sndOPC => sndOPC,						--: in std_logic_vector(15 downto 0);
+		sndOPC => sndOPC,					--: in std_logic_vector(15 downto 0);
 		last_data_read => last_data_read(15 downto 0),	--: in std_logic_vector(31 downto 0);
-		data_read => data_read(15 downto 0),		 		--: in std_logic_vector(31 downto 0);
+		data_read => data_read(15 downto 0),			--: in std_logic_vector(31 downto 0);
 		FlagsSR => FlagsSR,					--: in std_logic_vector(7 downto 0);
-		micro_state => micro_state,		--: in micro_states;
+		micro_state => micro_state,			--: in micro_states;
 		bf_ext_in => bf_ext_in,
 		bf_ext_out => bf_ext_out,
 		bf_shift => alu_bf_shift,
@@ -407,11 +418,14 @@ ALU: TG68K_ALU
 		bf_loffset => alu_bf_loffset(4 downto 0),
 
 		set_V_Flag => set_V_Flag,			--: buffer bit;
-		Flags => Flags,					 	--: buffer std_logic_vector(8 downto 0);
-		c_out => c_out,					 	--: buffer std_logic_vector(2 downto 0);
+		Flags => Flags,						--: buffer std_logic_vector(8 downto 0);
+		c_out => c_out,						--: buffer std_logic_vector(2 downto 0);
 		addsub_q => addsub_q,				--: buffer std_logic_vector(31 downto 0);
-		ALUout => ALUout						--: buffer std_logic_vector(31 downto 0)
+		ALUout => ALUout					--: buffer std_logic_vector(31 downto 0)
 	);
+
+	-- AMR - let the parent module know this is a longword access.  (Easy way to enable burst writes.)
+	longword <= not memmaskmux(3);
 
 	long_start_alu <= to_bit(NOT memmaskmux(3));
 	execOPC_ALU <= execOPC OR exec(alu_exec);
@@ -425,10 +439,11 @@ ALU: TG68K_ALU
 -----------------------------------------------------------------------------
 -- Bus control
 -----------------------------------------------------------------------------
-   regin_out <= regin;
+	regin_out <= regin;
 
 
 	nWr <= '0' WHEN state="11" ELSE '1';
+
 	busstate <= state;
 	nResetOut <= '0' WHEN exec(opcRESET)='1' ELSE '1';
 
@@ -437,7 +452,7 @@ ALU: TG68K_ALU
 	memmaskmux <= memmask when addr(0) = '1' else memmask(4 downto 0) & '1';
 	nUDS <= memmaskmux(5);
 	nLDS <= memmaskmux(4);
-	clkena_lw <= '1' WHEN clkena_in='1' AND memmaskmux(3)='1' ELSE '0';
+	clkena_lw <= '1' WHEN clkena_in='1' AND  memmaskmux(3)='1' ELSE '0';
 	clr_berr <= '1' WHEN setopcode='1' AND trap_berr='1' ELSE '0';
 
 	PROCESS (clk, nReset)
@@ -536,7 +551,7 @@ PROCESS (long_start, reg_QB, data_write_tmp, exec, data_read, data_write_mux, me
 			END IF;
 		END IF;
 		IF exec(mem_byte)='1' THEN	--movep
-			data_write(7 downto 0) <= data_write_tmp(15 downto 8);
+			data_write <= data_write_tmp(15 downto 8) & data_write_tmp(15 downto 8);
 		END IF;
 	END PROCESS;
 
@@ -736,6 +751,7 @@ PROCESS (clk)
 				direct_data <= '0';
 				use_direct_data <= '0';
 				Z_error <= '0';
+				writePCnext <= '0';
 			ELSIF clkena_lw='1' THEN
 				useStackframe2<='0';
 				direct_data <= '0';
@@ -753,6 +769,7 @@ PROCESS (clk)
 				IF endOPC='1' THEN
 					store_in_tmp <='0';
 					Z_error <= '0';
+					writePCnext <= '0';
 				ELSE
 					IF set_Z_error='1'  THEN
 						Z_error <= '1';
@@ -785,6 +802,7 @@ PROCESS (clk)
 				elsif micro_state=trap00 THEN
 					data_write_tmp <= exe_pc; --TH
 					useStackframe2<='1';
+					writePCnext <= trap_trap OR trap_trapv OR exec(trap_chk) OR Z_error;
 				elsif micro_state = trap0 then
 		  -- this is only active for 010+ since in 000 writePC is
 		  -- true in state trap0
@@ -794,6 +812,7 @@ PROCESS (clk)
 						data_write_tmp(15 downto 0) <= "0010" & trap_vector(11 downto 0); --TH
 					else
 						data_write_tmp(15 downto 0) <= "0000" & trap_vector(11 downto 0);
+						writePCnext <= trap_trap OR trap_trapv OR exec(trap_chk) OR Z_error;
 					end if;
 ------------------------------------
 --				ELSIF micro_state=trap0 THEN
@@ -850,7 +869,7 @@ PROCESS (brief, OP1out, OP1outbrief, cpu)
 -- MEM_IO
 -----------------------------------------------------------------------------
 PROCESS (clk, setdisp, memaddr_a, briefdata, memaddr_delta, setdispbyte, datatype, interrupt, rIPL_nr, IPL_vec,
-         memaddr_reg, reg_QA, use_base, VBR, last_data_read, trap_vector, exec, set, cpu, use_VBR_Stackframe)
+         memaddr_reg, memaddr_delta_rega, memaddr_delta_regb, reg_QA, use_base, VBR, last_data_read, trap_vector, exec, set, cpu, use_VBR_Stackframe)
 	BEGIN
 
 		IF rising_edge(clk) THEN
@@ -930,24 +949,26 @@ PROCESS (clk, setdisp, memaddr_a, briefdata, memaddr_delta, setdispbyte, datatyp
 					tmp_TG68_PC <= addr;
 				END IF;
 				use_base <= '0';
+				memaddr_delta_regb <= (others => '0');
 				IF memmaskmux(3)='0' OR exec(mem_addsub)='1' THEN
-					memaddr_delta <= addsub_q;
+					memaddr_delta_rega <= addsub_q;
 				ELSIF set(restore_ADDR)='1' THEN
-					memaddr_delta <= tmp_TG68_PC;
+					memaddr_delta_rega <= tmp_TG68_PC;
 				ELSIF exec(direct_delta)='1' THEN
-					memaddr_delta <= data_read;
+					memaddr_delta_rega <= data_read;
 				ELSIF exec(ea_to_pc)='1' AND setstate="00" THEN
-					memaddr_delta <= addr;
+					memaddr_delta_rega <= addr;
 				ELSIF set(addrlong)='1' THEN
-					memaddr_delta <= last_data_read;
+					memaddr_delta_rega <= last_data_read;
 				ELSIF setstate="00" THEN
-					memaddr_delta <= TG68_PC_add;
+					memaddr_delta_rega <= TG68_PC_add;
 				ELSIF exec(dispouter)='1' THEN
-					memaddr_delta <= ea_data+memaddr_a;
+					memaddr_delta_rega <= ea_data;
+					memaddr_delta_regb <= memaddr_a;
 				ELSIF set_vectoraddr='1' THEN
-					memaddr_delta <= trap_vector_vbr;
+					memaddr_delta_rega <= trap_vector_vbr;
 				ELSE
-					memaddr_delta <= memaddr_a;
+					memaddr_delta_rega <= memaddr_a;
 					IF interrupt='0' AND Suppress_Base='0' THEN
 --					IF interrupt='0' AND Suppress_Base='0' AND setstate(1)='1' THEN
 						use_base <= '1';
@@ -962,8 +983,9 @@ PROCESS (clk, setdisp, memaddr_a, briefdata, memaddr_delta, setdispbyte, datatyp
 			END IF;
 		END IF;
 
+		memaddr_delta <= memaddr_delta_rega + memaddr_delta_regb;
 		-- if access done, and not aligned, don't increment
-		addr <= memaddr_reg+memaddr_delta;
+		addr     <= memaddr_reg + memaddr_delta;
 		addr_out <= memaddr_reg + memaddr_delta;
 
 		IF use_base='0' THEN
@@ -977,7 +999,7 @@ PROCESS (clk, setdisp, memaddr_a, briefdata, memaddr_delta, setdispbyte, datatyp
 -- PC Calc + fetch opcode
 -----------------------------------------------------------------------------
 PROCESS (clk, IPL, setstate, addrvalue, state, exec_write_back, set_direct_data, next_micro_state, stop, make_trace, make_berr, IPL_nr, FlagsSR, set_rot_cnt, opcode, writePCbig, set_exec, exec,
-        PC_dataa, PC_datab, setnextpass, last_data_read, TG68_PC_brw, TG68_PC_word, Z_error, trap_trap, trap_trapv, interrupt, tmp_TG68_PC, TG68_PC)
+        PC_dataa, PC_datab, setnextpass, last_data_read, TG68_PC_brw, TG68_PC_word, Z_error, trap_trap, trap_trapv, interrupt, tmp_TG68_PC, TG68_PC, use_VBR_Stackframe, writePCnext)
 	BEGIN
 
 		PC_dataa <= TG68_PC;
@@ -1000,7 +1022,7 @@ PROCESS (clk, IPL, setstate, addrvalue, state, exec_write_back, set_direct_data,
 			ELSE
 				PC_datab(2) <= '1';
 			END IF;
-			IF trap_trap='1' OR trap_trapv='1' OR exec(trap_chk)='1' OR Z_error='1' THEN
+			IF (use_VBR_Stackframe='0' AND (trap_trap='1' OR trap_trapv='1' OR exec(trap_chk)='1' OR Z_error='1')) OR writePCnext='1' THEN
 				PC_datab(1) <= '1';
 			END IF;
 		ELSIF state="00" THEN
@@ -1360,6 +1382,10 @@ PROCESS (clk, Reset, FlagsSR, last_data_read, OP2out, exec)
 						SVmode <= preSVmode;
 					END IF;
 				END IF;
+				IF trap_berr='1' OR trap_illegal='1' OR trap_addr_error='1' OR trap_priv='1' OR trap_1010='1' OR trap_1111='1' THEN
+					make_trace <= '0';
+					FlagsSR(7) <= '0';
+				END IF;
 				IF set(changeMode)='1' THEN
 					preSVmode <= NOT preSVmode;
 					FlagsSR(5) <= NOT preSVmode;
@@ -1454,6 +1480,7 @@ PROCESS (clk, cpu, OP1out, OP2out, opcode, exe_condition, nextpass, micro_state,
 --		illegal_read_mode <= '0';
 --		illegal_byteaddr <= '0';
 		set_Z_error <= '0';
+		check_aligned <='0';
 
 		next_micro_state <= idle;
 		build_logical <= '0';
@@ -1494,8 +1521,7 @@ PROCESS (clk, cpu, OP1out, OP2out, opcode, exe_condition, nextpass, micro_state,
 			setstate <= "01";
 		END IF;
 		IF trapmake='1' AND trapd='0' THEN
---			IF use_VBR_Stackframe='1' AND (trap_trapv='1' OR set_Z_error='1' OR exec(opcCHK)='1') THEN
-			IF use_VBR_Stackframe='1' AND (trap_trapv='1' OR set_Z_error='1' OR exec(trap_chk)='1') THEN
+			IF cpu(1)='1' AND (trap_trapv='1' OR set_Z_error='1' OR exec(trap_chk)='1') THEN
 				next_micro_state <= trap00;
 			else
 				next_micro_state <= trap0;
@@ -1511,7 +1537,7 @@ PROCESS (clk, cpu, OP1out, OP2out, opcode, exe_condition, nextpass, micro_state,
 		END IF;
 		IF micro_state=int1 OR (interrupt='1' AND trap_trace='1') THEN
 -- paste and copy form TH	---------
-			if trap_trace='1' AND use_VBR_Stackframe='1' then
+			if trap_trace='1' AND cpu(1) = '1' then
 				next_micro_state <= trap00;  --TH
 			else
 				next_micro_state <= trap0;
@@ -1725,6 +1751,9 @@ PROCESS (clk, cpu, OP1out, OP2out, opcode, exe_condition, nextpass, micro_state,
 								IF micro_state=idle AND nextpass='1' THEN
 									setstate <= "10";
 									set(hold_OP2) <='1';
+									IF exe_datatype/="00" THEN
+										check_aligned <='1';
+									END IF;
 									next_micro_state <= chk20;
 								END IF;
 							ELSE
@@ -1753,7 +1782,7 @@ PROCESS (clk, cpu, OP1out, OP2out, opcode, exe_condition, nextpass, micro_state,
 				ELSE								--andi, ...xxxi
 					IF opcode(7 downto 6)/="11" AND opcode(5 downto 3)/="001" THEN --ea An illegal mode
 						IF opcode(11 downto 9)="000" THEN	--ORI
-							IF opcode(5 downto 3)/="111" OR opcode(2 downto 1)="00" OR opcode(2 downto 0)="100" THEN
+							IF opcode(5 downto 3)/="111" OR opcode(2 downto 1)="00" OR (opcode(2 downto 0)="100" AND opcode(7)='0') THEN
 								set_exec(opcOR) <= '1';
 							ELSE
 								trap_illegal <= '1';
@@ -1761,7 +1790,7 @@ PROCESS (clk, cpu, OP1out, OP2out, opcode, exe_condition, nextpass, micro_state,
 							END IF;
 						END IF;
 						IF opcode(11 downto 9)="001" THEN	--ANDI
-							IF opcode(5 downto 3)/="111" OR opcode(2 downto 1)="00" OR opcode(2 downto 0)="100" THEN
+							IF opcode(5 downto 3)/="111" OR opcode(2 downto 1)="00" OR (opcode(2 downto 0)="100" AND opcode(7)='0') THEN
 								set_exec(opcAND) <= '1';
 							ELSE
 								trap_illegal <= '1';
@@ -1777,7 +1806,7 @@ PROCESS (clk, cpu, OP1out, OP2out, opcode, exe_condition, nextpass, micro_state,
 							END IF;
 						END IF;
 						IF opcode(11 downto 9)="101" THEN	--EORI
-							IF opcode(5 downto 3)/="111" OR opcode(2 downto 1)="00" OR opcode(2 downto 0)="100" THEN
+							IF opcode(5 downto 3)/="111" OR opcode(2 downto 1)="00" OR (opcode(2 downto 0)="100" AND opcode(7)='0') THEN
 								set_exec(opcEOR) <= '1';
 							ELSE
 								trap_illegal <= '1';
@@ -2633,7 +2662,7 @@ PROCESS (clk, cpu, OP1out, OP2out, opcode, exe_condition, nextpass, micro_state,
 								trap_illegal <= '1';
 								trapmake <= '1';
 							END IF;
-						ELSE				--Scc
+						ELSIF (opcode(5 downto 3)/="111" OR opcode(2 downto 1)="00") THEN --Scc
 							datatype <= "00";			--Byte
 							ea_build_now <= '1';
 							write_back <= '1';
@@ -2644,6 +2673,9 @@ PROCESS (clk, cpu, OP1out, OP2out, opcode, exe_condition, nextpass, micro_state,
 							IF opcode(5 downto 4)="00" THEN
 								set_exec(Regwrena) <= '1';
 							END IF;
+						ELSE
+							trap_illegal <= '1';
+							trapmake <= '1';
 						END IF;
 					ELSE					--addq, subq
 						IF opcode(7 downto 3)/="00001" AND
@@ -3975,7 +4007,7 @@ PROCESS (clk, cpu, OP1out, OP2out, opcode, exe_condition, nextpass, micro_state,
 -----------------------------------------------------------------------------
 -- MOVEC
 -----------------------------------------------------------------------------
-  process (clk, VBR, CACR, brief)
+  process (clk, SFC, DFC, VBR, CACR, brief)
   begin
 	-- all other hexa codes should give illegal isntruction exception
 	if rising_edge(clk) then
@@ -3984,8 +4016,8 @@ PROCESS (clk, cpu, OP1out, OP2out, opcode, exe_condition, nextpass, micro_state,
 		CACR <= (others => '0');
 	  elsif clkena_lw = '1' and exec(movec_wr) = '1' then
 		case brief(11 downto 0) is
-		  when X"000" => NULL; -- SFC -- 68010+
-		  when X"001" => NULL; -- DFC -- 68010+
+		  when X"000" => SFC <= reg_QA(2 downto 0); -- SFC -- 68010+
+		  when X"001" => DFC <= reg_QA(2 downto 0); -- DFC -- 68010+
 		  when X"002" => CACR <= reg_QA(3 downto 0); -- 68020+
 		  when X"800" => NULL; -- USP -- 68010+
 		  when X"801" => VBR <= reg_QA; -- 68010+
@@ -3999,6 +4031,8 @@ PROCESS (clk, cpu, OP1out, OP2out, opcode, exe_condition, nextpass, micro_state,
 
 	movec_data <= (others => '0');
 	case brief(11 downto 0) is
+		when X"000" => movec_data <= "00000000000000000000000000000" & SFC;
+		when X"001" => movec_data <= "00000000000000000000000000000" & DFC;
 	  when X"002" => movec_data <= "0000000000000000000000000000" & (CACR AND "0011");
 
 	  when X"801" =>

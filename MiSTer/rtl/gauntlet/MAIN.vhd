@@ -200,7 +200,7 @@ architecture RTL of MAIN is
 
 	signal
 		slv_cpu_ad
-								: std_logic_vector(23 downto 0) := (others=>'0');
+								: std_logic_vector(31 downto 0) := (others=>'0');
 begin
 	O_ADDR		<= slv_cpu_ad(14 downto 1);
 	O_DATA		<= slv_cpu_do;
@@ -373,36 +373,34 @@ begin
 
 	-- Wrapper around 68010 soft core
 	u_12E : entity work.TG68K
+	generic map (
+		CPU			=> "01"				-- 00->68000  01->68010  11->68020
+	)
 	port map (
-		-- ins
 		CLK			=>	I_MCKR,			-- CLK 7.1591MHz
-		RST			=>	sl_CPU_RESET,	-- RESET active low
-												-- HALT  in sync with reset
+		RESET		=>	sl_CPU_RESET,	-- RESET active low
+		HALT		=> sl_SYSRESn,		-- HALT in sync with reset
 
-												-- BR		tied high
-												-- BGACK	tied high
-												-- BERR	tied high
-		clkena_ext	=>	'1',
-		IPL			=>	slv_IPL,			-- IPL
-		DTACK			=>	sl_DTACKn,		-- DTACK active low
-		VPA			=>	sl_VPA,			-- VPA   active low
-		DI				=>	slv_cpu_di,		-- DATA in
-
-		-- outs
-		AS				=>	sl_ASn,			-- AS
-		UDS			=>	sl_UDSn,			-- UDS
-		LDS			=>	sl_LDSn,			-- LDS
-		WR				=>	sl_R_Wn,			-- R/W
-												-- E   not connected
-												-- VMA not connected
-												-- BG  not connected
-		FC				=> slv_FC,			-- FC2..0
-		ADDR			=> slv_cpu_ad,		-- ADDR
-		DO				=>	slv_cpu_do,		-- DATA out
-
-		--
-		cpusel		=>	"01",				-- CPU type selector 00->68000  01->68010  11->68020
-		nRSTout		=>	open				-- reset out (not used);
+		BERR		=> '0',				-- BERR tied high (inverse logic here)
+		IPL			=>	slv_IPL,		-- IPL
+		ADDR		=> slv_cpu_ad,		-- ADDR
+		FC			=> slv_FC,			-- FC2..0
+		DATAI		=>	slv_cpu_di,		-- DATA in
+		DATAO		=>	slv_cpu_do,		-- DATA out
+---- bus control
+--		BG			=> open,			-- BG not connected
+--		BR			=> '1',				-- BR    tied high
+--		BGACK		=> '1',				-- BGACK tied high
+-- async interface
+		AS			=>	sl_ASn,			-- AS
+		UDS			=>	sl_UDSn,		-- UDS
+		LDS			=>	sl_LDSn,		-- LDS
+		RW			=>	sl_R_Wn,		-- R/W
+		DTACK		=>	sl_DTACKn,		-- DTACK active low
+-- sync interface
+		E			=> open,			-- E not connected
+		VPA			=> sl_VPA,			-- VPA active low
+		VMA			=> open				-- VMA not connected
 	);
 
 	----------------------------

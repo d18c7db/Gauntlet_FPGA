@@ -34,21 +34,22 @@ generic(
 		DIV_Mode : integer;			--0=>16Bit,	1=>32Bit,	2=>switchable with CPU(1),	3=>no DIV,
 		BarrelShifter :integer		--0=>no,		1=>yes,		2=>switchable with CPU(1)
 		);
-	port(clk						: in std_logic;
-		Reset						: in std_logic;
+	port(clk					: in std_logic;
+		Reset					: in std_logic;
 		clkena_lw				: in std_logic:='1';
 		CPU						: in std_logic_vector(1 downto 0):="00";  -- 00->68000  01->68010  11->68020(only some parts - yet)
 		execOPC					: in bit;
 		decodeOPC				: in bit;
 		exe_condition			: in std_logic;
-		exec_tas					: in std_logic;
+		exec_tas				: in std_logic;
 		long_start				: in bit;
 		non_aligned				: in std_logic;
+		check_aligned			: in std_logic;
 		movem_presub			: in bit;
-		set_stop					: in bit;
-		Z_error 					: in bit;
-		rot_bits					: in std_logic_vector(1 downto 0);
-		exec						: in bit_vector(lastOpcBit downto 0);
+		set_stop				: in bit;
+		Z_error 				: in bit;
+		rot_bits				: in std_logic_vector(1 downto 0);
+		exec					: in bit_vector(lastOpcBit downto 0);
 		OP1out					: in std_logic_vector(31 downto 0);
 		OP2out					: in std_logic_vector(31 downto 0);
 		reg_QA					: in std_logic_vector(31 downto 0);
@@ -63,15 +64,15 @@ generic(
 		micro_state				: in micro_states;
 		bf_ext_in				: in std_logic_vector(7 downto 0);
 		bf_ext_out				: out std_logic_vector(7 downto 0);
-		bf_shift					: in std_logic_vector(5 downto 0);
-		bf_width					: in std_logic_vector(5 downto 0);
+		bf_shift				: in std_logic_vector(5 downto 0);
+		bf_width				: in std_logic_vector(5 downto 0);
 		bf_ffo_offset			: in std_logic_vector(31 downto 0);
 		bf_loffset				: in std_logic_vector(4 downto 0);
 
 		set_V_Flag				: buffer bit;
-		Flags						: buffer std_logic_vector(7 downto 0);
-		c_out						: buffer std_logic_vector(2 downto 0);
-		addsub_q					: buffer std_logic_vector(31 downto 0);
+		Flags					: buffer std_logic_vector(7 downto 0);
+		c_out					: buffer std_logic_vector(2 downto 0);
+		addsub_q				: buffer std_logic_vector(31 downto 0);
 		ALUout					: out std_logic_vector(31 downto 0)
 	);
 end TG68K_ALU;
@@ -83,29 +84,29 @@ architecture logic of TG68K_ALU is
 -----------------------------------------------------------------------------
 -----------------------------------------------------------------------------
 	signal OP1in				: std_logic_vector(31 downto 0);
-	signal addsub_a			: std_logic_vector(31 downto 0);
-	signal addsub_b			: std_logic_vector(31 downto 0);
-	signal notaddsub_b		: std_logic_vector(33 downto 0);
+	signal addsub_a				: std_logic_vector(31 downto 0);
+	signal addsub_b				: std_logic_vector(31 downto 0);
+	signal notaddsub_b			: std_logic_vector(33 downto 0);
 	signal add_result			: std_logic_vector(33 downto 0);
 	signal addsub_ofl			: std_logic_vector(2 downto 0);
-	signal opaddsub			: bit;
+	signal opaddsub				: bit;
 	signal c_in					: std_logic_vector(3 downto 0);
 	signal flag_z				: std_logic_vector(2 downto 0);
 	signal set_Flags			: std_logic_vector(3 downto 0);	--NZVC
 	signal CCRin				: std_logic_vector(7 downto 0);
-	signal last_Flags1		: std_logic_vector(3 downto 0);	--NZVC
+	signal last_Flags1			: std_logic_vector(3 downto 0);	--NZVC
 
 --BCD
 	signal bcd_pur				: std_logic_vector(9 downto 0);
 	signal bcd_kor				: std_logic_vector(8 downto 0);
-	signal halve_carry		: std_logic;
+	signal halve_carry			: std_logic;
 	signal Vflag_a				: std_logic;
-	signal bcd_a_carry		: std_logic;
+	signal bcd_a_carry			: std_logic;
 	signal bcd_a				: std_logic_vector(8 downto 0);
-	signal result_mulu		: std_logic_vector(127 downto 0);
+	signal result_mulu			: std_logic_vector(127 downto 0);
 	signal result_div			: std_logic_vector(63 downto 0);
-	signal result_div_pre	: std_logic_vector(31 downto 0);
-	signal set_mV_Flag		: std_logic;
+	signal result_div_pre		: std_logic_vector(31 downto 0);
+	signal set_mV_Flag			: std_logic;
 	signal V_Flag				: bit;
 
 	signal rot_rot				: std_logic;
@@ -115,35 +116,35 @@ architecture logic of TG68K_ALU is
 	signal rot_C				: std_logic;
 	signal rot_out				: std_logic_vector(31 downto 0);
 	signal asl_VFlag			: std_logic;
-	signal bit_bits			: std_logic_vector(1 downto 0);
+	signal bit_bits				: std_logic_vector(1 downto 0);
 	signal bit_number			: std_logic_vector(4 downto 0);
-	signal bits_out			: std_logic_vector(31 downto 0);
+	signal bits_out				: std_logic_vector(31 downto 0);
 	signal one_bit_in			: std_logic;
 	signal bchg					: std_logic;
 	signal bset					: std_logic;
 
 	signal mulu_sign			: std_logic;
-	signal mulu_signext		: std_logic_vector(16 downto 0);
-	signal muls_msb			: std_logic;
-	signal mulu_reg			: std_logic_vector(63 downto 0);
+	signal mulu_signext			: std_logic_vector(16 downto 0);
+	signal muls_msb				: std_logic;
+	signal mulu_reg				: std_logic_vector(63 downto 0);
 	signal FAsign				: std_logic;
 	signal faktorA				: std_logic_vector(31 downto 0);
 	signal faktorB				: std_logic_vector(31 downto 0);
 
 	signal div_reg				: std_logic_vector(63 downto 0);
-	signal div_quot			: std_logic_vector(63 downto 0);
+	signal div_quot				: std_logic_vector(63 downto 0);
 	signal div_ovl				: std_logic;
 	signal div_neg				: std_logic;
 	signal div_bit				: std_logic;
 	signal div_sub				: std_logic_vector(32 downto 0);
-	signal div_over			: std_logic_vector(32 downto 0);
+	signal div_over				: std_logic_vector(32 downto 0);
 	signal nozero				: std_logic;
 	signal div_qsign			: std_logic;
-	signal dividend			: std_logic_vector(63 downto 0);
+	signal dividend				: std_logic_vector(63 downto 0);
 	signal divs					: std_logic;
-	signal signedOP			: std_logic;
-	signal OP1_sign			: std_logic;
-	signal OP2_sign			: std_logic;
+	signal signedOP				: std_logic;
+	signal OP1_sign				: std_logic;
+	signal OP2_sign				: std_logic;
 	signal OP2outext			: std_logic_vector(15 downto 0);
 
 	signal in_offset			: std_logic_vector(5 downto 0);
@@ -152,26 +153,26 @@ architecture logic of TG68K_ALU is
 	signal bf_datareg			: std_logic_vector(31 downto 0);
 	signal result				: std_logic_vector(39 downto 0);
 	signal result_tmp			: std_logic_vector(39 downto 0);
-	signal unshifted_bitmask: std_logic_vector(31 downto 0);
+	signal unshifted_bitmask	: std_logic_vector(31 downto 0);
 	signal bf_set1				: std_logic_vector(39 downto 0);
 	signal inmux0				: std_logic_vector(39 downto 0);
 	signal inmux1				: std_logic_vector(39 downto 0);
 	signal inmux2				: std_logic_vector(39 downto 0);
 	signal inmux3				: std_logic_vector(31 downto 0);
-	signal shifted_bitmask	: std_logic_vector(39 downto 0);
-	signal bitmaskmux0		: std_logic_vector(37 downto 0);
-	signal bitmaskmux1		: std_logic_vector(35 downto 0);
-	signal bitmaskmux2		: std_logic_vector(31 downto 0);
-	signal bitmaskmux3		: std_logic_vector(31 downto 0);
+	signal shifted_bitmask		: std_logic_vector(39 downto 0);
+	signal bitmaskmux0			: std_logic_vector(37 downto 0);
+	signal bitmaskmux1			: std_logic_vector(35 downto 0);
+	signal bitmaskmux2			: std_logic_vector(31 downto 0);
+	signal bitmaskmux3			: std_logic_vector(31 downto 0);
 	signal bf_set2				: std_logic_vector(31 downto 0);
 	signal shift				: std_logic_vector(39 downto 0);
-	signal bf_firstbit		: std_logic_vector(5 downto 0);
+	signal bf_firstbit			: std_logic_vector(5 downto 0);
 	signal mux					: std_logic_vector(3 downto 0);
 	signal bitnr				: std_logic_vector(4 downto 0);
 	signal mask					: std_logic_vector(31 downto 0);
 	signal mask_not_zero		: std_logic;
 	signal bf_bset				: std_logic;
-	signal bf_NFlag			: std_logic;
+	signal bf_NFlag				: std_logic;
 	signal bf_bchg				: std_logic;
 	signal bf_ins				: std_logic;
 	signal bf_exts				: std_logic;
@@ -179,20 +180,20 @@ architecture logic of TG68K_ALU is
 	signal bf_d32				: std_logic;
 	signal bf_s32				: std_logic;
 	signal index				: std_logic_vector(4 downto 0);
---	signal i						: integer range 0 to 31;
---	signal i						: integer range 0 to 31;
---	signal i						: std_logic_vector(5 downto 0);
+--	signal i					: integer range 0 to 31;
+--	signal i					: integer range 0 to 31;
+--	signal i					: std_logic_vector(5 downto 0);
 
 	signal hot_msb				: std_logic_vector(33 downto 0);
 	signal vector				: std_logic_vector(32 downto 0);
 	signal result_bs			: std_logic_vector(65 downto 0);
 	signal bit_nr				: std_logic_vector(5 downto 0);
 	signal bit_msb				: std_logic_vector(5 downto 0);
-	signal bs_shift			: std_logic_vector(5 downto 0);
-	signal bs_shift_mod		: std_logic_vector(5 downto 0);
-	signal asl_over			: std_logic_vector(32 downto 0);
-	signal asl_over_xor		: std_logic_vector(32 downto 0);
-	signal asr_sign			: std_logic_vector(32 downto 0);
+	signal bs_shift				: std_logic_vector(5 downto 0);
+	signal bs_shift_mod			: std_logic_vector(5 downto 0);
+	signal asl_over				: std_logic_vector(32 downto 0);
+	signal asl_over_xor			: std_logic_vector(32 downto 0);
+	signal asr_sign				: std_logic_vector(32 downto 0);
 	signal msb					: std_logic;
 	signal ring					: std_logic_vector(5 downto 0);
 	signal ALU					: std_logic_vector(31 downto 0);
@@ -286,7 +287,7 @@ PROCESS (OP2out, reg_QB, opcode, OP1out, OP1in, exe_datatype, addsub_q, execOPC,
 -- addsub
 -----------------------------------------------------------------------------
 PROCESS (OP1out, OP2out, execOPC, Flags, long_start, movem_presub, exe_datatype, exec, addsub_a, addsub_b, opaddsub,
-	     notaddsub_b, add_result, c_in, sndOPC, non_aligned)
+	     notaddsub_b, add_result, c_in, sndOPC, non_aligned, check_aligned)
 	BEGIN
 		addsub_a <= OP1out;
 		IF exec(get_bfoffset)='1' THEN
@@ -327,7 +328,7 @@ PROCESS (OP1out, OP2out, execOPC, Flags, long_start, movem_presub, exe_datatype,
 		END IF;
 
 		-- patch for un-aligned movem --mikej
-		if (exec(movem_action) = '1') then
+		if exec(movem_action)='1' OR check_aligned='1' then
 		  if (movem_presub = '0') then -- up
 			if (non_aligned = '1') and (long_start = '0') then -- hold
 			  addsub_b <= (others => '0');
@@ -840,7 +841,49 @@ process (OP1out, OP2out, opcode, bit_nr, bit_msb, bs_shift, bs_shift_mod, ring, 
 		END IF;
 
 -- calc shift count
-		bs_shift_mod <= std_logic_vector(unsigned(bs_shift) rem unsigned(ring));
+		-- bs_shift_mod <= std_logic_vector(unsigned(bs_shift) rem unsigned(ring));
+		-- replace the divider with logic
+		CASE ring IS
+			WHEN "001001" =>
+				IF bs_shift = 63 THEN
+					bs_shift_mod <= "000000";
+				ELSIF bs_shift > 6*9-1 THEN
+					bs_shift_mod <= bs_shift - 6*9;
+				ELSIF bs_shift > 5*9-1 THEN
+					bs_shift_mod <= bs_shift - 5*9;
+				ELSIF bs_shift > 4*9-1 THEN
+					bs_shift_mod <= bs_shift - 4*9;
+				ELSIF bs_shift > 3*9-1 THEN
+					bs_shift_mod <= bs_shift - 3*9;
+				ELSIF bs_shift > 2*9-1 THEN
+					bs_shift_mod <= bs_shift - 2*9;
+				ELSIF bs_shift > 9-1 THEN
+					bs_shift_mod <= bs_shift - 9;
+				ELSE
+					bs_shift_mod <= bs_shift;
+				END IF;
+			WHEN "010001" =>
+				IF bs_shift > 3*17-1 THEN
+					bs_shift_mod <= bs_shift - 3*17;
+				ELSIF bs_shift > 2*17-1 THEN
+					bs_shift_mod <= bs_shift - 2*17;
+				ELSIF bs_shift > 17-1 THEN
+					bs_shift_mod <= bs_shift - 17;
+				ELSE
+					bs_shift_mod <= bs_shift;
+				END IF;
+			WHEN "100001" =>
+				IF bs_shift > 32 THEN
+					bs_shift_mod <= bs_shift - 33;
+				ELSE
+					bs_shift_mod <= bs_shift;
+				END IF;
+			WHEN "001000" => bs_shift_mod <= "000" & bs_shift(2 downto 0);
+			WHEN "010000" => bs_shift_mod <=  "00" & bs_shift(3 downto 0);
+			WHEN "100000" => bs_shift_mod <=   "0" & bs_shift(4 downto 0);
+			WHEN OTHERS => bs_shift_mod <= (OTHERS => '0');
+		END CASE;
+
 		bit_nr <= bs_shift_mod(5 downto 0);
 		IF exe_opcode(8)='0' THEN  --right shift
 			bit_nr <= ring-bs_shift_mod;
@@ -969,11 +1012,14 @@ PROCESS (clk, Reset, exe_opcode, exe_datatype, Flags, last_data_read, OP2out, fl
 				IF exec(to_CCR)='1' THEN
 					Flags(7 downto 0) <= CCRin(7 downto 0);			--CCR
 				ELSIF Z_error='1' THEN
-					IF exe_opcode(8)='0' THEN
+					IF micro_state = trap0 THEN
+						-- Undocumented behavior (flags when div by zero)
+						IF exe_opcode(8)='0' THEN
 --						Flags(3 downto 0) <= reg_QA(31)&"000";
-						Flags(3 downto 0) <= '0'&NOT reg_QA(31)&"00";
-					ELSE
-						Flags(3 downto 0) <= "0100";
+							Flags(3 downto 0) <= '0'&NOT reg_QA(31)&"00";
+						ELSE
+							Flags(3 downto 0) <= "0100";
+						END IF;
 					END IF;
 				ELSIF exec(no_Flags)='0' THEN
 					last_Flags1 <= Flags(3 downto 0);
@@ -1025,16 +1071,19 @@ PROCESS (clk, Reset, exe_opcode, exe_datatype, Flags, last_data_read, OP2out, fl
 						Flags(1) <= BS_V;
 					ELSIF exec(opcBITS)='1' THEN
 						Flags(2) <= NOT one_bit_in;
-					ELSIF exec(opcCHK2)='1' THEN
-						Flags(0) <= '0';
-						Flags(2) <= Flags(2) OR set_flags(2);
+					ELSIF exec(opcCHK2)='1' THEN		--micro_state = chk23
+--micro_state	 chk21   chk22   chk23
+--OP1out      		UB		R			R
+--OP2out				LB		LB			UB
 ----lower bound first
 						IF last_Flags1(0)='0' THEN			--unsigned OP
 							Flags(0) <= Flags(0) OR (NOT set_flags(0) AND NOT set_flags(2));
 						ELSE										--signed OP
-							Flags(0) <= (Flags(3) AND NOT Flags(1)) OR (NOT Flags(3) AND Flags(1)) OR																				--LT
-										   (set_flags(3) AND set_flags(1) AND NOT set_flags(2)) OR (NOT set_flags(3) AND NOT set_flags(1) AND NOT set_flags(2));	--GT
+							Flags(0) <= (Flags(0) XOR set_flags(0)) AND  NOT Flags(2) AND NOT set_flags(2);
 						END IF;
+						Flags(1) <= '0';
+						Flags(2) <= Flags(2) OR set_flags(2);
+						Flags(3) <= NOT last_Flags1(0);
 					ELSIF exec(opcCHK)='1' THEN
 						IF exe_datatype="01" THEN 						--Word
 							Flags(3) <= OP1out(15);
@@ -1242,7 +1291,9 @@ PROCESS (clk)
 	BEGIN
 		IF rising_edge(clk) THEN
 			IF clkena_lw='1' THEN
-				V_Flag <= set_V_Flag;
+				IF micro_state/=div_end2 THEN
+					V_Flag <= set_V_Flag;
+				END IF;
 				signedOP <= divs;
 				IF micro_state=div1 THEN
 					nozero <= '0';
@@ -1262,7 +1313,7 @@ PROCESS (clk)
 					IF DIV_Mode=0 THEN
 						div_over(32 downto 16) <= ('0'&div_reg(47 downto 32))-('0'&OP2out(15 downto 0));
 					ELSE
-						div_over <= ('0'&div_reg(63 downto 32))-('0'&OP2out);
+						div_over <= ('0'&div_reg(63 downto 32))-('0'&OP2outext(15 downto 0)&OP2out(15 downto 0));
 					END IF;
 				END IF;
 				IF exec(write_reminder)='0' THEN

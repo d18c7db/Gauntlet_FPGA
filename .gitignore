@@ -1,7 +1,13 @@
 db
+tb
+ROMS*
+unused
+pipistrello
+debug
+doc
 greybox_tmp
 incremental_db
-output_files
+output_files*
 simulation
 hc_output
 scaler
@@ -24,7 +30,6 @@ PLLJ_PLLSPE_INFO.txt
 *.qws
 *.ppf
 *.ddb
-build_id.v
 c5_pin_model_dump.txt
 *.sopcinfo
 *.csv
@@ -37,13 +42,3 @@ c5_pin_model_dump.txt
 *.xml
 *_netlist
 *.cdf
-ROM_*.VHD
-roms
-unused
-debug
-testbed
-tb
-doc
-scripts
-minterm
-**/.DS_Store

@@ -30,14 +30,14 @@ entity VIDEO is
 		I_R_Wn				: in	std_logic;
 		I_LDSn				: in	std_logic;
 		I_UDSn				: in	std_logic;
-		I_SLAP_TYPE			: in  integer range 0 to 118; -- slapstic type can be changed dynamically
+		I_SLAP_TYPE			: in	integer range 0 to 118; -- slapstic type can be changed dynamically
 		O_VCPU				: out	std_logic;
 		O_VBKINTn			: out	std_logic;
 		O_VBLANKn			: out	std_logic;
 		O_HBLANKn			: out	std_logic;
-		O_1H					: out	std_logic;
-		O_2H					: out	std_logic;
-		O_32V					: out	std_logic;
+		O_1H				: out	std_logic;
+		O_2H				: out	std_logic;
+		O_32V				: out	std_logic;
 		O_DATA				: out	std_logic_vector(15 downto 0);
 		O_I					: out	std_logic_vector( 3 downto 0);
 		O_R					: out	std_logic_vector( 3 downto 0);
@@ -220,7 +220,7 @@ architecture RTL of VIDEO is
 		slv_GP_ADDR
 								: std_logic_vector(17 downto 0) := (others=>'0');
 	signal
-		slv_GP_DATA			: std_logic_vector(31 downto 0) := (others=>'0');
+		slv_GP_DATA				: std_logic_vector(31 downto 0) := (others=>'0');
 
 begin
 	O_I       <= sl_I;
@@ -260,11 +260,11 @@ begin
 	sl_VRDTACK	<= I_VRDTACK;
 	sl_VBKACKn	<= I_VBKACKn;
 	sl_HSCRLDn	<= I_HSCRLDn;
-	sl_VRAMn		<= I_VRAMn;
+	sl_VRAMn	<= I_VRAMn;
 	sl_UDSn		<= I_UDSn;
 	sl_LDSn		<= I_LDSn;
-	sl_BR_Wn		<= I_R_Wn;
-	sl_BW_Rn		<= not I_R_Wn;
+	sl_BR_Wn	<= I_R_Wn;
+	sl_BW_Rn	<= not I_R_Wn;
 
 	-----------------------
 	-- sheet 8 RAM banks --
@@ -274,10 +274,10 @@ begin
 	port map (
 		I_CK		=>	sl_MCKF,
 		I_VRAMWE	=>	sl_VRAMWE,
-		I_SELB	=>	sl_9D4,
-		I_SELA	=>	sl_9D7,
-		I_UDSn	=>	sl_9D9,
-		I_LDSn	=>	sl_9D12,
+		I_SELB		=>	sl_9D4,
+		I_SELA		=>	sl_9D7,
+		I_UDSn		=>	sl_9D9,
+		I_LDSn		=>	sl_9D12,
 		I_VRA		=>	slv_VRA,
 		I_VRD		=>	slv_VBD,
 		O_VRD		=>	slv_VRD
@@ -312,7 +312,7 @@ begin
 	p_7S : process
 	begin
 		wait until rising_edge(I_MCKR);
-		sl_NXLDL		<= sl_NXL;
+		sl_NXLDL	<= sl_NXL;
 		slv_VAS(1)	<= slv_VAS_star(1) and sl_NXLn;
 		sl_7S7		<= slv_VAS_star(1);
 		slv_VAS(0)	<= slv_VAS_star(0);
@@ -337,10 +337,10 @@ begin
 	--		VRAM data bus
 	--		else it holds its value (latches 9J,10J)
 	slv_VBD <=
-		I_DATA		when sl_BW_Rn = '1' and sl_VBUS  = '0' else			-- VBUS write access from 68K
-		slv_CRAM		when sl_BW_Rn = '0' and I_CRAMn  = '0' else			-- CRAM read access
-		slv_VRD		when sl_BW_Rn = '0' and sl_VRAMn = '0' else			-- VRAM read access
-		(others=>'0');																	-- else floating
+		I_DATA		when sl_BW_Rn = '1' and sl_VBUS  = '0' else		-- VBUS write access from 68K
+		slv_CRAM	when sl_BW_Rn = '0' and I_CRAMn  = '0' else		-- CRAM read access
+		slv_VRD		when sl_BW_Rn = '0' and sl_VRAMn = '0' else		-- VRAM read access
+		(others=>'0');												-- else floating
 
 	----------------------------
 	-- sheet 10
@@ -356,17 +356,17 @@ begin
 		end if;
 	end process;
 
-	--	903000-9037FF  R/W   xxxxxxxx x-------      (Y position)
-	--						R/W   -------- -x------      (Horizontal flip)
-	--						R/W   -------- --xxx---      (Number of X tiles - 1)
-	--						R/W   -------- -----xxx      (Number of Y tiles - 1)
+	--	903000-9037FF	R/W   xxxxxxxx x-------      (Y position)
+	--					R/W   -------- -x------      (Horizontal flip)
+	--					R/W   -------- --xxx---      (Number of X tiles - 1)
+	--					R/W   -------- -----xxx      (Number of Y tiles - 1)
 	-- 5C, 5K latches sheet 10
 	p_5C_5K : process
 	begin
 		wait until rising_edge(I_MCKR);
 		if sl_VERTDLn_tap = '0' then
-			slv_YPOS <= slv_VRD(15 downto 7);
-			sl_MFLP	<= slv_VRD(6);
+			slv_YPOS	<= slv_VRD(15 downto 7);
+			sl_MFLP		<= slv_VRD(6);
 			slv_HSIZ	<= slv_VRD( 5 downto 3);
 			slv_VSIZ	<= slv_VRD( 2 downto 0);
 		end if;
@@ -422,7 +422,7 @@ begin
 		ADDR(2)	=> slv_sum_6L(2),
 		ADDR(1)	=> slv_sum_6L(1),
 		ADDR(0)	=> slv_sum_6L(0),
-		DATA		=> slv_PROM_5L_data
+		DATA	=> slv_PROM_5L_data
 	);
 
 	-- 4L, 4M counters
@@ -494,9 +494,9 @@ begin
 		I_B			=> slv_GP_DATA(15 downto  8),
 		I_HLDAn		=> '1',
 		I_HLDBn		=> '1',
-		I_FLP			=> sl_HFLP,
-		I_MO_PFn		=> sl_MO_PFn,
-		I_LDn			=> sl_GLDn,
+		I_FLP		=> sl_HFLP,
+		I_MO_PFn	=> sl_MO_PFn,
+		I_LDn		=> sl_GLDn,
 
 		O_PFDA		=> slv_PFSR(0),
 		O_PFDB		=> slv_PFSR(1),
@@ -512,9 +512,9 @@ begin
 		I_B			=> slv_GP_DATA(31 downto 24),
 		I_HLDAn		=> '1',
 		I_HLDBn		=> '1',
-		I_FLP			=> sl_HFLP,
-		I_MO_PFn		=> sl_MO_PFn,
-		I_LDn			=> sl_GLDn,
+		I_FLP		=> sl_HFLP,
+		I_MO_PFn	=> sl_MO_PFn,
+		I_LDn		=> sl_GLDn,
 
 		O_PFDA		=> slv_PFSR(2),
 		O_PFDB		=> slv_PFSR(3),
@@ -532,18 +532,18 @@ begin
 	-- 12K Play Field Horizontal Scroll
 	u_12K : entity work.PFHS
 	port map (
-		I_CK					=> I_MCKR,
-		I_ST					=> sl_PFHSTn,
-		I_4H					=> sl_4H,
-		I_HS					=> sl_HSCRLDn,
-		I_SPC					=> '1',
+		I_CK				=> I_MCKR,
+		I_ST				=> sl_PFHSTn,
+		I_4H				=> sl_4H,
+		I_HS				=> sl_HSCRLDn,
+		I_SPC				=> '1',
 		I_D					=> slv_VBD(8 downto 0),
 		I_PS(7)				=> slv_PFSR(6),
 		I_PS(6 downto 0)	=> slv_PFSR(6 downto 0),
 
-		O_PFM					=> open,
-		O_PFH					=> slv_PFH(8 downto 3),
-		O_XP					=> slv_PFX
+		O_PFM				=> open,
+		O_PFH				=> slv_PFH(8 downto 3),
+		O_XP				=> slv_PFX
 	);
 
 	-- Motion Object Horizontal Line Buffer
@@ -557,7 +557,7 @@ begin
 		I_HPOS				=> slv_HPOS,
 		I_MOSR				=> slv_MOSR,
 
-		O_MPX					=> slv_MPX
+		O_MPX				=> slv_MPX
 	);
 
 	----------------------------
@@ -571,8 +571,8 @@ begin
 	begin
 		wait until rising_edge(I_MCKR);
 		if sl_HORZDLn_tap = '0' then
-			slv_XPOS		<= slv_VRD(15 downto 7);
-			slv_PSEL		<= slv_VRD(3 downto 0);
+			slv_XPOS	<= slv_VRD(15 downto 7);
+			slv_PSEL	<= slv_VRD(3 downto 0);
 		end if;
 	end process;
 
@@ -643,7 +643,7 @@ begin
 	end process;
 
 	-- gate 4U
-	sl_MATCH <= sl_6S6 and sl_6S9;
+	sl_MATCH	<= sl_6S6 and sl_6S9;
 
 	sl_2H	<= slv_H(1);
 	sl_1H	<= slv_H(0);

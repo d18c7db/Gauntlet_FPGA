@@ -2,6 +2,18 @@ create_generated_clock -name SDRAM_CLK \
   -source [get_pins -compatibility_mode {emu|pll|pll_inst|altera_pll_i|general[4].gpll~PLL_OUTPUT_COUNTER|divclk}] \
   [get_ports {SDRAM_CLK}]
 
+#set_clock_groups -exclusive -group [get_clocks { SDRAM_CLK }]
+
+#set_clock_groups -exclusive -group [get_clocks {emu|pll|pll_inst|altera_pll_i|general[3].gpll~PLL_OUTPUT_COUNTER|divclk}]
+
+#set_false_path \
+#-from {emu|pll|pll_inst|altera_pll_i|general[0].gpll~PLL_OUTPUT_COUNTER|divclk} \
+#-to   {emu|pll|pll_inst|altera_pll_i|general[3].gpll~PLL_OUTPUT_COUNTER|divclk}
+
+#set_false_path \
+#-from {emu|pll|pll_inst|altera_pll_i|general[1].gpll~PLL_OUTPUT_COUNTER|divclk} \
+#-to   {emu|pll|pll_inst|altera_pll_i|general[3].gpll~PLL_OUTPUT_COUNTER|divclk}
+
 # data access delay (tAC)
 set_input_delay -clock SDRAM_CLK -max 6.0 [get_ports {SDRAM_DQ[*]}]
 

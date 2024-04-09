@@ -60,7 +60,7 @@ module emu
 	output        HDMI_FREEZE,
 
 `ifdef MISTER_FB
-	// Use framebuffer in DDRAM (MISTER_FB=1 in qsf)
+	// Use framebuffer in DDRAM
 	// FB_FORMAT:
 	//    [2:0] : 011=8bpp(palette) 100=16bpp 101=24bpp 110=32bpp
 	//    [3]   : 0=16bits 565 1=16bits 1555
@@ -182,36 +182,36 @@ assign USER_OUT = '1;
 assign {UART_RTS, UART_TXD, UART_DTR} = 0;
 assign {SD_SCK, SD_MOSI, SD_CS} = 'Z;
 assign {SDRAM_DQ, SDRAM_A, SDRAM_BA, SDRAM_CLK, SDRAM_CKE, SDRAM_DQML, SDRAM_DQMH, SDRAM_nWE, SDRAM_nCAS, SDRAM_nRAS, SDRAM_nCS} = 'Z;
-assign {DDRAM_CLK, DDRAM_BURSTCNT, DDRAM_ADDR, DDRAM_DIN, DDRAM_BE, DDRAM_RD, DDRAM_WE} = 'Z;
+assign {DDRAM_CLK, DDRAM_BURSTCNT, DDRAM_ADDR, DDRAM_DIN, DDRAM_BE, DDRAM_RD, DDRAM_WE} = '0;
 
 assign VGA_F1 = 0;
 assign VGA_SCALER  = 0;
 assign VGA_DISABLE = 0;
 assign HDMI_FREEZE = 0;
 
-integer     slap_type = 104; // Slapstic type depends on game: 104=Gauntlet, 106=Gauntlet II, 107=2-Player Gauntlet, 118=Vindicators Part II
-wire        gauntlet_4p = (slap_type == 104 || slap_type == 106);
-wire        clk_7M;
-wire        clk_14M;
-wire        clk_sys;
-wire        clk_video;
-reg         ce_pix;
-wire        pll_locked;
-wire        hblank, vblank;
-wire        hs, vs;
+integer      slap_type = 104; // Slapstic type depends on game: 104=Gauntlet, 106=Gauntlet II, 107=2-Player Gauntlet, 118=Vindicators Part II
+wire         gauntlet_4p = (slap_type == 104 || slap_type == 106);
+wire         clk_7M;
+wire         clk_14M;
+wire         clk_sys;
+wire         clk_video;
+reg          ce_pix;
+wire         pll_locked;
+wire         HBlank, VBlank;
+wire         HSync, VSync;
 //reg  [ 7:0] sw[8];
-wire [ 3:0] r,g,b, gvid_I, gvid_R, gvid_G, gvid_B;
-wire [15:0] aud_l, aud_r;
+wire [  3:0] r,g,b, gvid_I, gvid_R, gvid_G, gvid_B;
+wire [ 15:0] aud_l, aud_r;
 wire [127:0] status;
-wire [ 1:0] buttons;
-wire        forced_scandoubler;
-wire        direct_video;
-wire        ioctl_download;
-wire        ioctl_wr;
-wire        ioctl_wait;
-wire [15:0] ioctl_index;
-wire [26:0] ioctl_addr;
-wire [ 7:0] ioctl_dout;
+wire [  1:0] buttons;
+wire         forced_scandoubler;
+wire         direct_video;
+wire         ioctl_download;
+wire         ioctl_wr;
+wire         ioctl_wait;
+wire [ 15:0] ioctl_index;
+wire [ 26:0] ioctl_addr;
+wire [  7:0] ioctl_dout;
 
 assign AUDIO_S = 1'b1; // signed samples
 assign AUDIO_L = aud_l;
@@ -240,7 +240,7 @@ reg         m_coin2   = 1'b0;
 reg         m_coin3   = 1'b0;
 reg         m_coin4   = 1'b0;
 
-assign {FB_PAL_CLK, FB_FORCE_BLANK, FB_PAL_ADDR, FB_PAL_DOUT, FB_PAL_WR} = '0;
+//assign {FB_PAL_CLK, FB_FORCE_BLANK, FB_PAL_ADDR, FB_PAL_DOUT, FB_PAL_WR} = '0;
 
 wire [1:0] ar = status[1:0];
 wire [2:0] fx = status[4:2];
@@ -289,9 +289,9 @@ pll pll
 	.locked(pll_locked)
 );
 
-//always @(posedge clk_sys) if (ioctl_wr && (ioctl_index==254) && !ioctl_addr[24:3]) sw[ioctl_addr[2:0]] <= ioctl_dout;
 always @(posedge clk_sys) if (ioctl_wr && (ioctl_index==1)) slap_type <= ioctl_dout;
 
+// keyboard controls - map keycodes to actions
 wire pressed = ps2_key[9];
 always @(posedge clk_sys) begin
 	reg old_state;
@@ -455,12 +455,11 @@ end
 arcade_video #(.WIDTH(320), .DW(12)) arcade_video
 (
 	.*,
-
 	.RGB_in({r,g,b}),
-	.HBlank(~hblank),
-	.VBlank(~vblank),
-	.HSync(~hs),
-	.VSync(~vs),
+	.HBlank(~HBlank),
+	.VBlank(~VBlank),
+	.HSync (~HSync),
+	.VSync (~VSync)
 );
 
 hps_io #(.CONF_STR(CONF_STR)) hps_io
@@ -587,7 +586,7 @@ end
 assign sdram_addr = ioctl_download?ioctl_addr[24:2]:{5'd0,gp_addr};
 assign ioctl_wait = ~(pll_locked && sdram_ready);
 
-sdram #(.tCK_ns(1000/93.06817)) sdram
+sdram #(.fCK_Mhz(93.06817)) sdram
 (
 	.I_RST(~pll_locked),
 	.I_CLK(clk_sys),
@@ -673,51 +672,51 @@ assign r4_data = (slap_type == 118)?r4_data_V2:(slap_type == 106)?r4_data_G2:r4_
 
 FPGA_GAUNTLET gauntlet
 (
-	.I_CLK_14M(clk_14M),
-	.I_CLK_7M(clk_7M),
+	.I_CLK_7M    (clk_7M),
+	.I_CLK_14M   (clk_14M),
 
-	.I_RESET(reset),
+	.I_RESET     (reset),
 
-	.I_P1(I_P1),
-	.I_P2(I_P2),
-	.I_P3(I_P3),
-	.I_P4(I_P4),
+	.I_P1        (I_P1),
+	.I_P2        (I_P2),
+	.I_P3        (I_P3),
+	.I_P4        (I_P4),
 	
-	.I_SYS({m_service, ~(m_coin1 | joystick_0_mux[8]), ~(m_coin2 | joystick_1_mux[8]), ~(m_coin3 | joystick_2_mux[8]), ~(m_coin4 | joystick_3_mux[8])}),
-	.I_SLAP_TYPE(slap_type),
+	.I_SYS       ({m_service, ~(m_coin1 | joystick_0_mux[8]), ~(m_coin2 | joystick_1_mux[8]), ~(m_coin3 | joystick_2_mux[8]), ~(m_coin4 | joystick_3_mux[8])}),
+	.I_SLAP_TYPE (slap_type),
 
-	.O_LEDS(),
+	.O_LEDS      (),
 
-	.O_AUDIO_L(aud_l),
-	.O_AUDIO_R(aud_r),
+	.O_AUDIO_L   (aud_l),
+	.O_AUDIO_R   (aud_r),
 
-	.O_VIDEO_I(gvid_I),
-	.O_VIDEO_R(gvid_R),
-	.O_VIDEO_G(gvid_G),
-	.O_VIDEO_B(gvid_B),
-	.O_HSYNC(hs),
-	.O_VSYNC(vs),
-	.O_CSYNC(),
-	.O_HBLANK(hblank),
-	.O_VBLANK(vblank),
+	.O_VIDEO_I   (gvid_I),
+	.O_VIDEO_R   (gvid_R),
+	.O_VIDEO_G   (gvid_G),
+	.O_VIDEO_B   (gvid_B),
+	.O_HSYNC     (HSync),
+	.O_VSYNC     (VSync),
+	.O_CSYNC     (),
+	.O_HBLANK    (HBlank),
+	.O_VBLANK    (VBlank),
 
-	.O_GP_EN(gp_en),
-	.O_GP_ADDR(gp_addr),
-	.I_GP_DATA(gp_data),
+	.O_GP_EN     (gp_en),
+	.O_GP_ADDR   (gp_addr),
+	.I_GP_DATA   (gp_data),
 
-	.O_CP_ADDR(cp_addr),
-	.I_CP_DATA(cp_data),
+	.O_CP_ADDR   (cp_addr),
+	.I_CP_DATA   (cp_data),
 
-	.O_MP_EN(mp_en),
-	.O_MP_ADDR(mp_addr),
-	.I_MP_DATA(mp_data),
+	.O_MP_EN     (mp_en),
+	.O_MP_ADDR   (mp_addr),
+	.I_MP_DATA   (mp_data),
 
-	.O_4R_ADDR(r4_addr),
-	.I_4R_DATA(r4_data),
+	.O_4R_ADDR   (r4_addr),
+	.I_4R_DATA   (r4_data),
 
-	.O_AP_EN(ap_en),
-	.O_AP_ADDR(ap_addr),
-	.I_AP_DATA(ap_data)
+	.O_AP_EN     (ap_en),
+	.O_AP_ADDR   (ap_addr),
+	.I_AP_DATA   (ap_data)
 );
 
 // pragma translate_off
@@ -725,8 +724,8 @@ bmp_out #( "BI" ) bmp_out
 (
 	.clk_i(clk_7M),
 	.dat_i({r,4'b0,g,4'b0,b,4'b0}),
-	.hs_i(hs),
-	.vs_i(vs)
+	.hs_i(HSync),
+	.vs_i(VSync)
 );
 // pragma translate_on
 endmodule

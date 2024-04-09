@@ -1,0 +1,3 @@
+[submodule "MiSTer/rtl/lib/jt51"]
+	path = MiSTer/rtl/lib/jt51
+	url = https://github.com/jotego/jt51.git

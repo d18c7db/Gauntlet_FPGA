@@ -1,28 +1,5 @@
 set_global_assignment -name SYSTEMVERILOG_FILE Arcade-Gauntlet.sv
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_acc.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_csr_ch.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_csr_op.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_eg.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_exp2lin.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_exprom.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_kon.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_lfo.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_lfo_lfsr.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_lin2exp.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_mmr.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_mod.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_noise.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_noise_lfsr.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_op.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_pg.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_phinc_rom.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_phrom.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_pm.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_reg.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_sh.v
-set_global_assignment -name VERILOG_FILE rtl/lib/JT51/jt51_timers.v
-
+set_global_assignment -name  QIP_FILE rtl/lib/jt51/hdl/jt51.qip
 set_global_assignment -name VHDL_FILE rtl/lib/POKEY.vhd
 set_global_assignment -name VHDL_FILE rtl/lib/T65/T65.vhd
 set_global_assignment -name VHDL_FILE rtl/lib/T65/T65_ALU.vhd
@@ -34,8 +11,7 @@ set_global_assignment -name VHDL_FILE rtl/lib/TG68K/TG68K_Pack.vhd
 set_global_assignment -name VHDL_FILE rtl/lib/TG68K/TG68KdotC_Kernel.vhd
 set_global_assignment -name VHDL_FILE rtl/lib/mem/dpram.vhd
 set_global_assignment -name VHDL_FILE rtl/lib/mem/sdram.vhd
-set_global_assignment -name SDC_FILE  rtl/lib/mem/sdram.sdc
-
+set_global_assignment -name  SDC_FILE rtl/lib/mem/sdram.sdc
 set_global_assignment -name VHDL_FILE rtl/gauntlet/ROMS.G1/EEP_14A.vhd
 set_global_assignment -name VHDL_FILE rtl/gauntlet/ROMS.G1/PROM_3E.vhd
 set_global_assignment -name VHDL_FILE rtl/gauntlet/ROMS.G1/PROM_4R.vhd
@@ -44,7 +20,6 @@ set_global_assignment -name VHDL_FILE rtl/gauntlet/ROMS.V2/PROM_4R.vhd
 set_global_assignment -name VHDL_FILE rtl/gauntlet/ROMS.G1/PROM_5E.vhd
 set_global_assignment -name VHDL_FILE rtl/gauntlet/ROMS.G1/PROM_5L.vhd
 set_global_assignment -name VHDL_FILE rtl/gauntlet/ROMS.G1/PROM_7U.vhd
-
 set_global_assignment -name VHDL_FILE rtl/gauntlet/AUDIO.vhd
 set_global_assignment -name VHDL_FILE rtl/gauntlet/CRAMS.vhd
 set_global_assignment -name VHDL_FILE rtl/gauntlet/GPC.vhd

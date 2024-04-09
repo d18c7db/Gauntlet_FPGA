@@ -15,9 +15,10 @@ rmdir /s /q sys\.qsys_edit
 rmdir /s /q sys\vip
 for /d %%i in (sys\*_sim) do rmdir /s /q "%%i"
 for /d %%i in (rtl\*_sim) do rmdir /s /q "%%i"
-REM del build_id.v
+del build_id.v
 del c5_pin_model_dump.txt
 del PLLJ_PLLSPE_INFO.txt
+del /s *.json
 del /s *.qws
 del /s *.ppf
 del /s *.ddb
@@ -26,10 +27,9 @@ del /s *.cmp
 del /s *.sip
 del /s *.spd
 del /s *.bsf
-del /s *.f
+rem del /s *.f
 del /s *.sopcinfo
 del /s *.xml
-del *.json
 del *.cdf
 del *.rpt
 del /s new_rtl_netlist

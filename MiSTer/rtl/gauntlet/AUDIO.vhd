@@ -67,9 +67,7 @@ architecture RTL of AUDIO is
 		left		:	 out std_logic_vector(15 downto 0);
 		right		:	 out std_logic_vector(15 downto 0);
 		xleft		:	 out signed(15 downto 0);
-		xright	:	 out signed(15 downto 0);
-		dacleft	:	 out std_logic_vector(15 downto 0);
-		dacright	:	 out std_logic_vector(15 downto 0)
+		xright	:	 out signed(15 downto 0)
 	);
 	end component;
 
@@ -102,7 +100,6 @@ architecture RTL of AUDIO is
 	signal
 		sl_SWR,
 		sl_TMS_ckena,
-		sl_SYNC,
 		sl_MCKF,
 		sl_PHI2,
 		sl_CPU_ena,
@@ -230,7 +227,7 @@ begin
 		A			=> slv_SBA,				-- out, address
 		DO			=> slv_SBDO,			-- out, data
 		R_W_n		=> sl_SBR_Wn,			-- out, read /write
-		SYNC		=> sl_SYNC				-- out, sync
+		SYNC		=> open				-- out, sync
 	);
 
 	O_SBD   <= slv_SBDO;
@@ -423,9 +420,7 @@ begin
 
 		--	 Full resolution outputs
 		xleft		=> s_YML_out,	-- std_logic_vector(15 downto 0)
-		xright	=> s_YMR_out,	-- std_logic_vector(15 downto 0)
-		dacleft	=> open,
-		dacright	=> open
+		xright	=> s_YMR_out	-- std_logic_vector(15 downto 0)
 	);
 
 --	-- YM3012 DAC - not used becase YM2151 core outputs parallel sound data
